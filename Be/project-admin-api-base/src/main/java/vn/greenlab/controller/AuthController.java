@@ -84,11 +84,12 @@ public class AuthController {
                 .maxAge(maxAge);
         System.out.println("=============Checking localhost calling to server: " + isLocalhostHost(httpRequest)
                 + "=============");
-        if (!isLocalhostHost(httpRequest)) {
-            cookieBuilder.sameSite("Strict");
-        } else {
-            cookieBuilder.sameSite("Lax");
-        }
+//        if (!isLocalhostHost(httpRequest)) {
+//            cookieBuilder.sameSite("Strict");
+//        } else {
+//            cookieBuilder.sameSite("Lax");
+//        }
+        cookieBuilder.sameSite("Lax");
         ResponseCookie cookie = cookieBuilder.build();
         // Save client IP address to lastLoginIp field
         String clientIp = getClientIp(httpRequest);
