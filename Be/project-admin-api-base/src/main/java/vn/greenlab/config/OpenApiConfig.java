@@ -38,7 +38,7 @@ public class OpenApiConfig {
                                 .url("http://www.apache.org/licenses/LICENSE-2.0")))
                 .servers(List.of(
                         new Server().url("http://localhost:" + port + contextPath).description("Development server"),
-                        new Server().url("https://dev.greenlab.vn" + contextPath).description("Production server")
+                        new Server().url("https://nam-dev-api.greenlab.io.vn" + contextPath).description("Production server")
                 ))
                 .components(new Components()
                         .addSecuritySchemes("bearer-jwt",
