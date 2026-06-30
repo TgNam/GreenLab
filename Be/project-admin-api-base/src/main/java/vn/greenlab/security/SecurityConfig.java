@@ -234,7 +234,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
                 List.of("http://localhost:51055", "http://localhost:4200", "http://172.17.0.1:4200",
-                        "http://180.93.144.20:4200", "https://dev.greenlab.vn", "https://nam-dev.greenlab.io.vn"));
+                        "http://180.93.144.20:4200", "https://dev.greenlab.vn", "https://nam-dev.greenlab.io.vn", "https://nam-dev-api.greenlab.io.vn"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         // Cho phép FE đọc header tên file download từ response.
