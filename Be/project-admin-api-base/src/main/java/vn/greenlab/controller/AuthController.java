@@ -89,7 +89,7 @@ public class AuthController {
 //        } else {
 //            cookieBuilder.sameSite("Lax");
 //        }
-        cookieBuilder.sameSite("Lax");
+        cookieBuilder.sameSite("Lax").secure(true).domain("greenlab.io.vn");
         ResponseCookie cookie = cookieBuilder.build();
         // Save client IP address to lastLoginIp field
         String clientIp = getClientIp(httpRequest);
