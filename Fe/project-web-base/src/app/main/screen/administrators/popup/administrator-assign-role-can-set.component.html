@@ -1,0 +1,105 @@
+<!-- assign-permissions-modal.component.html -->
+<div *ngIf="visible">
+    <app-modal-content [visible]="visible" [size]="'lgxl'" [title]="'ADMINISTRATOR.ASSIGN_ROLE_CAN_SET' | translate"
+        [saveButtonText]="'ADMINISTRATOR.ASSIGN_ROLE' | translate" [closeButtonText]="'COMMON.CLOSE' | translate"
+        (onSave)="onSave()" [loading]="assigning" (onClose)="onClose()">
+
+
+        <div class="search-filter-section flex-shrink-0 border-bottom"
+            style="border-color: rgba(255, 255, 255, 0.1) !important;">
+            <div class="mb-3">
+                <div class="mb-1" class="role-search-box">
+                    <div class="d-flex gap-3 flex-wrap" style="align-items: center;">
+                        <div style="margin-right: 5px;">
+                            <label class="fw-semibold">{{ 'COMMON.SEARCH' | translate }}:</label>
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" placeholder="{{ 'COMMON.SEARCH' | translate }}..."
+                    [(ngModel)]="searchText" (ngModelChange)="filterRoles($event)" />
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 flex-wrap" style="gap: 5px">
+                        <div class="form-check">
+
+                            <app-form-input type="checkbox" [for]="'selectAllCheck'" [(model)]="selectAllModel"
+                                (change)="selectAll($event)"
+                                [label]="'ADMINISTRATOR.SELECT_ALL_PERMISSIONS' | translate"
+                                [placeholder]="'ADMINISTRATOR.SELECT_ALL_PERMISSIONS' | translate" [max]="250">
+                            </app-form-input>
+                        </div>
+                        <div class="form-check">
+                            <app-form-input type="checkbox" [for]="'selectAllCheck2'" [(model)]="isRoleSelected"
+                                [label]="'ADMINISTRATOR.SHOW_SELECTED_ROLES' | translate"
+                                [placeholder]="'ADMINISTRATOR.SHOW_SELECTED_ROLES' | translate" [max]="250"
+                                (change)="filterCheckRole($event)"></app-form-input>
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="modal-body flex-grow-1 overflow-y-auto">
+            <div>
+                <div class="mb-3">
+                    <h6 class="text-center fw-semibold" style="margin: 20px 0;">
+                        ≫≫ {{ 'ADMINISTRATOR.ROLE_LIST_TITLE' | translate }} ≪≪
+                    </h6>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-3 mb-2" *ngFor="let role of filteredRoles">
+                            <div class="card border-0 shadow-sm">
+                                <div class="modal-header bg-primary d-flex align-items-center"
+                                    style="padding-bottom: 0px;">
+                                    <div class="mb-2" style="max-width: 100% !important;">
+                                        <app-form-input type="checkbox" [width]="width" [for]="'perm_' + role.id"
+                                            [label]="role.name" [(model)]="role.selected" [placeholder]="role.name"
+                                            (change)="onRoleChange(role)"></app-form-input>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <p>{{ role.description }}</p>
+
+                                    <div class="container-box mt-1" style="max-width: 600px; margin: 0 auto;">
+                                        <div *ngIf="role.permissions && hasPermissions(role)" class="label-admin">
+                                            [{{ 'ADMINISTRATOR.PERMISSION_LIST' | translate }}]
+                                        </div>
+                                        <div *ngIf="role.permissions && hasPermissions(role)" class="permissions-list">
+                                            <ul>
+                                                <li *ngFor="let perm of role.permissions | keyvalue">
+                                                    <div>
+                                                        <div><strong>{{perm.key}}</strong></div>
+                                                        <div>{{perm.value}}</div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div *ngIf="role.employees && hasEmployees(role)" class="label-admin">
+                                            [{{ 'ADMINISTRATOR.EMPLOYEES_WITH_ROLE' | translate }}]
+                                        </div>
+                                        <div *ngIf="role.employees && hasEmployees(role)" class="employees-list">
+                                            <ul>
+                                                <li *ngFor="let emp of role.employees | keyvalue"><span>{{emp.key}} |
+                                                        {{emp.value}}</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-template #loading>
+                    <div class="text-center p-3">
+                        <div class="spinner-border text-success" role="status"></div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+
+    </app-modal-content>
+</div>

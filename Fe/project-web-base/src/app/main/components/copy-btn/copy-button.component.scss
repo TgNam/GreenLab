@@ -1,0 +1,13 @@
+button {
+  transition: all 0.2s ease-in-out;
+  font-size: 0.9rem;
+  border: none !important;
+  padding: 1px;
+ 
+
+  i {
+    width: 16px;
+    text-align: center;
+    color: var(--primary);
+  }
+}

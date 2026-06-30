@@ -1,0 +1,59 @@
+<div class="floating-print-shell">
+  <app-floating-print-actions-bar [fab_icon]="fab_icon" [fab_title]="fab_title"
+    (fab_click)="toggle()"></app-floating-print-actions-bar>
+
+  <app-modal-content [visible]="is_open" [title]="panel_title" [hideSave]="true" [closeButtonText]="'Đóng'"
+    [size]="'sm'" [overflowY]="true" (onClose)="close()">
+    <div class="floating-print-modal-inner">
+      <!-- Thao tác -->
+      <section *ngIf="hasActionsSection()" class="floating-print-section">
+        <h6 class="floating-print-section__title">{{ section_title_actions }}</h6>
+        <div class="d-flex flex-wrap align-items-center floating-print-section__body">
+          <app-button *ngFor="let btn of action_buttons; trackBy: trackById" [text]="btn.text"
+            [type]="btn.type || 'secondary-outline'" [buttonClass]="btn.button_class || 'btn-sm btn-center'"
+            [icon]="btn.icon" [title]="btn.title || btn.text" (clickBtn)="onActionClick(btn)"></app-button>
+          <app-qz-print-actions *ngIf="qz_print_items?.length" [items]="qz_print_items"
+            [primaryMode]="qz_primary_mode"></app-qz-print-actions>
+        </div>
+      </section>
+
+      <!-- Cấu hình in -->
+      <section *ngIf="print_checkboxes?.length" class="floating-print-section">
+        <div class="d-flex align-items-center no-mb" style="margin-bottom: 10px;">
+          <h6 class="floating-print-section__title" style="margin-bottom: 0px !important;margin-right: 10px;">{{ section_title_print }}</h6>
+          <app-form-input type="checkbox" [for]="opt_print_all" [label]="opt_print_all ? 'Bỏ chọn tất cả' : 'Chọn tất cả'" [title]="opt_print_all ? 'Bỏ chọn tất cả' : 'Chọn tất cả'"
+            [model]="opt_print_all" (modelChange)="onPrintAllChange($event)"></app-form-input>
+        </div>
+        <div class="floating-print-section__print-grid">
+          <app-form-input *ngFor="let row of print_checkboxes; trackBy: trackById" type="checkbox" [for]="row.for_id"
+            [label]="row.label" [title]="row.title || row.label" [model]="row.get_checked()"
+            (modelChange)="onCheckboxChange(row, $event)"></app-form-input>
+        </div>
+      </section>
+
+      <!-- Cấu hình chữ ký -->
+      <section *ngIf="signature_rows?.length" class="floating-print-section">
+        <h6 class="floating-print-section__title">{{ section_title_signature }}</h6>
+        <div *ngFor="let sig of signature_rows; trackBy: trackById"
+          class="d-flex flex-wrap align-items-center floating-print-section__body floating-print-section__row">
+          <div class="floating-print-signature__select">
+            <app-form-input [class]="sig.select.input_class || null" [label]="''" type="select-search"
+              [model]="sig.select.get_model()" [selectOpen]="onSelectOpen" [selectClose]="onSelectClose"
+              (modelChange)="onSelectChange(sig.select, $event)" [options]="sig.select.options"
+              [size]="'form-control-sm'" [placeholder]="sig.select.placeholder || ''"
+              [optionLabel]="sig.select.option_label || 'label'"
+              [optionValue]="sig.select.option_value || 'value'"></app-form-input>
+          </div>
+          <app-form-input type="checkbox" [for]="sig.checkbox.for_id" [label]="sig.checkbox.label"
+            [title]="sig.checkbox.title || sig.checkbox.label" [model]="sig.checkbox.get_checked()"
+            (modelChange)="onCheckboxChange(sig.checkbox, $event)"></app-form-input>
+        </div>
+      </section>
+
+      <ng-container *ngIf="extra_template">
+        <hr class="my-2" />
+        <ng-container *ngTemplateOutlet="extra_template"></ng-container>
+      </ng-container>
+    </div>
+  </app-modal-content>
+</div>

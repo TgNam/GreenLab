@@ -1,0 +1,28 @@
+<app-modal-content 
+  [visible]="visible" 
+  [size]="getSizeFromClass()" 
+  [title]="title"
+  [closeButtonText]="'COMMON.CLOSE' | translate"
+  [hideSave]="true"
+  [customHeader]="true"
+  (onClose)="handleClose()">
+  
+  <!-- Custom Header with Copy Button -->
+  <div modalHeader class="modal-title mb-0 text-white d-flex align-items-center " style="flex: 1; min-width: 0;">
+    <span [title]="title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">{{ title }}</span>
+    <app-copy-button 
+      [textToCopy]="formattedJson" 
+      [title]="'COMMON.COPY' | translate" 
+      [icon]="'fa-copy'"
+      [colorWhite]="true"
+      style="flex-shrink: 0; margin-left: 0.5rem;">
+    </app-copy-button>
+  </div>
+  
+  <div class="modal-body">
+    <!-- JSON Viewer -->
+    <div class="json-viewer-container" [ngClass]="overflowY ? 'json-viewer-scrollable' : ''">
+      <ngx-json-viewer [json]="data || {}"></ngx-json-viewer>
+    </div>
+  </div>
+</app-modal-content>

@@ -1,0 +1,239 @@
+.modal-content {
+    background-color: #15182a;
+    /* nền tối như hình */
+    color: #fff;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    scrollbar-gutter: stable;
+    /* tránh layout shift khi xuất hiện thanh cuộn */
+  }
+
+  /* Làm thanh cuộn nhỏ, mềm mại, cùng tông màu */
+  .modal-content::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .name-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+  }
+
+  .modal-content::-webkit-scrollbar-track {
+    background: #1f2337;
+    /* nền thanh cuộn */
+    border-radius: 4px;
+  }
+
+  .modal-content::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    /* màu nhấn tím/xanh lam đồng bộ giao diện */
+    border-radius: 4px;
+    border: 2px solid #1f2337;
+    /* tạo viền cùng nền để trông mảnh hơn */
+  }
+
+  .modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary);
+  }
+
+  /* Giữ header và footer tách biệt */
+  .modal-header.custom-header {
+    background-color: #1f2337;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modal-footer {
+    background-color: #1f2337;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-close-custom {
+    background: transparent;
+    color: #fff;
+    border: none;
+    font-size: 1.8rem;
+    line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .btn-close-custom:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+  }
+
+  /* Đảm bảo user-autocomplete và button có cùng chiều cao */
+  .d-flex.align-items-center app-user-autocomplete {
+    display: block;
+  }
+
+  .d-flex.align-items-center app-user-autocomplete ::ng-deep .form-group,
+  .d-flex.align-items-center app-user-autocomplete ::ng-deep ng-select {
+    margin-bottom: 0;
+  }
+
+  .d-flex.align-items-center app-user-autocomplete ::ng-deep ng-select .ng-select-container {
+    min-height: 38px;
+    height: 38px;
+  }
+
+  /* Mobile layout - nút thêm ở cạnh label */
+  @media (max-width: 768px) {
+    .label-button-wrapper {
+      margin-bottom: 0.5rem;
+    }
+
+    .add-member-btn-mobile {
+      display: flex !important;
+    }
+
+    .add-member-btn-desktop {
+      display: none !important;
+    }
+
+    .autocomplete-wrapper {
+      width: 100%;
+    }
+
+    .autocomplete-wrapper .flex-grow-1 {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .autocomplete-wrapper app-user-autocomplete {
+      width: 100%;
+    }
+  }
+
+  /* Desktop layout - nút thêm ở cạnh autocomplete */
+  @media (min-width: 769px) {
+    .add-member-btn-mobile {
+      display: none !important;
+    }
+
+    .add-member-btn-desktop {
+      display: flex !important;
+    }
+  }
+
+  /* Mobile card styles - tương tự dynamic-table */
+  .mobile-card {
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-card-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-card-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-card-label {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: #666;
+  }
+
+  .mobile-card-value {
+    font-size: 14px;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Dark layout cho mobile card */
+  ::ng-deep .dark-layout .mobile-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  ::ng-deep .dark-layout .mobile-card-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  ::ng-deep .dark-layout .mobile-card-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  ::ng-deep .dark-layout .mobile-card-value {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .modal-content {
+    background-color: #15182a;
+    /* nền tối như hình */
+    color: #fff;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    scrollbar-gutter: stable;
+    /* tránh layout shift khi xuất hiện thanh cuộn */
+  }
+
+  /* Làm thanh cuộn nhỏ, mềm mại, cùng tông màu */
+  .modal-content::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .modal-content::-webkit-scrollbar-track {
+    background: #1f2337;
+    /* nền thanh cuộn */
+    border-radius: 4px;
+  }
+
+  .modal-content::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    /* màu nhấn tím/xanh lam đồng bộ giao diện */
+    border-radius: 4px;
+    border: 2px solid #1f2337;
+    /* tạo viền cùng nền để trông mảnh hơn */
+  }
+
+  .modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: #8a92ff;
+  }
+
+  /* Giữ header và footer tách biệt */
+  .modal-header.custom-header {
+    background-color: #1f2337;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modal-footer {
+    background-color: #1f2337;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-close-custom {
+    background: transparent;
+    color: #fff;
+    border: none;
+    font-size: 1.8rem;
+    line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .btn-close-custom:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+  }

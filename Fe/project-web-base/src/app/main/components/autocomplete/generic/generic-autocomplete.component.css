@@ -1,0 +1,31 @@
+.generic-autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* Giữ option 1 dòng để ArrowUp/ArrowDown không cuộn sớm từng bước. */
+::ng-deep .break-word-select .ng-option,
+::ng-deep .break-word-select .ng-option-label {
+  white-space: normal !important;
+  word-break: break-word;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+.selected-item .ng-value-icon {
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 18px;
+  color: #888;
+}
+
+.selected-item .ng-value-icon:hover {
+  color: #dc3545;
+}
+
+

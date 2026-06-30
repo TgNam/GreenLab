@@ -1,0 +1,112 @@
+<app-modal-content [visible]="visible" [size]="'lgr'"
+  [title]="'ROLE.ASSIGN_PERMISSIONS_TO_GROUP' | translate : { groupName: selectedGroup }"
+  [saveButtonText]="'ROLE.SAVE_PERMISSIONS' | translate" [closeButtonText]="'COMMON.CLOSE' | translate"
+  [loading]="loading" (onSave)="onSave()" (onClose)="onClose()">
+
+  <!-- Body -->
+  <div class="modal-body">
+
+    <div *ngIf="!permissionsLoaded" class="text-center p-5">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="sr-only">Đang tải...</span>
+      </div>
+      <p class="mt-3 text-muted">Đang tải dữ liệu...</p>
+    </div>
+
+    <!-- Content - chỉ hiển thị sau khi load xong -->
+    <div *ngIf="permissionsLoaded">
+      <!-- Top Checkboxes -->
+      <div>
+        <div class="row mb-1" style="padding: 0.8rem 1.4rem;">
+          <div class="mr-1">
+            <div class="custom-control custom-checkbox" style="padding-left: 0px !important;">
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" id="selectAllCheck"
+                  (change)="selectAllPermissions($event)">
+                <label class="form-check-label custom-control-label fw-semibold" style="cursor: pointer;" for="selectAllCheck">
+                  {{ 'ROLE.SELECT_ALL_PERMISSIONS' | translate }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="custom-control custom-checkbox" style="padding-left: 0px !important;">
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" id="viewMappedCheck" [(ngModel)]="viewMappedOnly"
+                  (ngModelChange)="applyFilters()" />
+                <label class="form-check-label custom-control-label fw-semibold" style="cursor: pointer;" for="viewMappedCheck">
+                  {{ 'ROLE.VIEW_MAPPED_PERMISSIONS' | translate }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="mb-4">
+          <input type="text" class="form-control form-control-lg"
+            [placeholder]="'ROLE.SEARCH_PERMISSION_GROUP' | translate" [(ngModel)]="searchText"
+            (ngModelChange)="applyFilters()" style="border-color: var(--bs-primary); border-width: 2px;" />
+        </div>
+      </div>
+
+      <!-- Permission Groups -->
+      <div class="permission-groups-container">
+        <div *ngFor="let group of filteredGroups; trackBy: trackByGroupId">
+          <div class="permission-group" *ngIf="group.filteredPermissions.length > 0 || !viewMappedOnly">
+            <!-- Group Header -->
+            <div class="group-header bg-primary">
+              <div class="group-header-content">
+                <div class="custom-control custom-checkbox" style="padding-left: 0px !important;">
+                  <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" [id]="'group_' + group.id"
+                      [(ngModel)]="group.selected" (change)="onGroupChange(group)" />
+                    <label class="form-check-label custom-control-label fw-semibold text-white text-ellipsis" style="cursor: pointer;"
+                      [for]="'group_' + group.id">
+                      {{ group.name }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <input type="text" class="form-control form-control-sm search-input"
+                [placeholder]="'ROLE.SEARCH_PERMISSION' | translate" [(ngModel)]="group.searchText"
+                (ngModelChange)="applyFilters2(group, $event)" />
+            </div>
+
+            <!-- Permissions Grid -->
+            <div class="permissions-grid mb-4">
+              <div class="permission-item" style="word-wrap: break-word;"
+                *ngFor="let permission of group.filteredPermissions; trackBy: trackByPermissionId">
+                <div class="custom-control custom-checkbox" style="padding-left: 0px !important;">
+                  <div class="custom-control custom-checkbox">
+                    <div>
+                      <input class="custom-control-input" type="checkbox" [id]="'perm_' + permission.id"
+                        [(ngModel)]="permission.selected" (change)="onPermissionChange(group, permission)" />
+                      <label class="form-check-label custom-control-label text-ellipsis" style="cursor: pointer;" [title]="permission.name"
+                        [for]="'perm_' + permission.id">
+                        <strong>{{ permission.name }}</strong>
+                      </label>
+                    </div>
+                    <div class="form-check-label text-ellipsis" [title]="permission.method + ' - ' + permission.uri"
+                      [for]="'perm1_' + permission.id">
+                      {{ permission.method + ' - ' + permission.uri }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="text-center py-5" *ngIf="filteredGroups.length === 0">
+          <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="text-muted mt-3">{{ 'ROLE.NO_PERMISSION_GROUP' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+</app-modal-content>
+

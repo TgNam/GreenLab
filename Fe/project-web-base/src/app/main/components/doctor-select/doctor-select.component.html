@@ -1,0 +1,53 @@
+<div class="doctor-select-wrapper">
+  <!-- City filter section (only show when filterCity = true) -->
+  <div *ngIf="filterCity" class="d-flex align-items-stretch mb-2 doctor-select-inside"  style="gap: 0.5rem;">
+    <!-- City filter with icon -->
+    <div style="flex: 0 0 auto; min-width: 120px; position: relative;">
+      <div class="position-relative">
+        <app-form-input type="select-search" [options]="cityOptions" optionLabel="label" optionValue="value"
+          [(model)]="selectedCityId" (modelChange)="onCityChange($event)" [placeholder]="'Tỉnh/TP'"
+          [disabled]="disabled || loadingCities" [size]="size">
+        </app-form-input>
+      </div>
+    </div>
+    <!-- Doctor select -->
+    <div style="flex: 1 1 auto; min-width: 0;" class="doctor-select-container">
+      <app-form-input #doctorInput type="select-search" [options]="doctorOptions" [title]="getTitleFromOptions(selectedDoctorId)"
+        [selectOpen]="selectOpen" [selectClose]="selectClose" optionLabel="label" optionValue="value"
+        [(model)]="selectedDoctorId" [typeaheadType]="'true'" [typeahead]="doctorTypeahead$"
+        (modelChange)="onDoctorSelect($event)" (onEnter)="onDoctorEnter()" [placeholder]="placeholder"
+        [disabled]="disabled" [size]="size" [onClearChange]="!ignoreClearAllModelChange">
+      </app-form-input>
+    </div>
+    <!-- Reload button -->
+    <button type="button"
+      [class]="size === 'form-control-sm' ? 'btn btn-outline-secondary btn-sm reset-sm' : 'btn btn-outline-secondary'"
+      (click)="reloadCache()" [title]="reloadButtonTitle" [disabled]="reloading"
+      style="margin-bottom: 0;">
+      <div class="btn-icon-icon" *ngIf="reloading">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </div>
+      <i class="fa" *ngIf="!reloading" [class.fa-refresh]="!reloading"></i>
+    </button>
+  </div>
+  <!-- Original doctor select (when filterCity = false) -->
+  <div *ngIf="!filterCity" class="d-flex align-items-stretch doctor-select-inside" style="gap: 0.5rem;">
+    <div style="flex: 1; min-width: 0;">
+      <app-form-input #doctorInput [label]="label" type="select-search" [options]="doctorOptions" [title]="getTitleFromOptions(selectedDoctorId)"
+        [selectOpen]="selectOpen" [selectClose]="selectClose" optionLabel="label" optionValue="value"
+        [(model)]="selectedDoctorId" [typeaheadType]="'true'" [typeahead]="doctorTypeahead$"
+        (modelChange)="onDoctorSelect($event)" (onEnter)="onDoctorEnter()" [placeholder]="placeholder"
+        [disabled]="disabled" [size]="size" [onClearChange]="!ignoreClearAllModelChange">
+      </app-form-input>
+    </div>
+    <button type="button" [ngClass]="{ 'has-label': !!label, 'has-label-sm': !!label && size === 'form-control-sm'}"
+      [class]="size === 'form-control-sm' ? 'btn btn-outline-secondary btn-sm reset-sm' : 'btn btn-outline-secondary'"
+      (click)="reloadCache()" [title]="reloadButtonTitle" [disabled]="reloading"
+      style="margin-bottom: 0; height: fit-content;flex-shrink: 0;">
+      <div class="btn-icon-icon" *ngIf="reloading">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </div>
+      <i class="fa" *ngIf="!reloading" [class.fa-refresh]="!reloading"></i>
+    </button>
+  </div>
+</div>

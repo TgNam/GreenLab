@@ -1,0 +1,354 @@
+<app-modal-content [visible]="visible" [size]="'xl'" [title]="title" [loading]="loading"
+  [hideSave]="!showPreview"
+  [saveButtonText]="'Xác nhận Import'"
+  [disableSave]="isConfirmImportDisabled"
+  [closeButtonText]="'COMMON.CLOSE' | translate"
+  [customFooter]="showPreview"
+  (onClose)="handleClose()"
+  (onSave)="confirmImport()">
+
+  <!-- Custom footer khi preview: Chọn file khác + Xác nhận Import (X/ESC vẫn gọi handleClose) -->
+  <div *ngIf="showPreview" modalFooter class="modal-footer border-0 flex-shrink-0 d-flex justify-content-end gap-2 footer-preview">
+    <app-button [text]="'Chọn file khác'" type="secondary" [buttonClass]="'btn-center'"
+      [icon]="'fa fa-file-excel-o'" (clickBtn)="resetAndImportAnother()">
+    </app-button>
+    <app-button [text]="'Xác nhận Import'" [buttonClass]="'btn-center'" type="primary"
+      [disabled]="loading" [onlyDisabled]="isConfirmImportDisabled"
+      [loading]="loading" (clickBtn)="confirmImport()">
+    </app-button>
+  </div>
+
+  <!-- Body -->
+  <div class="p-1">
+    <ng-template #rowNumberTemplate let-row="row">
+      <div class="text-center">
+        <strong>{{ row.rowNumber }}</strong>
+      </div>
+    </ng-template>
+
+    <ng-template #statusTemplate let-row="row">
+      <div *ngIf="row.success === true" class="d-flex justify-content-center">
+        <span class="badge badge-pill" [ngClass]="{
+          'badge-light-primary': row.success === true,
+          'badge-light-danger': row.success === false
+        }" style="font-size: 0.75rem; font-weight: 600;">
+          {{ row.status}}
+        </span>
+      </div>
+      <div *ngIf="row.success === false && getDisplayErrors(row).length > 0" class="text-danger small">
+        <div *ngFor="let error of getDisplayErrors(row)" class="d-flex align-items-start mb-1">
+          <span>{{ error }}</span>
+        </div>
+        <div *ngIf="renderRowActionsInStatus" class="d-flex justify-content-center gap-1 flex-wrap mt-1">
+          <ng-container *ngFor="let action of rowActions">
+            <app-button
+              *ngIf="canShowAction(action, row)"
+              [text]="action.label"
+              [type]="action.buttonType || 'secondary'"
+              [buttonClass]="action.buttonClass || 'btn-sm btn-center'"
+              (clickBtn)="handleRowAction(action, row)">
+            </app-button>
+          </ng-container>
+        </div>
+        <div *ngIf="renderRowActionsInStatus && getSelectedPid(row.rowNumber)" class="selected-pid font-small-1" style="margin-top: 5px;">
+          PID: {{ getSelectedPid(row.rowNumber) }}
+        </div>
+      </div>
+      <div *ngIf="row.success === false && getDisplayErrors(row).length === 0" class="text-danger small">
+        <div  class="d-flex justify-content-center">
+          <span class="badge badge-pill" [ngClass]="
+            'badge-light-danger'
+          " style="font-size: 0.75rem; font-weight: 600;">
+          </span>
+        </div>
+        <div *ngIf="renderRowActionsInStatus" class="d-flex justify-content-center gap-1 flex-wrap mt-1">
+          <ng-container *ngFor="let action of rowActions">
+            <app-button
+              *ngIf="canShowAction(action, row)"
+              [text]="action.label"
+              [type]="action.buttonType || 'secondary'"
+              [buttonClass]="action.buttonClass || 'btn-sm btn-center'"
+              (clickBtn)="handleRowAction(action, row)">
+            </app-button>
+          </ng-container>
+        </div>
+        <div *ngIf="renderRowActionsInStatus && getSelectedPid(row.rowNumber)" class="selected-pid font-small-1" style="margin-top: 5px;">
+          PID: {{ getSelectedPid(row.rowNumber) }}
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #errorsTemplate let-row="row">
+      <div *ngIf="row.errors && row.errors.length > 0" class="text-danger small">
+        <div *ngFor="let error of row.errors" class="d-flex align-items-start mb-1">
+          <span>{{ error }}</span>
+        </div>
+      </div>
+      <span *ngIf="!row.errors || row.errors.length === 0" class="text-muted">-</span>
+    </ng-template>
+
+    <ng-template #dataTemplate let-row="row" let-value="value">
+      <span style="text-align: center;display: flex;justify-content: center;">{{ value || '-' }}</span>
+    </ng-template>
+    <ng-template #actionTemplate let-row="row">
+      <div class="d-flex justify-content-center gap-1 flex-wrap">
+        <ng-container *ngFor="let action of rowActions">
+          <app-button
+            *ngIf="canShowAction(action, row)"
+            [text]="action.label"
+            [type]="action.buttonType || 'secondary'"
+            [buttonClass]="action.buttonClass || 'btn-sm btn-center'"
+            (clickBtn)="handleRowAction(action, row)">
+          </app-button>
+        </ng-container>
+      </div>
+    </ng-template>
+    <!-- File Input (hidden) -->
+    <input #fileInput type="file" [accept]="acceptedFileTypes" style="display: none;" (change)="onFileSelected($event)">
+
+    <!-- Import Section -->
+    <div *ngIf="!showResult && !showPreview" class="text-center py-4">
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="mb-4">
+        <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"
+          style="width: 3rem; height: 3rem; border-width: 0.3em;"></span>
+        <p class="text-muted mt-3">Đang xử lý file Excel, vui lòng đợi...</p>
+      </div>
+
+      <!-- File Selection (Hidden when loading) -->
+      <div *ngIf="!loading">
+        <div class="mb-1">
+          <i class="fa fa-file-excel fa-3x text-success mb-1"></i>
+          <p class="text-muted">Chọn file Excel để import dữ liệu bệnh nhân</p>
+        </div>
+
+        <div class="d-flex justify-content-center gap-2 mb-1">
+          <app-button [text]="'Chọn file Excel'" type="primary" (clickBtn)="handleImportClick()">
+          </app-button>
+        </div>
+
+        <!-- Sample Files Section -->
+        <div *ngIf="getSampleFiles().length > 0" class="mt-1">
+          <div class="d-flex justify-content-center gap-2 mb-2 flex-wrap">
+            <app-button 
+              *ngFor="let sampleFile of getSampleFiles()" 
+              [text]="sampleFile.label || 'Tải file mẫu: ' + sampleFile.fileName" 
+              type="secondary" 
+              (clickBtn)="downloadSampleFile(sampleFile)">
+            </app-button>
+          </div>
+          <small class="text-info d-block text-center">
+            <i class="fa fa-info-circle"></i>
+            Tải file mẫu để xem cấu trúc dữ liệu cần import
+          </small>
+        </div>
+
+        <div *ngIf="selectedFile" class="mt-3">
+          <p class="text-muted">
+            <i class="fa fa-file-o"></i> {{ selectedFile.name }}
+            <span class="text-muted ms-2">({{ formatFileSize(selectedFile.size) }})</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div *ngIf="showPreview && previewData">
+      <!-- Preview Info - Ẩn khi có globalErrors -->
+      <div *ngIf="!previewData.globalErrors || previewData.globalErrors.length === 0" class="alert mb-1" style="display: flex; align-items: start;;
+             background-color: rgb(240 249 255 / 1);
+             border: 1px solid rgb(186 230 253 / 1); padding: 5px; font-size: 0.875rem;">
+        <h6 class="alert-heading d-flex align-items-center" style="box-shadow: none !important; padding: 0.2rem 0.5rem !important;">
+          <i class="fa fa-info-circle me-2" style="color: rgb(3 105 161 / 1) !important; font-size: 18px;"></i>
+        </h6>
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <div>
+            <p style="color: rgb(3 105 161 / 1) !important;" class="mb-0">Vui lòng kiểm tra dữ liệu bên dưới trước khi
+              xác
+              nhận import.</p>
+          </div>
+          <!-- <div class="d-flex justify-content-end gap-2  border-top">
+            <app-button [text]="'Hủy bỏ'" type="secondary" (clickBtn)="cancelImport()">
+            </app-button>
+            <app-button [text]="'Xác nhận Import'" type="primary"
+              [disabled]="previewData.errorCount > 0 && previewData.successCount === 0" (clickBtn)="confirmImport()">
+            </app-button>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Global Errors trong preview -->
+      <div *ngIf="previewData.globalErrors && previewData.globalErrors.length > 0" class="alert alert-danger mb-1"
+        style="display: flex; align-items: start;padding: 10px;">
+        <h6 class="alert-heading d-flex align-items-center" style="box-shadow: none !important; margin-bottom: 0.5rem;">
+          <i class="fa fa-exclamation-triangle me-2"></i>
+        </h6>
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <div>
+            <p style="font-weight: bold;">Lỗi chung</p>
+            <p *ngFor="let error of previewData.globalErrors" class="mb-0"> <strong>{{
+                error }}</strong></p>
+          </div>
+          <div class="d-flex justify-content-end gap-2">
+            <app-button [text]="'Chọn file khác'" type="primary" [buttonClass]="'btn-sm btn-center'"
+              [icon]="'fa fa-file-excel-o'" (clickBtn)="resetAndImportAnother()">
+            </app-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Statistics - Ẩn khi có globalErrors -->
+      <div *ngIf="!previewData.globalErrors || previewData.globalErrors.length === 0" class="row mb-1 g-3">
+        <div class="col-md-4">
+          <div class="card border-2 border-slate-200 shadow-sm status-card"
+            [ngClass]="{'all-active': previewFilterStatus === 'all'}"
+            style="transition: transform 0.2s;margin-bottom: 0px !important;">
+            <div class="card-body text-center p-2"
+              style="display: flex; justify-content: center; align-items: center;cursor: pointer;"
+              (click)="filterStatusPreview('all')">
+              <div class="card-title text-slate-700" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0px !important; margin-right: 5px;">{{
+                previewData.totalRows }}</div>
+              <div class="card-text text-muted mb-0"
+                style="font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Tổng
+                số dòng</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-2 border-success shadow-sm status-card"
+            [ngClass]="{'success-active': previewFilterStatus === 'success'}"
+            style="transition: transform 0.2s;margin-bottom: 0px !important;">
+            <div class="card-body text-center p-2"
+              style="display: flex; justify-content: center; align-items: center;cursor: pointer;"
+              (click)="filterStatusPreview('success')">
+              <div class="card-title text-success" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0px !important; margin-right: 5px;">{{
+                previewData.successCount }}</div>
+              <div class="card-text text-success mb-0"
+                style="font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Dòng
+                sẵn sàng import</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-2 border-danger shadow-sm status-card"
+            [ngClass]="{'error-active': previewFilterStatus === 'error'}"
+            style="transition: transform 0.2s;margin-bottom: 0px !important;">
+            <div class="card-body text-center p-2"
+              style="display: flex; justify-content: center; align-items: center;cursor: pointer;"
+              (click)="filterStatusPreview('error')">
+              <div class="card-title text-danger" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0px !important; margin-right: 5px;">{{
+                previewData.errorCount }}</div>
+              <div class="card-text text-danger mb-0"
+                style="font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Dòng
+                lỗi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Table - Ẩn khi có globalErrors -->
+      <div *ngIf="!previewData.globalErrors || previewData.globalErrors.length === 0" class="mb-1">
+        <!-- Dynamic Table -->
+        <app-dynamic-table *ngIf="previewData.results && previewData.results.length > 0" [columns]="tableColumns"
+          [rows]="tableRows"
+          [totalCnt]="tableRows.length"
+          [prefix]="'preview-excel'"
+          [total]="tableRows.length"
+          [totalPage]="1" [page]="1" [selectedOption]="tableRows.length" [sizeOptions]="[]" [hideTime]="true"
+          [enablePagination]="false" [dateStatus]="false" [onPageChange]="onPageChange" [rowClass]="rowClassFN"
+          [onPageSizeChange]="onPageSizeChange" [fixedHeader]="true" [fixedHeaderMaxHeight]="500">
+        </app-dynamic-table>
+      </div>
+
+      <!-- Action Buttons -->
+
+    </div>
+
+    <!-- Global Errors -->
+    <div *ngIf="hasGlobalErrors" class="alert alert-danger mb-1 p-1">
+      <h6 class="alert-heading" style="box-shadow: none !important;">
+        <i class="fa fa-exclamation-triangle"></i> Lỗi chung:
+      </h6>
+      <ul class="mb-0">
+        <li *ngFor="let error of importResult?.globalErrors">{{ error }}</li>
+      </ul>
+    </div>
+
+      <!-- Results Section (Sau khi import thực sự) -->
+      <div *ngIf="showResult && importResult && !showPreview">
+      <!-- Import Another File Button -->
+      <div class="mb-1 d-flex justify-content-between align-items-center">
+        <div>
+          <h5 style="font-weight: 700;">Kết quả Import</h5>
+        </div>
+        <app-button [text]="'Chọn file khác'" type="primary" [buttonClass]="'btn-sm btn-center'"
+          [icon]="'fa fa-file-excel-o'" (clickBtn)="resetAndImportAnother()">
+        </app-button>
+      </div>
+
+      <!-- Statistics -->
+      <div class="row mb-1 g-3">
+        <div class="col-md-4">
+          <div class="card border-2 border-slate-200 shadow-sm status-card"
+            [ngClass]="{'all-active': resultFilterStatus === 'all'}"
+            style="transition: transform 0.2s;margin-bottom: 0px !important;">
+            <div class="card-body text-center p-2"
+            style="display: flex; justify-content: center; align-items: center;cursor: pointer;"
+              (click)="filterStatusResult('all')">
+              <h3 class="card-title text-slate-700 mb-1" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px !important; margin-bottom: 0px !important; margin-right: 5px;">{{
+                importResult.totalRows }}</h3>
+              <p class="card-text text-muted mb-0" style="font-size: 0.875rem; font-weight: 500;">Tổng số dòng</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-2 border-success shadow-sm status-card"
+            [ngClass]="{'success-active': resultFilterStatus === 'success'}"
+            style="transition: transform 0.2s!important;margin-bottom: 0px !important;">
+            <div class="card-body text-center p-2"
+               style="display: flex; justify-content: center; align-items: center;cursor: pointer;"
+              (click)="filterStatusResult('success')">
+              <h3 class="card-title text-success mb-1" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px !important; margin-bottom: 0px !important; margin-right: 5px;">{{
+                importResult.successCount }}</h3>
+              <p class="card-text text-success mb-0" style="font-size: 0.875rem; font-weight: 500;">Thành công</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-2 border-danger shadow-sm status-card"
+            [ngClass]="{'error-active': resultFilterStatus === 'error'}"
+            style="transition: transform 0.2s;margin-bottom: 0px !important;">
+            <div class="card-body text-center p-2"
+               style="display: flex; justify-content: center; align-items: center;cursor: pointer;"
+              (click)="filterStatusResult('error')">
+              <h3 class="card-title text-danger mb-1" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px !important; margin-bottom: 0px !important; margin-right: 5px;">{{
+                importResult.errorCount }}</h3>
+              <p class="card-text text-danger mb-0" style="font-size: 0.875rem; font-weight: 500;">Lỗi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Table using dynamic-table -->
+      <div *ngIf="hasResults">
+        <!-- Dynamic Table -->
+        <app-dynamic-table [columns]="tableColumns" [rows]="tableRows"
+          [prefix]="'result-excel'"
+          [totalCnt]="tableRows.length"
+          [total]="tableRows.length"
+          [totalPage]="1" [page]="1" [selectedOption]="tableRows.length" [rowClass]="rowClassFN"
+          [sizeOptions]="[]" [hideTime]="true" [fixedHeader]="true" [fixedHeaderMaxHeight]="500" [enablePagination]="false" [dateStatus]="false" [onPageChange]="onPageChange"
+          [onPageSizeChange]="onPageSizeChange">
+        </app-dynamic-table>
+      </div>
+
+      <!-- No Results Message -->
+      <div *ngIf="!hasResults && !hasGlobalErrors" class="text-center py-4">
+        <p class="text-muted">Không có dữ liệu để hiển thị</p>
+      </div>
+
+      <!-- Action Buttons -->
+      
+    </div>
+  </div>
+</app-modal-content>

@@ -1,0 +1,31 @@
+.btn {
+  font-weight: bold;
+
+  &.btn-secondary-outline {
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    background-color: transparent;
+  }
+
+  &.btn-primary {
+    background-color: #0d6efd;
+    color: #fff;
+  }
+
+  &.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+}
+.text-adjust {
+  margin-top: 1px;
+}
+.disabled-btn:disabled {
+  cursor: not-allowed; /* thay đổi con trỏ khi button disabled */
+  pointer-events: auto; /* để hover vẫn nhận pointer */
+}
+
+/* Optional: hover icon vẫn nổi bật */
+.disabled-btn[disabled] i.fa-ban {
+  pointer-events: none; /* icon không block click */
+}

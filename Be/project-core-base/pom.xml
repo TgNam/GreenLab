@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>vn.greenlab</groupId>
+  <artifactId>core</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>core</name>
+  <description>Core backend library for GreenLab</description>
+  <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.6</version>
+  </parent>
+  <dependencies>
+  <dependency>
+    <groupId>com.openhtmltopdf</groupId>
+    <artifactId>openhtmltopdf-svg-support</artifactId>
+    <version>1.0.10</version> </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jfree</groupId>
+      <artifactId>jfreechart</artifactId>
+      <version>1.5.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-json</artifactId>
+    </dependency>
+     <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+    <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <!-- <dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-itext5</artifactId>
+			<version>9.7.2</version>
+		</dependency> -->
+    <dependency>
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-pdfbox</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+    <dependency>
+      <groupId>com.itextpdf</groupId>
+      <artifactId>itext-asian</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-crypto</artifactId>
+    </dependency>
+
+    <!-- Thymeleaf templates in core can be used by admin-api -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <!-- ZXing for barcode generation (CODE_128) -->
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency> 
+      <groupId>com.aliyun.oss</groupId>
+      <artifactId>aliyun-sdk-oss</artifactId>
+      <version>3.8.0</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20250517</version>
+    </dependency>
+    <!-- Swagger annotations for API documentation - version must match admin-api -->
+    <dependency>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-annotations</artifactId>
+        <version>2.2.15</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>3.0-rc5</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+</project>

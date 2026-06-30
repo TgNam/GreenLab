@@ -1,0 +1,27 @@
+.btn-close-custom {
+    background: transparent;
+    color: #fff;
+    /* chữ trắng */
+    border: none;
+    font-size: 1.8rem;
+    /* to hơn */
+    line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-close-custom:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    /* hover nhẹ */
+    transform: scale(1.1);
+}

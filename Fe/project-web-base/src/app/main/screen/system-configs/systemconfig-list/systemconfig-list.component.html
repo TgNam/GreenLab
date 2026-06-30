@@ -1,0 +1,171 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{
+      headerTitle: 'SYSTEMCONFIG.TITLE' | translate,
+      actionButton: false,
+      breadcrumb: {
+        links: [
+          { name: 'COMMON.HOME' | translate, isLink: true, link: '/' },
+          { name: 'SYSTEMCONFIG.TITLE' | translate, isLink: false }
+        ]
+      }
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter [showAdvanced]="showAdvancedSearch" (toggleAdvanced)="toggleAdvancedSearch()" style="width: 100% !important;">
+          <!-- Tất cả filters - chỉ viết một lần, TypeScript sẽ tự động di chuyển các input có advanced-filter -->
+          <div basic-filters class="row g-2 w-100">
+            <!-- Basic filters - luôn hiển thị trên mobile: Tên cấu hình, Khóa -->
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'SYSTEMCONFIG.CONFIG_NAME' | translate" type="text" [(model)]="filters.name" (modelChange)="filterUpdate($event, 'name')"
+                (onEnter)="fetchPage()" [placeholder]="'SYSTEMCONFIG.CONFIG_NAME' | translate" max="255">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'SYSTEMCONFIG.KEY' | translate" type="select-search" [(model)]="filters.key" (modelChange)="filterUpdate($event, 'key')"
+                [options]="keyOptions" optionLabel="label" optionValue="value" [placeholder]="'SYSTEMCONFIG.SELECT_KEY' | translate">
+              </app-form-input>
+            </div>
+
+            <!-- Advanced filters - sẽ tự động di chuyển vào advanced-filters trên mobile -->
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'SYSTEMCONFIG.VALUE' | translate" type="text" [(model)]="filters.value" (modelChange)="filterUpdate($event, 'value')"
+                (onEnter)="fetchPage()" [placeholder]="'SYSTEMCONFIG.VALUE' | translate">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.STATUS' | translate" type="select-search" [(model)]="filters.isActive"
+                (modelChange)="filterUpdate($event, 'status')" [options]="statusOptions" optionLabel="label"
+                optionValue="value" [placeholder]="'COMMON.STATUS' | translate">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+          <app-button 
+            [text]="'COMMON.SEARCH' | translate" 
+            type="primary" 
+            [buttonClass]="'btn-sm btn-center'"
+            [loading]="isSearching"
+            icon="fa fa-search"
+            (clickBtn)="fetchPage()" 
+            [title]="'COMMON.SEARCH' | translate">
+          </app-button>
+
+          <button class="btn btn-sm btn-outline-secondary waves-effect waves-float waves-light" (click)="resetFilters()" [title]="'COMMON.RESET' | translate">
+            <i class="fa fa-refresh"></i>&nbsp;
+            {{'COMMON.RESET' | translate}}
+          </button>
+
+          <button class="btn btn-sm btn-primary waves-effect waves-float waves-light" (click)="openModalCreate()" [title]="'COMMON.ADD' | translate">
+            <i class="fa fa-plus"></i>&nbsp;
+            {{'COMMON.ADD' | translate}}
+          </button>
+        </div>
+      </div>
+
+    <div class="card card-body" style="padding: 0px !important;">
+      <ng-template #idTemplate let-row="row" let-rowIndex="rowIndex">
+        <div class="d-flex align-items-center">
+          {{ row.stt || (rowIndex !== undefined && !isNaN(rowIndex) ? rowIndex + 1 : '—') }}
+        </div>
+      </ng-template>
+
+      <ng-template #infoTemplate let-row="row">
+        <div class="employee-info">
+          <div class="info-line" style="margin-bottom: 4px;">
+            <span class="info-label-wrapper">
+              <i class="fa fa-cog text-dark"></i>
+              <strong>&nbsp;{{ 'COMMON.NAME' | translate }}:&nbsp;</strong>
+            </span>
+            <span class="info-value" style="color: #007bff; font-weight: 600;">{{ row.name || ('COMMON.NOT_HAVE' | translate) }}</span>
+          </div>
+          <div class="info-line mb-1">
+            <i class="fa fa-key text-dark"></i>
+            <strong>&nbsp;{{ 'SYSTEMCONFIG.KEY' | translate }}:&nbsp;</strong>
+            <span class="ms-1">{{ row.key || '—' }}</span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #valueTemplate let-row="row">
+        <div class="truncate-cell" [title]="row.value">
+          {{ row.value || '—' }}
+        </div>
+      </ng-template>
+
+      <ng-template #statusTemplate let-row="row">
+        <div class="badge badge-pill" [ngClass]="{
+          'badge-light-primary': row.active === true,
+          'badge-light-danger': row.active === false
+        }">
+          {{ (row.active === true ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}
+        </div>
+      </ng-template>
+
+      <ng-template #timeTemplate let-row="row">
+        <div class="d-flex flex-column text-nowrap">
+          <span class="d-flex align-items-center gap-1" style="margin-bottom: 4px;">
+            <i class="fa fa-history text-dark" style="margin-right: 5px;"></i>
+            <small>
+              <strong>{{ 'SYSTEMCONFIG.CREATED_TIME' | translate }}:&nbsp;</strong>
+              {{ row.create_time | date:'HH:mm dd/MM/yyyy' }}
+            </small>
+          </span>
+          <span class="d-flex align-items-center gap-1">
+            <i class="fa fa-history text-dark" style="margin-right: 5px;"></i>
+            <small>
+              <strong>{{ 'SYSTEMCONFIG.UPDATED_TIME' | translate }}:&nbsp;</strong>
+              {{ row.update_time | date:'HH:mm dd/MM/yyyy' }}
+            </small>
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template #actionTemplate let-row="row">
+        <div class="btn-parent">
+          <button (click)="openModal(row, 'edit')" class="btn btn-sm btn-primary mr-1 waves-effect waves-float waves-light btn-center"
+            [title]="'SYSTEMCONFIG.EDIT_TITLE' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-edit"></i>
+            </div>
+            {{'COMMON.EDIT' | translate}}
+          </button>
+          <button (click)="removeFunction(row)" class="btn btn-sm btn-primary mr-1 waves-effect waves-float waves-light btn-center"
+            [title]="'SYSTEMCONFIG.DELETE_HEADER' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-times-circle"></i>
+            </div>
+            {{'COMMON.DELETE' | translate}}
+          </button>
+        </div>
+      </ng-template>
+
+      <app-dynamic-table [columns]="columns" [timeFrom]="timeFrom" [timeTo]="timeTo"
+          (timeFromChange)="onTimeFromChange($event)" (timeToChange)="onTimeToChange($event)" 
+          [timeOpts]="timeOpts" [timeType]="filters.timeType" (timeTypeChange)="onTimeTypeChange($event)"
+          [total]="total" [sizeOptions]="sizeOptions" [page]="page"
+          [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows"
+          [onPageSizeChange]="onPageSizeChange.bind(this)" *ngIf="rows" [totalCnt]="total" [totalPage]="totalPage">
+      </app-dynamic-table>
+    </div>
+    </div>
+  </div>
+
+<app-systemconfig-create [visible]="showModalCreate" [saving]="isCreating" (close)="closeModalCreate()" (save)="create($event)">
+</app-systemconfig-create>
+
+
+<app-systemconfig-update [visible]="showModal" [mode]="modalMode" [systemconfig]="selectedAdmin" [saving]="isUpdating" (close)="closeModal()"
+  (save)="updateSystemConfig($event)">
+</app-systemconfig-update>
+
+<app-confirm-modal [visible]="confirmVisible" [header]="confirmHeader" [message]="confirmMessage" [type]="confirmType"
+  (onCancel)="handleCancel()" (onConfirm)="handleConfirm()">
+</app-confirm-modal>

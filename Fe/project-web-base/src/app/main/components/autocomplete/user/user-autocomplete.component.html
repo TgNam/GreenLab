@@ -1,0 +1,118 @@
+<!-- <div class="user-autocomplete-container">
+  <div class="search-wrapper">
+    <div style="display: flex; ">
+
+      <input type="text" class="form-control" [placeholder]="placeholder" [(ngModel)]="searchText"
+        (input)="onSearchInput($event)" (focus)="onInputFocus()"  style="border-right: none; border-radius: 0.375rem 0 0 0.375rem;" (blur)="onInputBlur()" autocomplete="off" />
+
+      <button type="button" class="btn btn-outline-secondary border-start-0"
+        style="border-radius: 0; z-index: 10; border-top-right-radius: 0.357rem;border-bottom-right-radius: 0.357rem;"
+        (click)="clearSearch(); $event.target.blur()" aria-label="Xóa tìm kiếm">
+        <span style="font-weight: bold; ">X</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="dropdown-results" #resultsContainer *ngIf="isOpen && (results.length > 0 || isLoading)"
+    (scroll)="onScroll($event)">
+    <div *ngIf="isLoading && results.length === 0" class="loading-state">
+      <div class="spinner-border spinner-border-sm" role="status">
+      </div>
+      <span>Đang tìm kiếm...</span>
+    </div>
+
+    <div *ngIf="!isLoading || results.length > 0" class="results-list">
+      <div *ngFor="let user of results" class="result-item" (click)="selectUser(user)"
+        [class.active]="selectedUser?.id === user.id">
+        <div class="user-avatar">
+          <i class="fa fa-user-circle"></i>
+        </div>
+        <div class="user-info">
+          <div class="user-name">{{ user.user_name + ' - ' + user.full_name}}</div>
+          <div class="user-email">{{ user.email }}</div>
+        </div>
+      </div>
+
+
+      <div *ngIf="results.length === 0 && !isLoading" class="no-results">
+        <i class="fa fa-inbox"></i>
+        <p>Không tìm thấy kết quả</p>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="form-group">
+  <ng-select #ngSelect
+    [items]="results" [ngClass]="size ? 'ng-select-size-' + size.replace('form-control-', '') : 'normal'"
+    bindLabel="user_name"
+    [(ngModel)]="selectedUser"
+    [typeahead]="searchText$"
+    [keyDownFn]="arrowKeyDownFn"
+    [style.minWidth]="minWidth"
+    [loading]="isLoading"
+    [clearable]="true"
+    [searchable]="true"
+    [disabled]="disabled"
+    [placeholder]="placeholder || 'Tìm người dùng...'"
+    (change)="onUserSelect($event)"
+    (scrollToEnd)="loadMore()"
+    (keydown.enter)="handleSelectEnter($event)"
+    (open)="onDropdownOpen()"
+    (close)="onDropdownClose()"
+  >
+  <ng-template ng-typetosearch-tmp>
+      <div class="p-1 text-muted">
+        {{'COMMON.SEARCH_USER_PLACEHOLDER' | translate}}
+      </div>
+    </ng-template>
+  
+    <!-- Template "Loading..." -->
+    <ng-template ng-loadingtext-tmp>
+      <div class="p-1 d-flex align-items-center">
+        <i class="fa fa-spinner fa-spin me-1" style="margin-right: 5px;"></i>
+        {{'COMMON.LOADING' | translate}}
+      </div>
+    </ng-template>
+    <ng-template ng-notfound-tmp>
+      <div class="p-1">{{'COMMON.NO_DATA' | translate}}</div>
+    </ng-template>
+    <!-- Dropdown template -->
+    <ng-template ng-option-tmp let-item="item">
+    <div class="d-flex align-items-center" (click)="onOptionClick(item)">
+      <!-- Avatar -->
+      <img 
+        [src]="item.photo || 'assets/images/avatars/avatar-default.png'" 
+        alt="avatar" 
+        (error)="onAvatarError($event)"
+        class="rounded-circle me-2 mr-1" 
+        width="32" 
+        height="32"
+      />
+      <div class="cell-line-height" >
+        <div class="font-medium-1 name-wrapper" style="font-size: 13px !important;">
+          <span class="font-weight-bold">{{ item.full_name || 'Chưa có' }}</span>
+          <span class="username-separator" *ngIf="item.user_name">&nbsp; - &nbsp;</span>
+          <span class="username-text" *ngIf="item.user_name">{{ item.user_name }}</span>
+        </div>
+        <div class="text-muted font-small-2 ellipsis" [title]="item.email">
+          <i class="fa fa-envelope text-icon"></i>
+          {{ item.email }}
+        </div>
+  
+      </div>
+    </div>
+  </ng-template>
+  
+  
+    <!-- Selected label template -->
+    <ng-template ng-label-tmp let-item="item" let-clear="clear">
+      <div class="selected-user" style="min-width: 270px;">
+        <img *ngIf="item.avatar_url" [src]="item.avatar_url" width="24" height="24" class="rounded-circle"/>
+        <span style="font-size: 13px;">
+          {{ displayFullname ? (item.user_name + (item.full_name ? ' - ' + item.full_name : '')) : item.user_name }}
+        </span>
+        <span class="ng-value-icon right" (click)="clear(item)">×</span>
+      </div>
+    </ng-template>
+  </ng-select>
+  </div>

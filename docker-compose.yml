@@ -1,0 +1,91 @@
+services:
+  # ==========================================
+  # 1. INFRASTRUCTURE SERVICES
+  # ==========================================
+  greenlab-mongodb:
+    image: mongo:7
+    container_name: greenlab-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: greenlab
+    networks:
+      - greenlab-network
+
+  greenlab-mysql:
+    image: mysql:8.0
+    container_name: greenlab-mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: greenlab
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 552502102
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - greenlab-network
+
+  greenlab-redis:
+    image: redis:7-alpine
+    container_name: greenlab-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --requirepass NLoga41_1ABCCC123
+    networks:
+      - greenlab-network
+
+  # ==========================================
+  # 2. BACKEND SERVICE (Java)
+  # ==========================================
+  greenlab-admin-api:
+    build:
+      context: ./Be
+      dockerfile: docker.yml
+    container_name: greenlab-admin-api
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+    networks:
+      - greenlab-network
+    depends_on:
+      - greenlab-mongodb
+      - greenlab-mysql
+      - greenlab-redis
+
+  # ==========================================
+  # 3. FRONTEND SERVICE (Angular)
+  # ==========================================
+  greenlab-admin-web:
+    build: 
+      context: ./Fe/project-web-base
+      dockerfile: Dockerfile
+    container_name: greenlab-admin-web
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    networks:
+      - greenlab-network
+
+# ==========================================
+# VOLUMES & NETWORKS CONFIGURATION
+# ==========================================
+volumes:
+  mongo_data:
+  mysql_data:
+  redis_data:
+
+networks:
+  greenlab-network:
+    driver: bridge

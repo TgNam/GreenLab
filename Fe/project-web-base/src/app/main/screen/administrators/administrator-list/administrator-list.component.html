@@ -1,0 +1,319 @@
+
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{ 
+      headerTitle: 'ADMINISTRATOR.TITLE' | translate, 
+      actionButton: false, 
+      breadcrumb: { 
+        links: [
+          { name: 'COMMON.HOME' | translate, isLink: true, link: '/' }, 
+          { name: 'ADMINISTRATOR.TITLE' | translate, isLink: false }
+        ] 
+      } 
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter [showAdvanced]="showAdvancedSearch" (toggleAdvanced)="toggleAdvancedSearch()"
+          style="width: 100% !important;">
+          <!-- Tất cả filters - chỉ viết một lần, TypeScript sẽ tự động di chuyển các input có advanced-filter -->
+          <div basic-filters class="row g-2 w-100">
+            <!-- Basic filters - luôn hiển thị -->
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'COMMON.EMPLOYEE_ID' | translate" type="text" [(model)]="id"
+                [max]="100" (modelChange)="filterUpdate($event, 'id')" (onEnter)="fetchPage()">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'COMMON.USERNAME' | translate" type="text" [(model)]="username"
+                [max]="100" (modelChange)="filterUpdate($event, 'username')" (onEnter)="fetchPage()">
+              </app-form-input>
+            </div>
+
+            <!-- Advanced filters - sẽ tự động di chuyển vào advanced-filters trên mobile -->
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.EMPLOYEE_NAME_OR_EMAIL' | translate" type="text" [(model)]="name"
+                [max]="100" (modelChange)="filterUpdate($event, 'name')" (onEnter)="fetchPage()">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.PHONE' | translate" type="text" [(model)]="phone"
+                [max]="10" [min]="10" (modelChange)="filterUpdate($event, 'phone')" (onEnter)="fetchPage()">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.STATUS' | translate" type="select-search" [(model)]="isActive"
+                (modelChange)="filterUpdate($event, 'status')" [options]="statusOptions" optionLabel="label"
+                optionValue="value">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <label class="form-label fw-semibold">
+                {{'ADMINISTRATOR.MANAGER' | translate}}
+              </label>
+              <app-user-autocomplete [searchFunction]="searchUsers" [(searchText)]="searchTextAutocomplete"
+                [onSelect]="onUserSelected" [placeholder]="'COMMON.MANAGER_PLACEHOLDER' | translate">
+              </app-user-autocomplete>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.DEPARTMENT' | translate" type="select-search" [options]="departments"
+                [searchText]="searchDepartment" optionLabel="name" optionValue="id" [(model)]="selectedDeparment"
+                [placeholder]="'COMMON.DEPARTMENT_PLACEHOLDER' | translate">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.WORK_AREA' | translate" type="select-search"
+                [searchText]="searchWorkArea" [options]="workAreas" [(model)]="selectedWorkArea"
+                [placeholder]="'COMMON.WORK_AREA_PLACEHOLDER' | translate">
+              </app-form-input>
+            </div>
+
+            <!-- <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.AREA' | translate" type="select-search"
+                [searchText]="searchArea" [options]="areas" [(model)]="selectedArea"
+                [placeholder]="'COMMON.AREA_PLACEHOLDER' | translate">
+              </app-form-input>
+            </div> -->
+          </div>
+
+          <!-- Action buttons -->
+
+        </app-advanced-search-filter>
+
+
+        <div class="action-buttons">
+
+          <app-button [text]="'COMMON.SEARCH' | translate" type="primary" [buttonClass]="'btn-sm btn-center'"
+            [loading]="isSearching" icon="fa fa-search" (clickBtn)="fetchPage()" [title]="'COMMON.SEARCH' | translate">
+          </app-button>
+
+          <button class="btn btn-sm btn-center btn-outline-secondary waves-effect waves-float waves-light"
+            (click)="resetFilters()" [title]="'COMMON.RESET' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-refresh"></i>
+            </div>
+            <div class="btn-text">
+              {{'COMMON.RESET' | translate}}
+            </div>
+          </button>
+
+          <button class="btn btn-center btn-sm btn-primary waves-effect waves-float waves-light"
+            (click)="openModalCreate()" [title]="'ADMINISTRATOR.CREATE' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-plus"></i>
+            </div>
+            <div class="btn-text">
+              {{'ADMINISTRATOR.CREATE' | translate}}
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card card-body" style="padding: 0px !important;">
+
+      <ng-template #idTemplate let-row="row">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold" style="margin-right: 3px;">{{ row.id }}</span>
+          <app-copy-button [textToCopy]="row.id" [title]="'Copy'" [icon]="'fa-copy'"></app-copy-button>
+        </div>
+        <div class="info-line " [title]="'COMMON.CREATED_TIME' | translate">
+          <strong class="text-muted font-small-2">{{ row.create_time | date:'HH:mm dd/MM/yyyy' }}</strong>
+        </div>
+        <div class="info-line " *ngIf="row.last_login_ip" [title]="'COMMON.LAST_LOGIN_IP' | translate">
+          <strong class="text-muted font-small-2">IP: {{ row.last_login_ip }}</strong>
+        </div>
+      </ng-template>
+
+      <ng-template #employeeTemplate let-row="row">
+
+        <div class="d-flex align-items-center employee-cell-container">
+          <div class="avatar mr-1 ml-0 bg-light-secondary flex-shrink-0">
+            <div class="avatar-content" style="width: 48px; height: 48px;">
+              <app-image-preview [src]="row.photo | ossThumbnail:48:48"
+                [defaultSrc]="'assets/images/avatars/avatar-default.png'" [fullSrc]="row.photo"
+                [alt]="'COMMON.AVATAR' | translate" [width]="48" [height]="48">
+              </app-image-preview>
+            </div>
+          </div>
+          <div class="cell-line-height flex-grow-1" style="min-width: 0; overflow: hidden;">
+            <div class="font-medium-1 name-wrapper" style="overflow: hidden; width: 100%;">
+              <div class="font-weight-bold employee-name" [title]="row.full_name">{{ row.full_name || 'Chưa có' }}</div>
+              <div class="badge badge-pill badge-light-primary employee-badge" style="margin-left: 5px;"
+                *ngIf="row.user_name" [title]="row.user_name">{{ row.user_name }}</div>
+            </div>
+
+            <div class="text-muted font-small-2 ellipsis" [title]="row.email">
+              <i class="fa fa-envelope text-icon"></i>
+              {{ row.email }}
+            </div>
+
+            <div class="text-muted font-small-2 underline-hover ellipsis">
+              <i class="fa fa-phone text-icon"></i>
+              <a style="color: unset;" href="tel:{{ row.phone }}" [title]="row.phone">&nbsp;{{ row.phone }}</a>
+            </div>
+
+            <div *ngIf="row.start_barcode" class="text-muted font-small-2" [title]="'COMMON.START_BARCODE' | translate">
+              <i class="fa fa-barcode text-icon"></i>
+              {{ row.start_barcode }}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #otherInfoTemplate let-row="row">
+        <div class="d-flex align-items-center flex-wrap">
+          <span>{{'COMMON.POSITION1' | translate}}:&nbsp;</span>
+          <strong class="ms-1 text-ellipsis flex-shrink-1">{{ row.position_name || 'Chưa có' }}</strong>
+        </div>
+        <div class="d-flex align-items-center flex-wrap">
+          <span>{{'COMMON.DEPARTMENT' | translate}}:&nbsp;</span>
+          <strong class="ms-1 text-ellipsis flex-shrink-1">{{ row.department_name || 'Chưa có' }}</strong>
+        </div>
+        <div class="d-flex align-items-center flex-wrap">
+          <span>{{'COMMON.WORK_AREA' | translate}}:&nbsp;</span>
+          <strong class="ms-1 text-ellipsis flex-shrink-1">{{ row.work_area_name || 'Chưa có' }}</strong>
+        </div>
+        <div class="d-flex align-items-cente flex-wrapr">
+          <span>{{'COMMON.MANAGER_INFO' | translate}}:&nbsp;</span>
+          <strong [title]="row.manager_username" class="ms-1 text-ellipsis flex-shrink-1">{{ row.manager_username|| 'Chưa có'
+            }}</strong>
+        </div>
+        <div class="d-flex align-items-center flex-wrap">
+          <span><span>{{'COMMON.UPDATED_TIME' | translate}}:&nbsp;</span>
+          <strong [title]="row.manager_username" class="ms-1 text-ellipsis flex-shrink-1">{{ row.update_time | date:'HH:mm dd/MM/yyyy'
+            }}</strong></span>
+        </div>
+      </ng-template>
+
+
+
+      <ng-template #statusTemplate let-row="row">
+        <!-- <span class="badge" [ngClass]="row.status === 1 ? 'badge-light-success' : 'badge-light-secondary'">
+            {{ row.status === 1 ? 'Hoạt động' : 'Ngừng hoạt động' }}
+          </span> -->
+        <div class="badge badge-pill" [ngClass]="{
+                  'badge-light-primary': row.status == true,
+                  'badge-light-danger': row.status == false
+                }">
+          {{ (row.status ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}
+        </div>
+
+        <!-- <app-switch [title]="'COMMON.STATUS' | translate" [checked]="row.status" [isChange]="false"
+            (onToggle)="openModalChangeStatus(row)">
+          </app-switch> -->
+        <!-- <app-switch [title]="'COMMON.STATUS' | translate" [checked]="row.status === 1" [isChange]="false"
+            (onToggle)="openModalChangeStatus(row)">
+          </app-switch> -->
+      </ng-template>
+
+      <ng-template #actionTemplate let-row="row">
+    
+        <div class="action-buttons-row">
+          <button (click)="openModal(row, 'edit')"
+            class="btn btn-sm btn-primary waves-effect waves-float btn-center waves-light"
+            [title]="'ADMINISTRATOR.UPDATE' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-edit"></i>
+            </div>
+            <div class="">
+              {{'ADMINISTRATOR.UPDATE' | translate}}
+            </div>
+          </button>
+
+          <button
+            (click)="isAssignModalVisible = true; selectedEmployeeId = row.id; selectedEmployeeName = row.user_name"
+            *ngIf="row.status === 1" class="btn btn-sm btn-primary btn-center waves-effect waves-float waves-light"
+            [title]="'ADMINISTRATOR.ASSIGN_ROLE' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-random"></i>
+            </div>
+            <div class="">
+              {{'ADMINISTRATOR.ASSIGN_ROLE' | translate}}
+            </div>
+          </button>
+
+          <!-- add a 3 dots menu -->
+          <div *ngIf="row.status === 1" ngbDropdown class="btn-group" container="body">
+            <button class="btn btn-sm btn-primary waves-effect waves-float waves-light" ngbDropdownToggle>
+              <span class="btn-icon-icon" style="margin-right: -5px;">
+                <i class="fa fa-ellipsis-v"></i>
+              </span>
+            </button>
+            <div ngbDropdownMenu>
+              <button class="dropdown-item" style="width: 100%;" *ngIf="row.status === 1"
+                (click)="isAssignModalCanSetVisible = true; selectedEmployeeCanSetId = row.id; selectedEmployeeCanSetName = row.user_name">
+                {{'ADMINISTRATOR.ASSIGN_ROLE_CAN_SET' | translate}}
+              </button>
+              <button class="dropdown-item" style="width: 100%;" *ngIf="row.status === 1"
+                (click)="showModalChooseManager = true; selectedChooseManagerId = row.id">
+                {{'ADMINISTRATOR.CHOOSE_MANAGER' | translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- <a *ngIf="row.status === 1"
+            (click)="isAssignModalCanSetVisible = true; selectedEmployeeCanSetId = row.id; selectedEmployeeCanSetName = row.user_name"
+            class="btn btn-sm btn-primary mr-1  mb-1" [title]="'ADMINISTRATOR.ASSIGN_ROLE_CAN_SET' | translate">
+            <i [ngClass]="'fa fa-address-book'"></i>
+            {{'ADMINISTRATOR.ASSIGN_ROLE_CAN_SET' | translate}}
+          </a>
+
+          <a (click)="showModalChooseManager = true; selectedChooseManagerId = row.id"
+            class="btn btn-sm btn-primary mr-1  mb-1" [title]="'ADMINISTRATOR.CHOOSE_MANAGER' | translate">
+            <i [ngClass]="'fa fa-user-circle'"></i>
+            {{'ADMINISTRATOR.CHOOSE_MANAGER' | translate}}
+          </a> -->
+      </ng-template>
+      <app-dynamic-table (timeTypeChange)="onTimeTypeChange($event)" [columns]="columns" [timeType]="timeType"
+        (timeFromChange)="createdFrom = $event" (timeToChange)="createdTo = $event" [timeOpts]="timeOpts"
+        [timeFrom]="createdFrom" [timeTo]="createdTo" [total]="total" [sizeOptions]="sizeOptions" [page]="page"
+        [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows" [detachMode]="true"
+        [onPageSizeChange]="onPageSizeChange.bind(this)" *ngIf="rows" [totalCnt]="total" [totalPage]="totalPage">
+
+      </app-dynamic-table>
+
+    </div>
+    <!-- 
+      <div class="card-footer d-flex justify-content-end">
+        <ngb-pagination [collectionSize]="total" [(page)]="page" [pageSize]="selectedOption" [maxSize]="5"
+          [rotate]="true" [ellipses]="false" [boundaryLinks]="true" (pageChange)="onPageChange($event)">
+        </ngb-pagination>
+      </div> -->
+  </div>
+</div>
+
+<app-administrator-detail [visible]="showModal" [updating]="updating" [mode]="modalMode" [admin]="selectedAdmin" [positions]="positions"
+  (close)="closeModal()" (save)="saveAdmin($event)">
+</app-administrator-detail>
+
+<app-administrator-change-status [chaging]="chaging" [visible]="showModalChangeStatus"
+  [admin]="selectedAdminChangeStatus" (close)="closeModalChangeStatus()" (save)="changeStatus($event)">
+</app-administrator-change-status>
+
+<app-administrator-choose-manager *ngIf="showModalChooseManager" [visible]="showModalChooseManager"
+  [selectedAdminId]="selectedChooseManagerId" (close)="showModalChooseManager = false"
+  (save)="saveManager($event.selectedUser, $event.selectedAdminId)">
+</app-administrator-choose-manager>
+
+<app-administrator-create [creating]="creating" [positions]="positions" [visible]="showModalCreate" (close)="closeModalCreate()"
+  (save)="create($event)">
+</app-administrator-create>
+
+<app-administrator-assign-role *ngIf="isAssignModalVisible" [positions]="positions" [visible]="isAssignModalVisible"
+  [employeeId]="selectedEmployeeId" [employeeName]="selectedEmployeeName" (close)="onAssignModalClose()"
+  (save)="onAssignRoleSave($event)">
+</app-administrator-assign-role>
+
+<app-administrator-assign-role-can-set *ngIf="isAssignModalCanSetVisible" [visible]="isAssignModalCanSetVisible"
+  [employeeId]="selectedEmployeeCanSetId" [employeeName]="selectedEmployeeCanSetName"
+  (close)="onAssignModalCanSetClose()" (save)="onAssignRoleCanSetSave($event)">
+</app-administrator-assign-role-can-set>

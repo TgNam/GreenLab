@@ -1,0 +1,221 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{
+      headerTitle: 'Quản lý phòng ban',
+      actionButton: false,
+      breadcrumb: {
+        links: [
+          { name: 'Trang chủ', isLink: true, link: '/' },
+          { name: 'Quản lý phòng ban', isLink: false }
+        ]
+      }
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter class="advanced-search-full-width" [showAdvanced]="showAdvancedSearch"
+          (toggleAdvanced)="toggleAdvancedSearch()">
+          <div basic-filters class="row g-2 w-100">
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Tên phòng ban'" type="text" [(model)]="searchValue" (onEnter)="fetchPage()"
+                (modelChange)="filterUpdate($event, 'name')" [size]="'form-control-sm'"
+                [placeholder]="'Tìm kiếm theo tên...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Tên viết tắt'" type="text" [(model)]="searchShortName" (onEnter)="fetchPage()"
+                (modelChange)="filterUpdate($event, 'shortName')" [size]="'form-control-sm'"
+                [placeholder]="'Tìm kiếm theo tên viết tắt...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Thời gian từ'" type="date2" [(model)]="createdFrom"
+                (modelChange)="filterUpdate($event, 'from_time')" [size]="'form-control-sm'"
+                [placeholder]="'Chọn thời gian từ'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Thời gian đến'" type="date2" [(model)]="createdTo"
+                (modelChange)="filterUpdate($event, 'to_time')" [size]="'form-control-sm'"
+                [placeholder]="'Chọn thời gian đến'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Trạng thái'" type="select-search" [(model)]="selectedStatus"
+                (modelChange)="filterUpdate($event, 'status')" [options]="statusOptions" optionLabel="label"
+                optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn trạng thái...'">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+
+        <div class="action-buttons">
+          <app-button [text]="'Tìm kiếm'" type="primary" [buttonClass]="'btn-sm btn-center'" [loading]="isSearching"
+            icon="fa fa-search" (clickBtn)="fetchPage()" [title]="'Tìm kiếm'">
+          </app-button>
+
+          <button class="btn btn-sm btn-center btn-outline-secondary waves-effect waves-float waves-light"
+            (click)="resetFilters()" [title]="'Đặt lại bộ lọc'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-refresh"></i>
+            </div>
+            <div class="btn-text">Làm mới</div>
+          </button>
+
+          <button class="btn btn-center btn-sm btn-primary waves-effect waves-float waves-light"
+            (click)="openModalCreate()" [title]="'Tạo phòng ban mới'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-plus"></i>
+            </div>
+            <div class="btn-text">Tạo phòng ban</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-body no-padding-card-body">
+
+      <ng-template #nameTemplate let-row="row">
+        <div class="fw-bold">{{ row.name }}</div>
+      </ng-template>
+
+      <ng-template #shortNameTemplate let-row="row">
+        <span class="badge badge-light-secondary">
+          {{ row.short_name }}
+        </span>
+      </ng-template>
+
+      <ng-template #statusTemplate let-row="row">
+        <span class="badge badge-pill" [ngClass]="{
+          'badge-light-success': row.status === 1,
+          'badge-light-danger': row.status === 0
+        }">
+          {{ getStatusLabel(row.status) }}
+        </span>
+      </ng-template>
+
+      <ng-template #createTimeTemplate let-row="row">
+        <div class="time-column">
+          <div class="time-item">
+            <span class="time-label">Tạo:</span>
+            <span class="time-value">{{ row.create_time ? (row.create_time | date:'HH:mm dd/MM/yyyy') : '-' }}</span>
+          </div>
+          <div class="time-item">
+            <span class="time-label">Cập nhật:</span>
+            <span class="time-value">{{ row.update_time ? (row.update_time | date:'HH:mm dd/MM/yyyy') : '-' }}</span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #actionTemplate let-row="row">
+        <div class="action-buttons-row">
+          <button (click)="viewDepartment(row)"
+            class="btn btn-sm btn-outline-info waves-effect waves-float btn-center waves-light" [title]="'Xem'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-eye"></i>
+            </div>
+            <div>Xem</div>
+          </button>
+          <button (click)="editDepartment(row)"
+            class="btn btn-sm btn-primary waves-effect waves-float btn-center waves-light" [title]="'Sửa'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-edit"></i>
+            </div>
+            <div>Sửa</div>
+          </button>
+        </div>
+      </ng-template>
+
+      <app-dynamic-table [columns]="columns" [hideTime]="true" [total]="total" [sizeOptions]="sizeOptions"
+        [page]="page" [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows"
+        [onPageSizeChange]="onPageSizeChange.bind(this)" [totalCnt]="total" [totalPage]="totalPage"
+        [size]="'form-control-sm'">
+      </app-dynamic-table>
+    </div>
+  </div>
+</div>
+
+<app-modal-content [visible]="showModal" [size]="'lg'"
+  [title]="modalMode === 'view' ? 'Xem phòng ban' : 'Chỉnh sửa phòng ban'" [hideSave]="modalMode === 'view'"
+  [saveButtonText]="modalMode === 'edit' ? 'Lưu thay đổi' : ''" [closeButtonText]="'Đóng'"
+  [disableSave]="modalMode === 'view' || !selectedDepartment?.name?.trim() || !selectedDepartment?.short_name?.trim()"
+  (onSave)="saveDepartment()" [loading]="updating" (onClose)="closeModal()">
+  <div class="modal-body" *ngIf="selectedDepartment">
+    <div *ngIf="modalMode === 'view'">
+      <div class="row mb-2">
+        <div class="col-md-6"><strong>Tên phòng ban:</strong> {{ selectedDepartment.name }}</div>
+        <div class="col-md-6"><strong>Tên viết tắt:</strong> {{ selectedDepartment.short_name }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md-6"><strong>Trạng thái:</strong> {{ getStatusLabel(selectedDepartment.status) }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="modalMode === 'edit'">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <app-form-input [label]="'Tên phòng ban'" type="text" [max]="255" [(model)]="selectedDepartment.name"
+              labelType="required" [size]="'form-control-sm'">
+            </app-form-input>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <app-form-input [label]="'Tên viết tắt'" type="text" [max]="50" [(model)]="selectedDepartment.short_name"
+              labelType="required" [size]="'form-control-sm'">
+            </app-form-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <app-form-input [label]="'Trạng thái'" type="select" [options]="statusOptions" optionLabel="label"
+              optionValue="value" [(model)]="selectedDepartment.status" labelType="required" [size]="'form-control-sm'">
+            </app-form-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-modal-content [visible]="showCreateModal" [size]="'lg'" [title]="'Tạo phòng ban mới'" [saveButtonText]="'Tạo phòng ban'"
+  [closeButtonText]="'Hủy'"
+  [disableSave]="!newDepartment?.name?.trim() || !newDepartment?.short_name?.trim()"
+  (onSave)="createDepartment()" [loading]="creating" (onClose)="closeModalCreate()">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-2">
+          <app-form-input [label]="'Tên phòng ban'" type="text" [max]="255" [(model)]="newDepartment.name"
+            labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-2">
+          <app-form-input [label]="'Tên viết tắt'" type="text" [max]="50" [(model)]="newDepartment.short_name"
+            labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-2">
+          <app-form-input [label]="'Trạng thái'" type="select" [options]="statusOptions" optionLabel="label"
+            optionValue="value" [(model)]="newDepartment.status" labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-modal-content>

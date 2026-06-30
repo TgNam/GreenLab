@@ -1,0 +1,124 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{
+      headerTitle: 'Quản lý người dùng',
+      actionButton: false,
+      breadcrumb: {
+        links: [
+          { name: 'Trang chủ', isLink: true, link: '/' },
+          { name: 'Quản lý người dùng', isLink: false }
+        ]
+      }
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter class="advanced-search-full-width" [showAdvanced]="showAdvancedSearch"
+          (toggleAdvanced)="toggleAdvancedSearch()">
+          <div basic-filters class="row g-2 w-100">
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Từ khóa'" type="text" [(model)]="searchValue" (onEnter)="fetchPage()"
+                (modelChange)="filterUpdate($event, 'keyword')" [size]="'form-control-sm'"
+                [placeholder]="'Từ khóa, email, họ tên, SĐT...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Trạng thái'" type="select-search" [(model)]="selectedIsActive"
+                (modelChange)="filterUpdate($event, 'isActive')" [options]="isActiveOptions" optionLabel="label"
+                optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn trạng thái...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Loại user'" type="number" [(model)]="selectedType"
+                (modelChange)="filterUpdate($event, 'type')" [size]="'form-control-sm'"
+                [placeholder]="'Nhập loại user...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Nguồn đăng ký'" type="number" [(model)]="selectedRegSource"
+                (modelChange)="filterUpdate($event, 'regSource')" [size]="'form-control-sm'"
+                [placeholder]="'Nhập nguồn đăng ký...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Thời gian từ'" type="date2" [(model)]="createdFrom"
+                (modelChange)="filterUpdate($event, 'from_time')" [size]="'form-control-sm'"
+                [placeholder]="'Chọn thời gian từ'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Thời gian đến'" type="date2" [(model)]="createdTo"
+                (modelChange)="filterUpdate($event, 'to_time')" [size]="'form-control-sm'"
+                [placeholder]="'Chọn thời gian đến'">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+
+        <div class="action-buttons">
+          <app-button [text]="'Tìm kiếm'" type="primary" [buttonClass]="'btn-sm btn-center'" [loading]="isSearching"
+            icon="fa fa-search" (clickBtn)="fetchPage()" [title]="'Tìm kiếm'">
+          </app-button>
+
+          <button class="btn btn-sm btn-center btn-outline-secondary waves-effect waves-float waves-light"
+            (click)="resetFilters()" [title]="'Đặt lại bộ lọc'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-refresh"></i>
+            </div>
+            <div class="btn-text">Làm mới</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-body no-padding-card-body">
+
+      <ng-template #statusTemplate let-row="row">
+        <span class="badge badge-pill" [ngClass]="{
+          'badge-light-success': row.status === true,
+          'badge-light-danger': row.status === false
+        }">
+          {{ getStatusLabel(row.status) }}
+        </span>
+      </ng-template>
+
+      <ng-template #createTimeTemplate let-row="row">
+        <div class="time-column">
+          <div class="time-item">
+            <span class="time-label">Tạo:</span>
+            <span class="time-value">{{ row.createTime ? (row.createTime | date:'HH:mm dd/MM/yyyy') : '-' }}</span>
+          </div>
+          <div class="time-item">
+            <span class="time-label">Cập nhật:</span>
+            <span class="time-value">{{ row.updateTime ? (row.updateTime | date:'HH:mm dd/MM/yyyy') : '-' }}</span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #actionTemplate let-row="row">
+        <div class="action-buttons-row">
+          <button (click)="openDetail(row.id)"
+            class="btn btn-sm btn-primary waves-effect waves-float btn-center waves-light" [title]="'Chi tiết'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-eye"></i>
+            </div>
+            <div>Chi tiết</div>
+          </button>
+        </div>
+      </ng-template>
+
+      <app-dynamic-table [columns]="columns" [hideTime]="true" [total]="total" [sizeOptions]="sizeOptions"
+        [page]="page" [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows"
+        [onPageSizeChange]="onPageSizeChange.bind(this)" [totalCnt]="total" [totalPage]="totalPage"
+        [size]="'form-control-sm'">
+      </app-dynamic-table>
+    </div>
+  </div>
+</div>

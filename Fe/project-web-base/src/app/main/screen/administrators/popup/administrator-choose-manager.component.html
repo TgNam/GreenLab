@@ -1,0 +1,41 @@
+<app-modal-content [visible]="visible" [size]="'ssm'" [title]="'ADMINISTRATOR.CHOOSE_MANAGER' | translate"
+    [saveButtonText]="'COMMON.SAVE' | translate" [loading]="chosing" [closeButtonText]="'COMMON.CLOSE' | translate"
+    [disableSave]="selectedUser === null" (onSave)="onSave()" (onClose)="onClose()">
+
+
+    <div class="row g-2 align-items-end" style="padding: 0.8rem 1.4rem; padding-right: 6px;">
+        <div style="height: 200px; min-width: 200px !important;">
+            <label class="form-label fw-semibold mb-1">{{ 'COMMON.CHOOSE_MANAGER' | translate }}:</label>
+            <div style="display: flex; " class="mb-1">
+                <div style="width: 100% !important;">
+                    <app-user-autocomplete style="min-width: 270px !important;" [minWidth]="'270px'"
+                        [searchFunction]="searchUsers" [(searchText)]="searchTextAutocomplete"
+                        [onSelect]="onUserSelected" [placeholder]="'COMMON.SEARCH' | translate">
+                    </app-user-autocomplete>
+                </div>
+            </div>
+            <div *ngIf="selectedUser" class="mt-2 p-2 border rounded shadow-sm selected-user-card">
+                <div class="cell-line-height">
+                    <div class="font-medium-1 name-wrapper">
+                        <div class="font-weight-bold selected-user-name" [title]="selectedUser.full_name">{{
+                            selectedUser?.full_name || 'Chưa có' }}</div>
+                        <div class="badge badge-pill badge-light-primary selected-user-badge"
+                            *ngIf="selectedUser.user_name" [title]="'COMMON.USERNAME' | translate">{{
+                            selectedUser?.user_name }}</div>
+                    </div>
+
+                    <div class="selected-user-email" [title]="selectedUser.email">
+                        <i class="fa fa-envelope text-icon"></i>
+                        {{ selectedUser?.email }}
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+   
+</app-modal-content>

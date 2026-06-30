@@ -1,0 +1,4 @@
+<div class="loading-bar" *ngIf="isLoading | async">
+  <div class="spinner"></div>
+  <div class="progress" [style.width.%]="progress$ | async"></div>
+</div>

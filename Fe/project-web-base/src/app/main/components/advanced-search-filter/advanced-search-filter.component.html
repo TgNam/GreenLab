@@ -1,0 +1,36 @@
+<div class="advanced-search-filter">
+  <!-- Basic filters - chứa tất cả input, TypeScript sẽ tự động di chuyển advanced-filter elements -->
+  <div #basicFilters class="basic-filters">
+    <ng-content select="[basic-filters]"></ng-content>
+  </div>
+
+  <!-- Advanced filters toggle button - only on mobile -->
+  
+
+  <!-- Advanced filters - collapsible on mobile, always visible on desktop -->
+  <!-- TypeScript sẽ tự động di chuyển các elements có attribute advanced-filter vào đây trên mobile -->
+  <div 
+    #advancedFilters
+    class="advanced-filters" 
+    [class.show]="showAdvanced || !isMobile"
+    [class.collapsed]="!showAdvanced && isMobile"
+    [style.display]="hasAdvancedFilters ? '' : 'none'">
+    <!-- Row container để chứa các elements được di chuyển vào -->
+    <div class="row g-2 w-100"></div>
+  </div>
+  <div class="advanced-toggle-wrapper" *ngIf="isMobile && hasAdvancedFilters">
+    <button 
+      type="button" 
+      class="btn btn-flat-primary"
+      (click)="onToggleAdvanced()"
+      [class.active]="showAdvanced">
+      <i class="fa" [ngClass]="showAdvanced ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      &nbsp;
+      <span *ngIf="!showAdvanced">{{ 'COMMON.EXPANDED' | translate }}</span>
+      <span *ngIf="showAdvanced">{{ 'COMMON.HIDE' | translate }}</span>
+    </button>
+  </div>
+
+ 
+</div>
+

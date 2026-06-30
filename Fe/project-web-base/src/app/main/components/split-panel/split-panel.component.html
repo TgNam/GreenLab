@@ -1,0 +1,37 @@
+<div class="split-panel-container" #container>
+  <!-- Mobile toggle buttons -->
+  <div class="mobile-panel-toggle" *ngIf="isMobile()">
+    <button 
+      class="btn btn-sm btn-outline-primary toggle-btn"
+      [class.active]="leftPanelExpanded"
+      (click)="toggleLeftPanel()">
+      <i class="fa me-1" [ngClass]="leftPanelExpanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      <i class="fa fa-list me-1"></i>
+      DS loại mẫu
+    </button>
+    <button 
+      class="btn btn-sm btn-outline-primary toggle-btn"
+      [class.active]="rightPanelExpanded"
+      (click)="toggleRightPanel()">
+      <i class="fa me-1" [ngClass]="rightPanelExpanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      <i class="fa fa-info-circle me-1"></i>
+      DS xét nghiệm
+    </button>
+  </div>
+  
+  <div class="split-panel-left" #leftPanel [class.mobile-collapsed]="isMobile() && !leftPanelExpanded">
+    <ng-content select="[leftPanel]"></ng-content>
+  </div>
+  
+  <div 
+    class="split-panel-divider" 
+    #divider
+    (mousedown)="onDividerMouseDown($event)"
+    [class.hidden]="isMobile()">
+  </div>
+  
+  <div class="split-panel-right" #rightPanel [class.mobile-collapsed]="isMobile() && !rightPanelExpanded">
+    <ng-content select="[rightPanel]"></ng-content>
+  </div>
+</div>
+

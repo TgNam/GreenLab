@@ -1,0 +1,126 @@
+.page-count {
+    display: none !important;
+  }
+
+  .config-info-wrapper {
+    padding: 8px 0;
+  }
+
+  .config-icon-wrapper {
+    flex-shrink: 0;
+    margin-right: 12px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 2px;
+  }
+
+  .config-icon {
+    font-size: 24px;
+    color: #6c757d;
+    width: 24px;
+    height: 24px;
+  }
+
+  .config-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .config-title {
+    margin-bottom: 6px;
+  }
+
+  .config-title strong {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212529;
+    line-height: 1.4;
+  }
+
+  .config-description {
+    font-size: 13px;
+    color: #6c757d;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+
+  .config-metadata {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    font-size: 12px;
+    color: #6c757d;
+  }
+
+  .metadata-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .metadata-item i {
+    font-size: 13px;
+    width: 14px;
+    text-align: center;
+  }
+
+  .employee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  .info-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .info-line strong {
+    font-weight: 600;
+    margin-right: 2px;
+  }
+
+ 
+ 
+
+  .text-ellipsis {
+    display: inline-block;
+    max-width: 300px !important;
+    /* hoặc theo nhu cầu */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+  }
+
+  /* Đảm bảo scrollbar hiển thị cho ng-select trong form-input */
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host {
+    overflow-y: auto !important;
+    max-height: 300px !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+    display: block !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 3px !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 3px !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5) !important;
+  }

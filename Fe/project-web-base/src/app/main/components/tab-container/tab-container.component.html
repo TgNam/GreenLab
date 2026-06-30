@@ -1,0 +1,21 @@
+<div class="tab-container">
+  <div class="card-header" style="padding-left: 0px; padding-bottom: 0px;padding-top: 0px; background-color: unset;border-bottom: 0;">
+    <ul class="nav nav-tabs" role="tablist" style="margin-bottom: 0; padding-left: 0;">
+      <li class="nav-item" *ngFor="let tab of tabs">
+        <a 
+          class="nav-link" 
+          [class.active]="isActive(tab.id)"
+          [class.disabled]="tab.disabled"
+          (click)="onTabClickHandler(tab.id, tab.disabled)"
+          role="tab">
+          <i *ngIf="tab.icon" [class]="tab.icon + ' me-1'"></i>
+          {{ tab.label }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</div>
+

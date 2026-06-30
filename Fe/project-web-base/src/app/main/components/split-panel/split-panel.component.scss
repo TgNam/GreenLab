@@ -1,0 +1,187 @@
+.split-panel-container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  align-items: stretch; // Ensure all children have same height
+}
+
+.split-panel-left,
+.split-panel-right {
+  overflow: hidden; // Prevent outer scroll
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch; // Match height with divider
+  
+  // Ensure content inside can scroll
+  > * {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    // Custom scrollbar styling - thinner and more elegant
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c0c0c0;
+      border-radius: 3px;
+      transition: background 0.2s ease;
+      
+      &:hover {
+        background: #999;
+      }
+    }
+  }
+}
+
+.split-panel-left {
+  flex-shrink: 0;
+}
+
+.split-panel-right {
+  flex-shrink: 0;
+}
+
+.split-panel-divider {
+  width: 4px;
+  flex-shrink: 0;
+  background-color: #e8e8e8;
+  cursor: col-resize;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  align-self: stretch; // Match height of panels
+  user-select: none; // Prevent text selection when dragging
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
+  &:hover {
+    background-color: var(--primary, var(--bs-primary, #36803e));
+    width: 6px;
+    transition: background-color 0.2s ease, width 0.2s ease;
+  }
+  
+  &:not(:hover) {
+    transition: background-color 0.2s ease, width 0.2s ease;
+  }
+  
+  &.hidden {
+    display: none;
+  }
+  
+  .divider-handle {
+    width: 2px;
+    height: 50px;
+    background-color: #c0c0c0;
+    border-radius: 1px;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+  }
+  
+  &:hover .divider-handle {
+    background-color: #fff;
+    opacity: 1;
+  }
+}
+
+// Mobile toggle buttons
+.mobile-panel-toggle {
+  display: none;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  
+  .toggle-btn {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    
+    &.active {
+      background-color: var(--primary, #36803e);
+      color: white;
+      border-color: var(--primary, #36803e);
+    }
+    
+    &:not(.active) {
+      background-color: white;
+      color: var(--primary, #36803e);
+      border-color: var(--primary, #36803e);
+      opacity: 0.6;
+      
+      &:hover {
+        background-color: rgba(var(--primary-rgb, 54, 128, 62), 0.1);
+        opacity: 1;
+      }
+    }
+    
+    .badge {
+      margin-left: 0.25rem;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+    }
+  }
+}
+
+// Mobile and Tablet: show only active panel (iPad 820x1180 and below)
+@media (max-width: 1399px) {
+  .mobile-panel-toggle {
+    display: flex;
+  }
+  
+  .split-panel-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .split-panel-left,
+  .split-panel-right {
+    width: 100% !important;
+    min-height: 400px;
+    max-height: calc(100vh - 200px);
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
+    
+    &.mobile-collapsed {
+      display: none !important;
+    }
+  }
+  
+  .split-panel-divider {
+    display: none;
+  }
+}
+
+// Prevent text selection while resizing
+body.resizing {
+  user-select: none;
+  cursor: col-resize !important;
+  
+  * {
+    cursor: col-resize !important;
+  }
+}
+

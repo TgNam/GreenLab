@@ -1,0 +1,13 @@
+<button
+  type="button"
+  class="floating-print-actions-bar__fab d-flex align-items-center justify-content-center"
+  (click)="onFabClick()"
+  (mousedown)="onMouseDown($event)"
+  [style.left.px]="position.x"
+  [style.top.px]="position.y"
+  [style.position]="'fixed'"
+  [style.z-index]="1000"
+  [title]="fab_title"
+>
+  <i [ngClass]="fab_icon"></i>
+</button>

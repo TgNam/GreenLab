@@ -1,0 +1,13 @@
+<!-- Thumbnail -->
+<div class="image-thumbnail" (click)="openLightbox()">
+  <img [class.rounded-circle]="!square"
+    [src]="src || defaultSrc"
+    [alt]="alt"
+    [title]="imageTitle"
+    style="cursor: pointer;"
+    [width]="width"
+    [height]="height"
+    (error)="src=defaultSrc"
+  />
+</div>
+

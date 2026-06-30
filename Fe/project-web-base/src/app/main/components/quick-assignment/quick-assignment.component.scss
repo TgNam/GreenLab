@@ -1,0 +1,102 @@
+.quick-assignment-container {
+  width: 100%;
+}
+
+.quick-assignment-grid {
+  display: grid;
+  gap: 4px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 4px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #555;
+    }
+  }
+}
+
+.quick-assignment-item {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+  min-height: 36px;
+  
+  &:hover {
+    background-color: rgba(var(--linear-primary, 54, 128, 62), 0.05);
+    border-color: rgba(var(--linear-primary, 54, 128, 62), 0.3);
+  }
+  
+  &.selected {
+    background-color: rgba(var(--linear-primary, 54, 128, 62), 0.1);
+    border-color: var(--primary, var(--bs-primary, #36803e));
+  }
+  
+  // Style for form-input checkbox
+  app-form-input {
+    width: 100%;
+    
+    ::ng-deep {
+      .custom-control {
+        margin: 0;
+        padding-left: 0;
+      }
+      
+      .custom-checkbox-flex {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 8px;
+      }
+      
+      .custom-control-label {
+        cursor: pointer;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #333;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        min-width: 0; // Important for text truncation in flex
+      }
+      
+      .custom-control-input {
+        flex-shrink: 0;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .quick-assignment-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .quick-assignment-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+

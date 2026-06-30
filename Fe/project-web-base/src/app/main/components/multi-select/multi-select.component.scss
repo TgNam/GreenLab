@@ -1,0 +1,110 @@
+.multi-select {
+    position: relative;
+    width: 100%;
+
+    .select-dark1 {
+        border: 1px solid #404656;
+        border-radius: 6px;
+        padding: 6px 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .selected-text {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        i {
+            font-size: 0.9rem;
+            margin-left: 8px;
+        }
+    }
+
+    .select-light1 {
+        border: 1px solid #d8d6de;
+        border-radius: 6px;
+        padding: 6px 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .selected-text {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        i {
+            font-size: 0.9rem;
+            margin-left: 8px;
+        }
+    }
+
+    .btn-dark1 {
+        color: white !important;
+        border: 1px solid white
+    }
+
+    .dropdown-dark1 {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #7367f0 !important;
+        color: white;
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 4px;
+        margin-top: 4px;
+
+        .option {
+            padding: 6px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+
+            input {
+                pointer-events: none;
+            }
+        }
+    }
+
+    .dropdown-light1 {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #d8d6de;
+        background-color: white !important;
+        color: black;
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 4px;
+        margin-top: 4px;
+
+        .option {
+            padding: 6px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+
+            input {
+                pointer-events: none;
+            }
+        }
+    }
+
+}

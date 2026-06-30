@@ -1,0 +1,246 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{
+      headerTitle: 'Quản lý biểu mẫu SMS',
+      actionButton: false,
+      breadcrumb: {
+        links: [
+          { name: 'Trang chủ', isLink: true, link: '/' },
+          { name: 'Quản lý biểu mẫu SMS', isLink: false }
+        ]
+      }
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter class="advanced-search-full-width" [showAdvanced]="showAdvancedSearch"
+          (toggleAdvanced)="toggleAdvancedSearch()">
+          <div basic-filters class="row g-2 w-100">
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Thời gian từ'" type="date2" [(model)]="createdFrom"
+                (modelChange)="filterUpdate($event, 'from_time')" [size]="'form-control-sm'"
+                [placeholder]="'Chọn thời gian từ'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Thời gian đến'" type="date2" [(model)]="createdTo"
+                (modelChange)="filterUpdate($event, 'to_time')" [size]="'form-control-sm'"
+                [placeholder]="'Chọn thời gian đến'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Tên mẫu'" type="text" [(model)]="searchValue" (onEnter)="fetchPage()"
+                (modelChange)="filterUpdate($event, 'name')" [size]="'form-control-sm'"
+                [placeholder]="'Tìm kiếm theo tên...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Loại'" type="select-search" [(model)]="selectedType"
+                (modelChange)="filterUpdate($event, 'type')" [options]="typeOptions" optionLabel="label"
+                optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn loại...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Người nhận'" type="select-search" [(model)]="selectedRecipientType"
+                (modelChange)="filterUpdate($event, 'recipientType')" [options]="recipientTypeOptions"
+                optionLabel="label" optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn người nhận...'">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Trạng thái'" type="select-search" [(model)]="selectedStatus"
+                (modelChange)="filterUpdate($event, 'status')" [options]="statusOptions" optionLabel="label"
+                optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn trạng thái...'">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+
+        <div class="action-buttons">
+          <app-button [text]="'Tìm kiếm'" type="primary" [buttonClass]="'btn-sm btn-center'" [loading]="isSearching"
+            icon="fa fa-search" (clickBtn)="fetchPage()" [title]="'Tìm kiếm'">
+          </app-button>
+
+          <button class="btn btn-sm btn-center btn-outline-secondary waves-effect waves-float waves-light"
+            (click)="resetFilters()" [title]="'Đặt lại bộ lọc'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-refresh"></i>
+            </div>
+            <div class="btn-text">Làm mới</div>
+          </button>
+
+          <button class="btn btn-center btn-sm btn-primary waves-effect waves-float waves-light"
+            (click)="openModalCreate()" [title]="'Tạo biểu mẫu SMS mới'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-plus"></i>
+            </div>
+            <div class="btn-text">Tạo mẫu</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-body no-padding-card-body">
+
+      <ng-template #nameTemplate let-row="row">
+        <div class="fw-bold">{{ row.name }}</div>
+      </ng-template>
+
+      <ng-template #typeTemplate let-row="row">
+        <span class="badge badge-light-primary">
+          {{ getTypeLabel(row.type) }}
+        </span>
+      </ng-template>
+
+      <ng-template #recipientTypeTemplate let-row="row">
+        <span class="badge badge-light-info">
+          {{ getRecipientTypeLabel(row.recipientType) }}
+        </span>
+      </ng-template>
+
+      <ng-template #statusTemplate let-row="row">
+        <div class="d-flex align-items-center gap-50">
+          <app-switch [title]="'Trạng thái'" [checked]="row.active" [isChange]="true"
+            (onToggle)="toggleStatus(row, $event)" [size]="'small'">
+          </app-switch>
+        </div>
+      </ng-template>
+
+      <ng-template #createTimeTemplate let-row="row">
+        <div class="time-column">
+          <div class="time-item">
+            <span class="time-label">Tạo:</span>
+            <span class="time-value">{{ row.createTime ? (row.createTime | date:'HH:mm dd/MM/yyyy') : '-' }}</span>
+          </div>
+          <div class="time-item">
+            <span class="time-label">Cập nhật:</span>
+            <span class="time-value">{{ row.updateTime ? (row.updateTime | date:'HH:mm dd/MM/yyyy') : '-' }}</span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #actionTemplate let-row="row">
+        <div class="action-buttons-row">
+          <button (click)="viewTemplate(row)"
+            class="btn btn-sm btn-outline-info waves-effect waves-float btn-center waves-light" [title]="'Xem'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-eye"></i>
+            </div>
+            <div>Xem</div>
+          </button>
+          <button (click)="editTemplate(row)"
+            class="btn btn-sm btn-primary waves-effect waves-float btn-center waves-light" [title]="'Sửa'">
+            <div class="btn-icon-icon">
+              <i class="fa fa-edit"></i>
+            </div>
+            <div>Sửa</div>
+          </button>
+        </div>
+      </ng-template>
+
+      <app-dynamic-table [columns]="columns" [hideTime]="true" [total]="total" [sizeOptions]="sizeOptions"
+        [page]="page" [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows"
+        [onPageSizeChange]="onPageSizeChange.bind(this)" [totalCnt]="total" [totalPage]="totalPage"
+        [size]="'form-control-sm'">
+      </app-dynamic-table>
+    </div>
+  </div>
+</div>
+
+<app-modal-content [visible]="showModal" [size]="'lg'"
+  [title]="modalMode === 'view' ? 'Xem biểu mẫu SMS' : 'Chỉnh sửa biểu mẫu SMS'" [hideSave]="modalMode === 'view'"
+  [saveButtonText]="modalMode === 'edit' ? 'Lưu thay đổi' : ''" [closeButtonText]="'Đóng'"
+  [disableSave]="modalMode === 'view' || !selectedTemplate?.name?.trim() || !selectedTemplate?.content?.trim()"
+  (onSave)="saveTemplate()" [loading]="updating" (onClose)="closeModal()">
+  <div class="modal-body" *ngIf="selectedTemplate">
+    <div *ngIf="modalMode === 'view'">
+      <div class="row mb-2">
+        <div class="col-md-6"><strong>Loại:</strong> {{ getTypeLabel(selectedTemplate.type) }}</div>
+        <div class="col-md-6"><strong>Người nhận:</strong> {{ getRecipientTypeLabel(selectedTemplate.recipientType) }}</div>
+      </div>
+      <div class="p-3 border rounded bg-light">
+        <pre class="mb-0 sms-content-preview">{{ selectedTemplate.content }}</pre>
+      </div>
+    </div>
+
+    <div *ngIf="modalMode === 'edit'">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <app-form-input [label]="'Tên mẫu'" type="text" [max]="200" [(model)]="selectedTemplate.name"
+              labelType="required" [size]="'form-control-sm'">
+            </app-form-input>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <app-form-input [label]="'Loại'" type="select" [options]="typeOptions" optionLabel="label"
+              optionValue="value" [(model)]="selectedTemplate.type" labelType="required" [size]="'form-control-sm'">
+            </app-form-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <app-form-input [label]="'Người nhận'" type="select" [options]="recipientTypeOptions" optionLabel="label"
+              optionValue="value" [(model)]="selectedTemplate.recipientType" labelType="required"
+              [size]="'form-control-sm'">
+            </app-form-input>
+          </div>
+        </div>
+      </div>
+      <div class="mb-2">
+        <app-form-input [label]="'Nội dung SMS'" type="textarea" [rows]="8" [(model)]="selectedTemplate.content"
+          labelType="required" [size]="'form-control-sm'">
+        </app-form-input>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-modal-content [visible]="showCreateModal" [size]="'lg'" [title]="'Tạo biểu mẫu SMS mới'" [saveButtonText]="'Tạo mẫu'"
+  [closeButtonText]="'Hủy'"
+  [disableSave]="!newTemplate?.name?.trim() || !newTemplate?.content?.trim() || !newTemplate?.type || !newTemplate?.recipientType"
+  (onSave)="createTemplate()" [loading]="creating" (onClose)="closeModalCreate()">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-2">
+          <app-form-input [label]="'Tên mẫu'" type="text" [max]="200" [(model)]="newTemplate.name"
+            labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-2">
+          <app-form-input [label]="'Loại'" type="select-search" [options]="typeOptions"
+            optionLabel="label" optionValue="value" [(model)]="newTemplate.type"
+            labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-2">
+          <app-form-input [label]="'Người nhận'" type="select-search" [options]="recipientTypeOptions"
+            optionLabel="label" optionValue="value" [(model)]="newTemplate.recipientType"
+            labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <app-form-input [label]="'Nội dung SMS'" type="textarea" [rows]="8"
+        [(model)]="newTemplate.content" labelType="required">
+      </app-form-input>
+    </div>
+  </div>
+</app-modal-content>

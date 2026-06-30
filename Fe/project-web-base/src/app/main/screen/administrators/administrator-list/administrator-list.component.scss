@@ -1,0 +1,303 @@
+.page-count {
+    display: none !important;
+  }
+
+  .employee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  .info-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4;
+  }
+
+
+
+
+  .info-line i {
+    width: 16px;
+    text-align: center;
+    opacity: 0.8;
+  }
+
+  .info-line strong {
+    font-weight: 600;
+    margin-right: 2px;
+  }
+
+  .avatar-square {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .avatar-cell-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .underline-hover:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    /* nếu bạn muốn pointer khi hover */
+  }
+
+  .text-ellipsis {
+    display: inline-block;
+    max-width: 100%;
+    /* Sử dụng width của phần tử cha */
+    min-width: 0;
+    /* Quan trọng cho flex items */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+  }
+
+  .ellipsis {
+    display: block;
+    /* hoặc inline-block */
+    width: 300px;
+    /* giới hạn chiều rộng */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+
+  .text-link-ellipsis {
+    display: inline-block;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--primary) !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .custom-dropdown-menu {
+    max-height: 200px;
+    /* giới hạn chiều cao */
+    overflow-y: auto;
+    /* scroll khi quá cao */
+    min-width: 160px;
+    /* rộng vừa đủ chứa text */
+    padding: 0.25rem 0;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  .icon {
+    font-size: 100%;
+    line-height: 1;
+  }
+
+  /* Style scroll bar đẹp hơn */
+  .custom-dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+ 
+
+
+  .custom-dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+ 
+
+  .text-icon {
+    display: inline-block;
+    width: 15px;
+    text-align: center;
+  }
+
+  .btn-group .btn i {
+    font-size: 1rem;
+    /* icon vừa với nút */
+  }
+
+  /* Desktop → giữ nguyên: inline-block */
+  .name-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Đảm bảo badge không tràn ra ngoài */
+  .name-wrapper .badge {
+    flex-shrink: 1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Đảm bảo cell có overflow hidden */
+  .cell-line-height {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+
+
+  /* Mobile → ép xuống dòng */
+  @media (max-width: 576px) {
+    .name-wrapper {
+      flex-direction: column;
+      justify-content: start;
+      align-items: start;
+    }
+
+    /* Đảm bảo card header không có padding thừa trên mobile */
+    .card-header {
+      padding: 1rem;
+    }
+
+    /* Đảm bảo các input có width 100% trên mobile */
+    .card-header app-form-input {
+      width: 100%;
+    }
+  }
+
+  /* Responsive cho tablet */
+  @media (min-width: 576px) and (max-width: 767px) {
+    .card-header {
+      padding: 1rem;
+    }
+  }
+
+  /* Employee cell container - đảm bảo không tràn */
+  .employee-cell-container {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Responsive cho iPad Air và iPad (768px - 1024px) */
+  @media (min-width: 768px) and (max-width: 1024px) {
+
+    /* Ellipsis width cho iPad */
+    .ellipsis {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .text-ellipsis {
+      max-width: 100%;
+    }
+
+    /* Employee template - điều chỉnh layout */
+    .cell-line-height {
+      flex: 1;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    /* Đảm bảo employee cell container không tràn */
+    .employee-cell-container {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    /* Đảm bảo name-wrapper không tràn */
+    .name-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .employee-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 60%;
+    }
+
+    .employee-badge {
+      flex-shrink: 0;
+      max-width: 35%;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+
+    /* Đảm bảo cells có overflow hidden */
+    :host ::ng-deep .table-wrapper ngx-datatable .datatable-body-cell,
+    :host ::ng-deep .table-wrapper ngx-datatable .datatable-header-cell {
+      overflow: hidden !important;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+
+    /* Đảm bảo employee cell không tràn - selector chính xác hơn */
+    :host ::ng-deep .table-wrapper ngx-datatable .datatable-body-row .datatable-body-cell {
+      overflow: hidden !important;
+      max-width: 100%;
+    }
+
+    /* Đặc biệt cho cột employee */
+    :host ::ng-deep .table-wrapper ngx-datatable .datatable-body-cell:has(.employee-cell-container) {
+      overflow: hidden !important;
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
+
+  /* Đảm bảo scrollbar hiển thị cho ng-select trong form-input */
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host {
+    overflow-y: auto !important;
+    max-height: 300px !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+    display: block !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 3px !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 3px !important;
+  }
+
+  :host ::ng-deep app-form-input[type="select-search"] ng-select .ng-dropdown-panel .scroll-host::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5) !important;
+  }

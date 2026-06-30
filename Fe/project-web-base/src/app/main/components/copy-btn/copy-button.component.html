@@ -1,0 +1,7 @@
+<button
+  class="btn btn-sm btn-outline-primary d-inline-flex align-items-center"
+  (click)="copyText()"
+  [title]="copied ? 'Đã sao chép!' : title"
+>
+  <i class="fa" [ngStyle]="colorWhite ? { color: 'white' } : {}" [ngClass]="copied ? 'fa-check text-success' : icon"></i>
+</button>

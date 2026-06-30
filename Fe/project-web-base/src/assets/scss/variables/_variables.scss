@@ -1,0 +1,17 @@
+//  ================================================================================================
+//  ? TIP:  It is recommended to use this file for overriding bootstrap variables.
+//  ================================================================================================
+
+// Bootstrap variables
+$primary: #36803e;
+$emerald: #089308;
+
+// CSS variables - must be in :root selector
+:root {
+  --primary: #36803e;
+  --linear-primary: 54, 128, 62;
+  --primary-hover: #8cc63f;
+  --emerald: #089308;
+}
+$font-size-base: 0.875rem !default; // ~17px nếu html = 16px
+

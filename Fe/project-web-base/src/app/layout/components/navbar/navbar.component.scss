@@ -1,0 +1,60 @@
+@import '@core/scss/base/bootstrap-extended/include'; // Bootstrap includes
+@import '@core/scss/base/components/include'; // Components includes
+.navbar-container {
+  font-family: "Google Sans Flex", sans-serif !important;
+}
+// To open dd on right
+.dropdown-menu-right {
+  right: 0 !important;
+  left: auto !important;
+}
+.dropdown-item {
+  padding: .5rem 1rem;
+  display: block;
+}
+.dropdown-item span {
+  padding: 0 !important;  /* hoặc bị reset */
+}
+.item-wrapper {
+  display: flex;
+  align-items: center;
+}
+.dropdown-item .item-wrapper {
+  padding: 6px 0;
+}
+// Cart Touchspin
+.touchspin-cart {
+  .touchspin-wrapper {
+    width: 6.4rem;
+  }
+  &:focus-within {
+    box-shadow: none !important;
+  }
+}
+
+app-navbar-bookmark {
+  display: flex;
+}
+
+// Apply style on window scroll for navbar static type
+.navbar-static-style-on-scroll {
+  background-color: #fff !important;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 20px 0px !important;
+}
+
+// Dark Layout
+.dark-layout {
+  .navbar-container {
+    .search-input {
+      .search-list {
+        li {
+          &.auto-suggestion {
+            &:hover {
+              background-color: $theme-dark-body-bg;
+            }
+          }
+        }
+      }
+    }
+  }
+}

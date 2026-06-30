@@ -1,0 +1,105 @@
+.card {
+    transition: transform 0.2s;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
+  }
+  
+  .text-success {
+    color: #22c55e !important;
+  }
+  
+  .text-danger {
+    color: #ef4444 !important;
+  }
+  :host ::ng-deep .highlight-red {
+    background-color: #fee2e2 !important;
+    /* Light red background */
+  }
+  :host ::ng-deep .highlight-red .datatable-body-cell {
+    background-color: transparent !important;
+  }
+  :host ::ng-deep .highlight-red:hover {
+    background-color: #fecaca !important;
+    /* Slightly darker red on hover */
+  }
+
+ 
+  .success-active {
+    background-color: #22c55e !important;
+    color: #fff !important;
+  }
+  .success-active .text-success {
+    color: #fff !important;
+  }
+  
+  .error-active {
+    background-color: #ef4444 !important;
+    color: #fff !important;
+  }
+  .error-active .text-danger {
+    color: #fff !important;
+  }
+
+  :host ::ng-deep .footer-preview .text-adjust {
+    margin-top: 0px !important;
+  }
+
+
+  :host ::ng-deep td {
+    background-color: white !important;
+  }
+  :host ::ng-deep .highlight-red td {
+    background-color: #fecaca !important;
+    /* Slightly darker red on hover */
+  }
+  :host ::ng-deep .highlight-info {
+    background-color: #F0F9FF !important;
+  }
+  :host ::ng-deep .highlight-info .sticky-col {
+    background-color: #F0F9FF !important;
+    /* Light red background */
+  }
+
+  :host ::ng-deep .table tbody tr.highlight-info.selected-row td.sticky-col {
+    background-color: #F0F9FF !important;
+  }
+  :host ::ng-deep .highlight-info .datatable-body-cell,
+  :host ::ng-deep .highlight-info td {
+    background-color: transparent !important;
+  }
+  :host ::ng-deep .highlight-info td {
+    background-color: #F0F9FF !important;
+  }
+  :host ::ng-deep .highlight-info:hover {
+    background-color: #F0F9FF !important;
+  }
+  .selected-pid {
+    color: rgb(3 105 161 / 1);
+    font-weight: 600;
+    text-align: center;
+  }
+  :host ::ng-deep thead {
+    z-index: 1200 !important;
+  }
+  // Badge styling for status
+  .badge-light-success {           
+    background-color: rgba(34, 197, 94, 0.1) !important;
+    color: #16a34a !important;
+  }
+
+  .badge-light-danger {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+  }
+
+  .status-card {
+    cursor: pointer;
+
+    &.active {
+      box-shadow: 0 0 0 1px #0ea5e9 !important;
+      border-color: #0ea5e9 !important;
+    }
+  }

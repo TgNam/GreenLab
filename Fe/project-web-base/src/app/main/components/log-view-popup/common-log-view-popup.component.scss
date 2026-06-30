@@ -1,0 +1,82 @@
+.log-table-container ::ng-deep ngx-datatable {
+  font-size: 0.875rem;
+}
+
+.log-table-container ::ng-deep .datatable-header {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+:host ::ng-deep .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  top: 9px !important;
+}
+
+.log-table-container ::ng-deep .datatable-header-cell {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.log-table-container ::ng-deep .datatable-body-cell {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.log-table-container ::ng-deep .datatable-body-row:hover {
+  background-color: #f8f9fa;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 1.5rem !important;
+}
+
+.sortable-header:hover {
+  background-color: #f8f9fa;
+}
+
+.action-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.action-CREATE {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.action-UPDATE {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.action-DELETE {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.action-EXPORT {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.action-IMPORT {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.action-OTHER {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.description-text {
+  white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
