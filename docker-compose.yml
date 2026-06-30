@@ -3,7 +3,7 @@ services:
   # 1. INFRASTRUCTURE SERVICES
   # ==========================================
   greenlab-mongodb:
-    image: mongo:7
+    image: mongo:4.4
     container_name: greenlab-mongodb
     restart: unless-stopped
     ports:
