@@ -1,0 +1,146 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{
+      headerTitle: 'Quản lý xét nghiệm',
+      actionButton: true,
+      breadcrumb: { links: [
+        { name: 'Trang chủ', isLink: true, link: '/' },
+        { name: 'Quản lý xét nghiệm', isLink: false }
+      ]}
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter class="advanced-search-full-width" [showAdvanced]="showAdvancedSearch" (toggleAdvanced)="toggleAdvancedSearch()">
+          <div basic-filters class="row g-2 w-100">
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Mã'" type="text" [(model)]="searchCode" (onEnter)="fetchPage()" (modelChange)="filterUpdate($event, 'code')" [size]="'form-control-sm'" [placeholder]="'Tìm kiếm theo mã...'">
+              </app-form-input>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Tên xét nghiệm'" type="text" [(model)]="searchName" (onEnter)="fetchPage()" (modelChange)="filterUpdate($event, 'name')" [size]="'form-control-sm'" [placeholder]="'Tìm kiếm theo tên...'">
+              </app-form-input>
+            </div>
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Trạng thái'" type="select-search" [(model)]="selectedStatus" (modelChange)="filterUpdate($event, 'isActive')" [options]="statusOptions" optionLabel="label" optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn trạng thái...'">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+        <div class="action-buttons">
+          <app-button [text]="'Tìm kiếm'" type="primary" [buttonClass]="'btn-sm btn-center'" [loading]="isSearching" icon="fa fa-search" (clickBtn)="fetchPage()"></app-button>
+          <button class="btn btn-sm btn-center btn-outline-secondary" (click)="resetFilters()"><i class="fa fa-refresh"></i> Làm mới</button>
+          <button class="btn btn-center btn-sm btn-primary" (click)="openModalCreate()"><i class="fa fa-plus"></i> Tạo mới</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-body no-padding-card-body">
+      <ng-template #codeTemplate let-row="row"><span class="badge badge-light-primary">{{ row.code }}</span></ng-template>
+      <ng-template #nameTemplate let-row="row">
+        <div class="fw-bold">{{ row.name }}</div>
+        <small class="text-muted" *ngIf="row.shortName">({{ row.shortName }})</small>
+      </ng-template>
+      <ng-template #categoryTemplate let-row="row"><span class="badge badge-light-secondary">{{ getCategoryName(row.testCategoryId) }}</span></ng-template>
+      <ng-template #priceTemplate let-row="row"><strong class="text-primary">{{ formatPrice(row.price) }}</strong></ng-template>
+      <ng-template #statusTemplate let-row="row">
+        <span class="badge badge-pill" [ngClass]="{'badge-light-success': row.isActive === true, 'badge-light-danger': row.isActive === false}">
+          {{ getStatusLabel(row.isActive) }}
+        </span>
+      </ng-template>
+      <ng-template #actionTemplate let-row="row">
+        <div class="action-buttons-row">
+          <button (click)="viewItem(row)" class="btn btn-sm btn-outline-info"><i class="fa fa-eye"></i> Xem</button>
+          <button (click)="editItem(row)" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+          <button (click)="openModalDelete(row)" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Xóa</button>
+        </div>
+      </ng-template>
+      <app-dynamic-table [columns]="columns" [total]="total" [sizeOptions]="sizeOptions" [page]="page" [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows" [onPageSizeChange]="onPageSizeChange.bind(this)" [totalCnt]="total" [totalPage]="totalPage" [size]="'form-control-sm'">
+      </app-dynamic-table>
+    </div>
+  </div>
+</div>
+
+<app-modal-content [visible]="showModal" [size]="'lg'" [title]="modalMode === 'view' ? 'Chi tiết xét nghiệm' : 'Chỉnh sửa xét nghiệm'" [hideSave]="modalMode === 'view'" [saveButtonText]="modalMode === 'edit' ? 'Lưu thay đổi' : ''" [closeButtonText]="'Đóng'" [disableSave]="!isValidForSave()" (onSave)="saveItem()" [loading]="updating" (onClose)="closeModal()">
+  <div class="modal-body" *ngIf="selectedItem">
+    <div *ngIf="modalMode === 'view'">
+      <div class="row mb-2">
+        <div class="col-md-4"><strong>Mã:</strong> {{ selectedItem.code }}</div>
+        <div class="col-md-8"><strong>Tên:</strong> {{ selectedItem.name }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md-4"><strong>Tên viết tắt:</strong> {{ selectedItem.shortName || '-' }}</div>
+        <div class="col-md-4"><strong>Giá:</strong> {{ formatPrice(selectedItem.price) }}</div>
+        <div class="col-md-4"><strong>Trạng thái:</strong> {{ getStatusLabel(selectedItem.isActive) }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md-4"><strong>Loại xét nghiệm:</strong> {{ getCategoryName(selectedItem.testCategoryId) }}</div>
+        <div class="col-md-4"><strong>Loại mẫu:</strong> {{ getSpecimenTypeName(selectedItem.specimenTypeId) }}</div>
+        <div class="col-md-4"><strong>Đơn vị:</strong> {{ getUnitName(selectedItem.unitId) }}</div>
+      </div>
+      <div class="row mb-2" *ngIf="selectedItem.normalRange"><div class="col-12"><strong>Giá trị bình thường:</strong> {{ selectedItem.normalRange }}</div></div>
+      <div class="row mb-2" *ngIf="selectedItem.method"><div class="col-12"><strong>Phương pháp:</strong> {{ selectedItem.method }}</div></div>
+      <div class="row mb-2" *ngIf="selectedItem.description"><div class="col-12"><strong>Mô tả:</strong> {{ selectedItem.description }}</div></div>
+    </div>
+    <div *ngIf="modalMode === 'edit'">
+      <div class="row">
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Mã'" type="text" [max]="20" [(model)]="selectedItem.code" labelType="required" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-8"><div class="mb-2"><app-form-input [label]="'Tên'" type="text" [max]="200" [(model)]="selectedItem.name" labelType="required" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Tên viết tắt'" type="text" [max]="50" [(model)]="selectedItem.shortName" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Giá'" type="number" [(model)]="selectedItem.price" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Trạng thái'" type="select" [options]="statusOptions" optionLabel="label" optionValue="value" [(model)]="selectedItem.isActive" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Loại xét nghiệm'" type="select" [options]="testCategories" optionLabel="name" optionValue="id" [(model)]="selectedItem.testCategoryId" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Loại mẫu'" type="select" [options]="specimenTypes" optionLabel="name" optionValue="id" [(model)]="selectedItem.specimenTypeId" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Đơn vị'" type="select" [options]="units" optionLabel="name" optionValue="id" [(model)]="selectedItem.unitId" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Giá trị bình thường'" type="text" [(model)]="selectedItem.normalRange" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Phương pháp'" type="text" [(model)]="selectedItem.method" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12"><div class="mb-2"><app-form-input [label]="'Mô tả'" type="textarea" [(model)]="selectedItem.description" [rows]="2" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-modal-content [visible]="showCreateModal" [size]="'lg'" [title]="'Tạo xét nghiệm mới'" [saveButtonText]="'Tạo mới'" [closeButtonText]="'Hủy'" [disableSave]="!isValidForCreate()" (onSave)="createItem()" [loading]="creating" (onClose)="closeModalCreate()">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Mã'" type="text" [max]="20" [(model)]="newItem.code" labelType="required" placeholder="VD: CBC001"></app-form-input></div></div>
+      <div class="col-md-8"><div class="mb-2"><app-form-input [label]="'Tên'" type="text" [max]="200" [(model)]="newItem.name" labelType="required" placeholder="VD: Công thức máu"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Tên viết tắt'" type="text" [max]="50" [(model)]="newItem.shortName" placeholder="VD: CBC"></app-form-input></div></div>
+      <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Giá'" type="number" [(model)]="newItem.price" placeholder="0"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Loại xét nghiệm'" type="select" [options]="testCategories" optionLabel="name" optionValue="id" [(model)]="newItem.testCategoryId"></app-form-input></div></div>
+      <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Loại mẫu'" type="select" [options]="specimenTypes" optionLabel="name" optionValue="id" [(model)]="newItem.specimenTypeId"></app-form-input></div></div>
+      <div class="col-md-4"><div class="mb-2"><app-form-input [label]="'Đơn vị'" type="select" [options]="units" optionLabel="name" optionValue="id" [(model)]="newItem.unitId"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Giá trị bình thường'" type="text" [(model)]="newItem.normalRange"></app-form-input></div></div>
+      <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Phương pháp'" type="text" [(model)]="newItem.method"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12"><div class="mb-2"><app-form-input [label]="'Mô tả'" type="textarea" [(model)]="newItem.description" [rows]="2"></app-form-input></div></div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-modal-content [visible]="showDeleteModal" [size]="'sm'" [title]="'Xác nhận xóa'" [hideSave]="true" [closeButtonText]="'Hủy'" (onClose)="closeModalDelete()">
+  <div class="modal-body text-center">
+    <p>Bạn có chắc chắn muốn xóa <strong>{{ selectedItem?.name }}</strong>?</p>
+    <p class="text-danger">Hành động này không thể hoàn tác.</p>
+  </div>
+  <div modal-footer class="d-flex justify-content-center gap-2">
+    <button type="button" class="btn btn-secondary" (click)="closeModalDelete()">Hủy</button>
+    <button type="button" class="btn btn-danger" (click)="deleteItem()" [disabled]="deleting">{{ deleting ? 'Đang xóa...' : 'Xóa' }}</button>
+  </div>
+</app-modal-content>

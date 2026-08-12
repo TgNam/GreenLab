@@ -1,0 +1,119 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{
+      headerTitle: 'Quản lý loại mẫu',
+      actionButton: true,
+      breadcrumb: { links: [
+        { name: 'Trang chủ', isLink: true, link: '/' },
+        { name: 'Quản lý loại mẫu', isLink: false }
+      ]}
+    }">
+  </app-content-header>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter class="advanced-search-full-width" [showAdvanced]="showAdvancedSearch" (toggleAdvanced)="toggleAdvancedSearch()">
+          <div basic-filters class="row g-2 w-100">
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Mã'" type="text" [(model)]="searchCode" (onEnter)="fetchPage()" (modelChange)="filterUpdate($event, 'code')" [size]="'form-control-sm'" [placeholder]="'Tìm kiếm theo mã...'">
+              </app-form-input>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'Tên loại mẫu'" type="text" [(model)]="searchName" (onEnter)="fetchPage()" (modelChange)="filterUpdate($event, 'name')" [size]="'form-control-sm'" [placeholder]="'Tìm kiếm theo tên...'">
+              </app-form-input>
+            </div>
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'Trạng thái'" type="select-search" [(model)]="selectedStatus" (modelChange)="filterUpdate($event, 'isActive')" [options]="statusOptions" optionLabel="label" optionValue="value" [size]="'form-control-sm'" [placeholder]="'Chọn trạng thái...'">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+        <div class="action-buttons">
+          <app-button [text]="'Tìm kiếm'" type="primary" [buttonClass]="'btn-sm btn-center'" [loading]="isSearching" icon="fa fa-search" (clickBtn)="fetchPage()"></app-button>
+          <button class="btn btn-sm btn-center btn-outline-secondary" (click)="resetFilters()"><i class="fa fa-refresh"></i> Làm mới</button>
+          <button class="btn btn-center btn-sm btn-primary" (click)="openModalCreate()"><i class="fa fa-plus"></i> Tạo mới</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-body no-padding-card-body">
+      <ng-template #codeTemplate let-row="row"><span class="badge badge-light-primary">{{ row.code }}</span></ng-template>
+      <ng-template #nameTemplate let-row="row">
+        <div class="fw-bold">{{ row.name }}</div>
+        <small class="text-muted" *ngIf="row.description">{{ row.description | slice:0:50 }}{{ row.description?.length > 50 ? '...' : '' }}</small>
+      </ng-template>
+      <ng-template #statusTemplate let-row="row">
+        <span class="badge badge-pill" [ngClass]="{'badge-light-success': row.isActive === true, 'badge-light-danger': row.isActive === false}">
+          {{ getStatusLabel(row.isActive) }}
+        </span>
+      </ng-template>
+      <ng-template #createdAtTemplate let-row="row"><small class="text-muted">{{ row.createdAt ? (row.createdAt | date:'dd/MM/yyyy HH:mm') : '-' }}</small></ng-template>
+      <ng-template #actionTemplate let-row="row">
+        <div class="action-buttons-row">
+          <button (click)="viewItem(row)" class="btn btn-sm btn-outline-info"><i class="fa fa-eye"></i> Xem</button>
+          <button (click)="editItem(row)" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+          <button (click)="openModalDelete(row)" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Xóa</button>
+        </div>
+      </ng-template>
+      <app-dynamic-table [columns]="columns" [total]="total" [sizeOptions]="sizeOptions" [page]="page" [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows" [onPageSizeChange]="onPageSizeChange.bind(this)" [totalCnt]="total" [totalPage]="totalPage" [size]="'form-control-sm'">
+      </app-dynamic-table>
+    </div>
+  </div>
+</div>
+
+<app-modal-content [visible]="showModal" [size]="'lg'" [title]="modalMode === 'view' ? 'Chi tiết loại mẫu' : 'Chỉnh sửa loại mẫu'" [hideSave]="modalMode === 'view'" [saveButtonText]="modalMode === 'edit' ? 'Lưu thay đổi' : ''" [closeButtonText]="'Đóng'" [disableSave]="!isValidForSave()" (onSave)="saveItem()" [loading]="updating" (onClose)="closeModal()">
+  <div class="modal-body" *ngIf="selectedItem">
+    <div *ngIf="modalMode === 'view'">
+      <div class="row mb-2"><div class="col-md-6"><strong>Mã:</strong> {{ selectedItem.code }}</div><div class="col-md-6"><strong>Tên:</strong> {{ selectedItem.name }}</div></div>
+      <div class="row mb-2"><div class="col-md-6"><strong>Trạng thái:</strong> {{ getStatusLabel(selectedItem.isActive) }}</div><div class="col-md-6"><strong>Ngày tạo:</strong> {{ selectedItem.createdAt ? (selectedItem.createdAt | date:'dd/MM/yyyy HH:mm') : '-' }}</div></div>
+      <div class="row mb-2" *ngIf="selectedItem.description"><div class="col-12"><strong>Mô tả:</strong> {{ selectedItem.description }}</div></div>
+      <div class="row mb-2" *ngIf="selectedItem.preparationInstruction"><div class="col-12"><strong>Hướng dẫn chuẩn bị:</strong> {{ selectedItem.preparationInstruction }}</div></div>
+      <div class="row mb-2" *ngIf="selectedItem.storageRequirement"><div class="col-12"><strong>Yêu cầu bảo quản:</strong> {{ selectedItem.storageRequirement }}</div></div>
+    </div>
+    <div *ngIf="modalMode === 'edit'">
+      <div class="row">
+        <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Mã'" type="text" [max]="20" [(model)]="selectedItem.code" labelType="required" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Tên'" type="text" [max]="100" [(model)]="selectedItem.name" labelType="required" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12"><div class="mb-2"><app-form-input [label]="'Mô tả'" type="textarea" [(model)]="selectedItem.description" [size]="'form-control-sm'" [rows]="2"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12"><div class="mb-2"><app-form-input [label]="'Hướng dẫn chuẩn bị'" type="textarea" [(model)]="selectedItem.preparationInstruction" [size]="'form-control-sm'" [rows]="2"></app-form-input></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Yêu cầu bảo quản'" type="text" [(model)]="selectedItem.storageRequirement" [size]="'form-control-sm'"></app-form-input></div></div>
+        <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Trạng thái'" type="select" [options]="statusOptions" optionLabel="label" optionValue="value" [(model)]="selectedItem.isActive" [size]="'form-control-sm'"></app-form-input></div></div>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-modal-content [visible]="showCreateModal" [size]="'lg'" [title]="'Tạo loại mẫu mới'" [saveButtonText]="'Tạo mới'" [closeButtonText]="'Hủy'" [disableSave]="!isValidForCreate()" (onSave)="createItem()" [loading]="creating" (onClose)="closeModalCreate()">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Mã'" type="text" [max]="20" [(model)]="newItem.code" labelType="required" placeholder="VD: HUYET_THANH"></app-form-input></div></div>
+      <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Tên'" type="text" [max]="100" [(model)]="newItem.name" labelType="required" placeholder="VD: Huyết thanh"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12"><div class="mb-2"><app-form-input [label]="'Mô tả'" type="textarea" [(model)]="newItem.description" [rows]="2"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12"><div class="mb-2"><app-form-input [label]="'Hướng dẫn chuẩn bị'" type="textarea" [(model)]="newItem.preparationInstruction" [rows]="2"></app-form-input></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><div class="mb-2"><app-form-input [label]="'Yêu cầu bảo quản'" type="text" [(model)]="newItem.storageRequirement"></app-form-input></div></div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-modal-content [visible]="showDeleteModal" [size]="'sm'" [title]="'Xác nhận xóa'" [hideSave]="true" [closeButtonText]="'Hủy'" (onClose)="closeModalDelete()">
+  <div class="modal-body text-center">
+    <p>Bạn có chắc chắn muốn xóa <strong>{{ selectedItem?.name }}</strong>?</p>
+    <p class="text-danger">Hành động này không thể hoàn tác.</p>
+  </div>
+  <div modal-footer class="d-flex justify-content-center gap-2">
+    <button type="button" class="btn btn-secondary" (click)="closeModalDelete()">Hủy</button>
+    <button type="button" class="btn btn-danger" (click)="deleteItem()" [disabled]="deleting">{{ deleting ? 'Đang xóa...' : 'Xóa' }}</button>
+  </div>
+</app-modal-content>

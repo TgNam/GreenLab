@@ -106,6 +106,41 @@ const appRoutes: Routes = [
     loadChildren: () => import('./main/components/components.module').then(m => m.ComponentsModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'test-categories',
+    loadChildren: () => import('./main/screen/test-categories/test-categories.module').then(m => m.TestCategoriesModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'specimen-types',
+    loadChildren: () => import('./main/screen/specimen-types/specimen-types.module').then(m => m.SpecimenTypesModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'units',
+    loadChildren: () => import('./main/screen/units/units.module').then(m => m.UnitsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'discount-types',
+    loadChildren: () => import('./main/screen/discount-types/discount-types.module').then(m => m.DiscountTypesModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'panel-categories',
+    loadChildren: () => import('./main/screen/panel-categories/panel-categories.module').then(m => m.PanelCategoriesModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'tests',
+    loadChildren: () => import('./main/screen/tests/tests.module').then(m => m.TestsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'panels',
+    loadChildren: () => import('./main/screen/panels/panels.module').then(m => m.PanelsModule),
+    canActivate: [AuthGuard]
+  },
   // {
   //   path: 'extensions',
   //   loadChildren: () => import('./main/extensions/extensions.module').then(m => m.ExtensionsModule),
