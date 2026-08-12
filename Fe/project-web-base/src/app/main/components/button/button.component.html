@@ -1,0 +1,31 @@
+<button type="button" [disabled]="disabled || onlyDisabled || loading || disabled2" [class]="getButtonClasses()"
+  (mouseenter)="isHover = true" (mouseleave)="isHover = false" [ngStyle]="customStyle" (click)="handleClick()">
+  <!-- Icon và Text chỉ hiển thị khi không loading -->
+  <ng-container *ngIf="!loading">
+    <div *ngIf="icon" class="btn-icon-icon">
+      <i [ngClass]="icon"></i>
+    </div>
+    <div class="btn-text"  [ngClass]="{
+      'text-adjust': icon === 'fa fa-eye' || icon === 'fa fa-file-excel-o' || icon === 'fa-solid fa-barcode'
+    }">
+      {{ text }}
+    </div>
+  </ng-container>
+  <!-- Spinner khi loading -->
+  <ng-container *ngIf="loading">
+    <div class="btn-icon-icon">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </div>
+    <div class="btn-text" style="margin-top: 1px;">
+      {{ textLoading ? textLoading :text }}
+    </div>
+  </ng-container>
+
+  <!-- Spinner và icon overlay chỉ khi disabled (không phải loading) -->
+  <ng-container *ngIf="disabled && !loading">
+    <span class="spinner-border spinner-border-sm position-absolute top-50 start-50 translate-middle" role="status"
+      aria-hidden="true"></span>
+    <i class="fa fa-ban text-danger position-absolute top-50 start-50 translate-middle" title="Action disabled"></i>
+  </ng-container>
+
+</button>

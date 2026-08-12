@@ -1,0 +1,379 @@
+<div class="form-group ng-select-parent"
+  [ngStyle]="marginBottomFormGroup !== null ? {'margin-bottom.rem': marginBottomFormGroup} : null"
+  [class.floating-input-wrapper]="floating && ['text','email','number'].includes(type)"
+  [class.no-margin-bottom]="type === 'checkbox'">
+  <!-- Label - Normal mode -->
+  <label *ngIf="label && type !== 'checkbox' && !floating && !hideLabel" [for]="for"
+    [ngStyle]="size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}"
+    [class]="'form-label fw-semibold' + (labelType === 'orange' ? ' text-orange' : '')">
+    {{ label }}
+    <span *ngIf="labelType === 'required'" class="text-danger ms-1">
+      *
+    </span>
+  </label>
+
+  <!-- Floating Label Input - text/email -->
+  <div *ngIf="floating && ['text','email'].includes(type)" class="form-label-group1 floating-label-group">
+    <div class="custom-ng-select-container" [class.is-active]="isFloatingActive"
+      [style.--floating-notch-right.px]="floatingNotchRightPx">
+      <label #floatingLabelForNotch class="floating-label"
+        [ngStyle]="size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}">
+        {{label}}
+      </label>
+      <input [type]="type" [class]="inputClass " [id]="for || 'floating-' + label" [ngModel]="model"
+        (ngModelChange)="emitChange($event)" (keydown.enter)="handleEnter($event)" (input)="handleInput($event)"
+        (focus)="onFocus($event)" (blur)="onBlur($event)" [disabled]="disabled" #inputEl
+        [attr.min]="type === 'number' ? min : null" [attr.max]="type === 'number' ? max : null"
+        [attr.minlength]="type === 'text' ? min : null" [attr.maxlength]="type === 'text' ? max : null"
+        [attr.step]="type === 'number' ? step : null" [class.floating-active]="isFloatingActive" placeholder="" />
+
+    </div>
+  </div>
+
+  <!-- Floating Label Input - number -->
+  <div *ngIf="floating && ['number'].includes(type)" class="form-label-group1 floating-label-group">
+    <input (keypress)="allowOnlyDigits($event)" [type]="type" [class]="inputClass + ' floating-input'"
+      [id]="for || 'floating-' + label" [ngModel]="model" (ngModelChange)="emitChange($event)"
+      (keydown.enter)="handleEnter($event)" (input)="handleInput($event)" (focus)="onFocus($event)" #inputEl
+      (blur)="onBlur($event)" [disabled]="disabled" [attr.min]="min ? min : null" [attr.max]="max ? max : null"
+      [attr.minlength]="min ? min : null" [attr.maxlength]="max ? max : null"
+      [attr.step]="type === 'number' ? step : null" [class.floating-active]="isFloatingActive" placeholder="" />
+    <label [for]="for || 'floating-' + label" class="floating-label" [class.floating-label-active]="isFloatingActive"
+      [title]="labelTitle || label">
+      {{ label }}
+      <span *ngIf="labelType === 'required'" class="text-danger ms-1"
+        style="font-size: 1.3rem; vertical-align: middle; line-height: 0.5rem;">
+        *
+      </span>
+    </label>
+  </div>
+
+  <!-- Input text/password/email/number - Normal mode -->
+  <input *ngIf="!floating && ['text','email'].includes(type) && !runOutsideAngularZone" #myInput [type]="type"
+    [class]="inputClass" [placeholder]="placeholder || label" [ngModel]="model" (ngModelChange)="emitChange($event)"
+    (input)="handleInput($event)" (keydown.enter)="handleEnter($event)" (blur)="onBlur($event)" #inputEl
+    [disabled]="disabled" [attr.minlength]="type === 'text' ? min : null"
+    [attr.maxlength]="type === 'text' ? max : null" />
+
+  <input *ngIf="!floating && ['text','email'].includes(type) && runOutsideAngularZone" #myInput [type]="type"
+    [class]="inputClass" [placeholder]="placeholder || label" [disabled]="disabled" #inputEl
+    [attr.minlength]="type === 'text' ? min : null" [attr.maxlength]="type === 'text' ? max : null" />
+
+  <!-- Number input with prefix/suffix -->
+  <div *ngIf="!floating && ['number'].includes(type) && (prefixText || suffixText)"
+    class="input-group input-group-merge">
+    <div *ngIf="prefixText" class="input-group-prepend">
+      <span class="input-group-text">{{ prefixText }}</span>
+    </div>
+    <input (keypress)="allowOnlyDigits($event)" [type]="type" [class]="inputClass" [placeholder]="placeholder || label"
+      (blur)="onBlur($event)" [ngModel]="model" (ngModelChange)="emitChange($event)"
+      (keydown.enter)="handleEnter($event)" (input)="handleInput($event)" [disabled]="disabled"
+      [attr.min]="min ? min : null" [attr.max]="max ? max : null" [attr.minlength]="min ? min : null"
+      [attr.maxlength]="max ? max : null" [attr.step]="type === 'number' ? step : null" #inputEl />
+    <div *ngIf="suffixText">
+      <span class="input-group-text" [class]="size ? 'input-group-append ' + size: 'input-group-append'">{{ suffixText
+        }}</span>
+    </div>
+  </div>
+
+  <!-- Decimal input - allows comma and dot for decimal numbers -->
+  <input *ngIf="!floating && type === 'decimal' && !prefixText && !suffixText" (keypress)="allowDecimalInput($event)"
+    type="text" [class]="inputClass" [placeholder]="placeholder || label" (blur)="onDecimalBlur($event)"
+    [ngModel]="model" (ngModelChange)="onDecimalChange($event)" (keydown.enter)="handleEnter($event)"
+    (input)="handleInput($event)" [disabled]="disabled" #inputEl />
+
+  <input *ngIf="!floating && ['number'].includes(type) && !prefixText && !suffixText"
+    (keypress)="allowOnlyDigits($event)" [type]="type" [class]="inputClass" [placeholder]="placeholder || label"
+    (blur)="onBlur($event)" [ngModel]="model" (ngModelChange)="emitChange($event)" (keydown.enter)="handleEnter($event)"
+    (input)="handleInput($event)" [disabled]="disabled" [attr.min]="min ? min : null" [attr.max]="max ? max : null"
+    [attr.minlength]="min ? min : null" [attr.maxlength]="max ? max : null"
+    [attr.step]="type === 'number' ? step : null" #inputEl />
+
+  <input *ngIf="['phone'].includes(type)" (keypress)="allowOnlyDigits($event)" [type]="'tel'" [class]="inputClass"
+    [placeholder]="placeholder || label" [ngModel]="model" (ngModelChange)="emitChange($event)"
+    (keydown.enter)="handleEnter($event)" (input)="handleInput($event)" [disabled]="disabled"
+    [attr.minlength]="min ? min : null" [attr.maxlength]="max ? max : null" />
+
+  <!-- Money input - formatted VND currency -->
+  <input *ngIf="type === 'money'" (keypress)="onMoneyKeypress($event)" type="text" [class]="inputClass"
+    [placeholder]="placeholder || label" [ngModel]="displayValue" (ngModelChange)="onMoneyInputChange($event)"
+    (keydown.enter)="handleEnter($event)" (focus)="onFocus($event)" (blur)="onMoneyBlur($event)" [disabled]="disabled"
+    [attr.minlength]="min ? min : null" [attr.maxlength]="max ? max : null" #inputEl />
+
+  <!-- <input [type]="showPassword ? 'text' : 'password'" class="form-control" [placeholder]="placeholder || label"
+      [ngModel]="model" (ngModelChange)="emitChange($event)" (keydown.enter)="handleEnter($event)"
+      (input)="handleInput($event)" [disabled]="disabled" />
+
+    <span class="input-group-text" style="cursor: pointer;" (click)="togglePassword()">
+      <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+    </span> -->
+
+  <div *ngIf="type === 'password'" class="input-group form-password-toggle">
+    <input [type]="showPassword ? 'text' : 'password'" [class]="inputClass" id="basic-default-password"
+      [placeholder]="placeholder || label" aria-describedby="basic-default-password" [ngModel]="model"
+      (ngModelChange)="emitChange($event)" (keydown.enter)="handleEnter($event)" (input)="handleInput($event)"
+      [disabled]="disabled" [attr.minlength]="type === 'password' ? min : null"
+      [attr.maxlength]="type === 'password' ? max : null" #inputEl />
+    <div class="input-group-append" (click)="showPassword = !showPassword">
+      <span class="input-group-text cursor-pointer"><i class="feather" [ngClass]="{
+                        'icon-eye-off': showPassword,
+                        'icon-eye': !showPassword
+                    }"></i></span>
+    </div>
+  </div>
+
+  <!-- Date time picker (flatpickr adapter) -->
+  <app-datetime-adapter *ngIf="type === 'datetime2'" [label]="label" [floating]="floating" [placeholder]="placeholder"
+    [(timestamp)]="model" (timestampChange)="emitChange($event)" (enterKey)="handleEnter($event)" (blur)="handleBlur()"
+    [disabled]="disabled" [size]="size" [displayFormat]="dateDisplayFormat">
+  </app-datetime-adapter>
+
+
+  <!-- Date picker -->
+  <app-date-adapter *ngIf="type === 'date'" [placeholder]="placeholder" [(timestamp)]="model"
+    (timestampChange)="emitChange($event)" (enterKey)="handleEnter($event)" [disabled]="disabled" [minDate]="minDate"
+    [size]="size">
+  </app-date-adapter>
+  <!-- Date + time picker -->
+  <app-date-time-adapter *ngIf="type === 'datetime'" [onEnter]="selectOpen" [placeholder]="placeholder"
+    [(timestamp)]="model" (timestampChange)="emitChange($event)" [disabled]="disabled" [size]="size">
+  </app-date-time-adapter>
+
+
+  <!-- <app-datetime-adapter *ngIf="type === 'date2'" [mode]="'date'"  [placeholder]="placeholder" [(timestamp)]="model"
+  (timestampChange)="emitChange($event)" (enterKey)="handleEnter($event)" (blur)="handleBlur()" [disabled]="disabled" [size]="size" 
+ >
+</app-datetime-adapter> -->
+  <app-datetime-adapter *ngIf="type === 'date2'" [label]="label" [floating]="floating" [mode]="'date'"
+    [placeholder]="placeholder" [(timestamp)]="model" (timestampChange)="emitChange($event)"
+    (enterKey)="handleEnter($event)" (blur)="handleBlur()" [disabled]="disabled" [size]="size" [config]="{altInput: true,
+      enableTime: true,
+      time_24hr: true,
+      dateFormat: 'Y-m-d H:i',
+      altFormat: 'd/m/Y H:i'}">
+  </app-datetime-adapter>
+
+
+  <app-time-adapter *ngIf="type === 'time'" [placeholder]="placeholder" [(minutes)]="model"
+    (minutesChange)="emitChange($event)">
+  </app-time-adapter>
+  <textarea *ngIf="type === 'textarea' && !runOutsideAngularZone" [class]="inputClass"
+    [placeholder]="placeholder || label" [ngModel]="model" (ngModelChange)="emitChange($event)"
+    (keydown.enter)="handleEnter($event)" (input)="handleInput($event)" [disabled]="disabled" [rows]="rows"
+    [attr.minlength]="min" [attr.maxlength]="max">
+</textarea>
+  <textarea #myInput *ngIf="type === 'textarea' && runOutsideAngularZone" [class]="inputClass"
+    [placeholder]="placeholder || label" [disabled]="disabled" [rows]="rows" [attr.minlength]="min"
+    [attr.maxlength]="max">
+</textarea>
+
+  <!-- Select -->
+  <select *ngIf="type === 'select'" [class]="inputClass" [(ngModel)]="model" (ngModelChange)="emitChange($event)"
+    (input)="handleInput($event)">
+    <option *ngFor="let opt of options" [ngValue]="opt[optionValue] ?? opt.value">
+      {{ opt[optionLabel] ?? opt.label }}
+    </option>
+  </select>
+
+  <!-- Checkbox -->
+  <div *ngIf="type === 'checkbox'" class="custom-control custom-checkbox custom-checkbox-form"
+    [ngClass]="{ 'checkbox-sm': size === 'form-control-sm' }" style="padding-left: 0px !important;">
+    <div class="custom-control custom-checkbox custom-checkbox-flex"
+      [ngClass]="{ 'custom-checkbox-sm': size === 'form-control-sm' }" (ngModelChange)="emitChange($event)"
+      (change)="emitChange($event)">
+      <input type="checkbox" class="custom-control-input" [id]="for" [checked]="model" [disabled]="disabled"
+        [ngClass]="{ 'checkbox-input-sm': size === 'form-control-sm' }"
+        [style.cursor]="disabled ? 'not-allowed' : 'pointer'" (change)="onCheckboxChange($event)"
+        (keydown.enter)="onCheckboxEnter($event)" />
+      <label [ngStyle]="{ width: width + 'px' }" [title]="title || label" [ngClass]="[
+          'custom-control-label',
+          'text-ellipsis1',
+          size === 'form-control-sm' ? 'checkbox-label-sm' : '',
+          labelType === 'orange' ? 'text-orange' : ''
+        ]" [for]="for" style="margin-top: 2px;" [style.cursor]="disabled ? 'not-allowed' : 'pointer'">{{ label
+        }}</label>
+    </div>
+  </div>
+
+  <!-- Radio: dùng ngValue để null/boolean khớp ngModel (HTML [value] luôn là string). id theo index vì value null thì ?? opt thành object. -->
+  <div *ngIf="type === 'radio'" style="display: flex;" class="form-check-pr">
+    <!-- <div *ngFor="let opt of options; let i = index" class="form-check" style="margin-right: 15px;">
+      <input class="form-check-input" type="radio" [id]="label + '-radio-' + i" [name]="label"
+        [value]="opt[optionValue]" [(ngModel)]="model" (input)="handleInput($event)"
+        (keydown.enter)="handleEnter($event)" (keydown)="handleRadioKeydown($event, i)"
+        (ngModelChange)="emitChange($event)">
+      <label class="form-check-label" [for]="label + '-radio-' + i"
+        style="cursor: pointer;margin-top: 2px;margin-bottom: 0px !important;">{{ opt[optionLabel] ?? opt }}</label>
+    </div> -->
+
+    <div *ngFor="let opt of options; let i = index" class="form-check"
+      style="margin-right: 15px; display: flex; align-items: center;">
+
+      <input class="form-check-input" type="radio" [id]="label + '-radio-' + i" [name]="label"
+        [value]="opt[optionValue]" [(ngModel)]="model" (input)="handleInput($event)"
+        (keydown.enter)="handleEnter($event)" (keydown)="handleRadioKeydown($event, i)"
+        (ngModelChange)="emitChange($event)" style="margin-top: 0;">
+      <div style="display: flex; align-items: center; height: 100%; min-height: 24px;">
+        <label class="form-check-label" [for]="label + '-radio-' + i" style="
+        margin-bottom: 0; cursor: pointer;line-height: 1;">
+          {{ opt[optionLabel] ?? opt }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Select with search -->
+  <!-- Select with search -->
+  <div *ngIf="type === 'select-search' && !floating" class="form-group" #container>
+    <ng-select [items]="options" [attr.title]="title || getTitleFromOptions(options, model)" [panelClass]="'test'"
+      [ngClass]="size ? 'ng-select-size-' + size.replace('form-control-', '') : 'normal'" (open)="onSelectOpen()"
+      (close)="onSelectClose()" bindLabel="label" bindValue="value" [notFoundText]="'COMMON.NO_RESULT' | translate"
+      [(ngModel)]="model" [clearable]="true" [searchable]="true" [typeahead]="typeahead"
+      [minTermLength]="typeahead ? 0 : undefined" (ngModelChange)="onModelChange($event)"
+      [appendTo]="appendBody ? 'body' : null" [virtualScroll]="false" [position]="appendBody ? 'auto' : 'bottom'"
+      [placeholder]="placeholder || label" (change)="onChange1($event)" (keydown.enter)="handleSelectEnter($event)"
+      [keyDownFn]="selectSearchKeyDownFn" [disabled]="disabled" #inputEl>
+      <ng-template ng-option-tmp ng-label-tmp let-item="item">
+        <span [title]="item.label">{{ item.label }}</span>
+      </ng-template>
+      <ng-template *ngIf="typeaheadType" ng-typetosearch-tmp>
+        <div class="p-1 text-muted">
+          {{ 'COMMON.SEARCH_PLACEHOLDER' | translate }}
+        </div>
+      </ng-template>
+    </ng-select>
+
+  </div>
+  <div *ngIf="type === 'select-search' && floating" class="form-group" #container>
+    <div class="custom-ng-select-container" [class.is-active]="isFloatingActive"
+      [style.--floating-notch-right.px]="floatingNotchRightPx">
+      <label #floatingLabelForNotch class="floating-label"
+        [ngStyle]="size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}">
+        {{label}}
+      </label>
+      <ng-select [items]="options" [attr.title]="title || getTitleFromOptions(options, model)" [panelClass]="'test'"
+        [ngClass]="size ? 'ng-select-size-' + size.replace('form-control-', '') : 'normal'" (open)="onSelectOpen()"
+        (close)="onSelectClose()" bindLabel="label" bindValue="value" [notFoundText]="'COMMON.NO_RESULT' | translate"
+        [(ngModel)]="model" [clearable]="true" [searchable]="true" [typeahead]="typeahead"
+        [minTermLength]="typeahead ? 0 : undefined" (ngModelChange)="onModelChange($event)"
+        [appendTo]="appendBody ? 'body' : null" [virtualScroll]="false" [position]="appendBody ? 'auto' : 'bottom'"
+        [placeholder]="''" (change)="onChange1($event)" (keydown.enter)="handleSelectEnter($event)"
+        [keyDownFn]="selectSearchKeyDownFn" [disabled]="disabled" #inputEl>
+        <ng-template ng-option-tmp ng-label-tmp let-item="item">
+          <span [title]="item.label">{{ item.label }}</span>
+        </ng-template>
+        <ng-template *ngIf="typeaheadType" ng-typetosearch-tmp>
+          <div class="p-1 text-muted">
+            {{ 'COMMON.SEARCH_PLACEHOLDER' | translate }}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+  </div>
+  <div *ngIf="type === 'multi-select' && !floating" class="form-group multi-select" #container>
+    <ng-select [items]="options" [style.minWidth.px]="width" (open)="onSelectOpen()" (close)="onSelectClose()"
+      [notFoundText]="'COMMON.NO_RESULT' | translate" [(ngModel)]="model" [clearable]="true"
+      (ngModelChange)="onModelChange($event)" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
+      bindLabel="label" bindValue="value" [placeholder]="placeholder || label" [keyDownFn]="multiSelectKeyDownFn"
+      (keydown.enter)="handleEnter($event)"
+      [ngClass]="size ? 'ng-select-size-' + size.replace('form-control-', '') + ' ng-select-multiple-size-' + size.replace('form-control-', '') : ''">
+      <ng-template ng-option-tmp let-item="item">
+        <span [title]="item.label">{{ item.label }}</span>
+      </ng-template>
+      <ng-template ng-label-tmp let-item="item" let-clear="clear"> <span class="ng-value-label"> {{ item.label
+          }}</span>
+        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div *ngIf="type === 'multi-select' && floating" class="form-group multi-select" #container>
+    <div class="custom-ng-select-container" [class.is-active]="isFloatingActive"
+      [style.--floating-notch-right.px]="floatingNotchRightPx">
+      <label #floatingLabelForNotch class="floating-label"
+        [ngStyle]="size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}">
+        {{label}}
+      </label>
+      <ng-select [items]="options" [style.minWidth.px]="width" (open)="onSelectOpen()" (close)="onSelectClose()"
+        [notFoundText]="'COMMON.NO_RESULT' | translate" [(ngModel)]="model" [clearable]="true"
+        (ngModelChange)="onModelChange($event)" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
+        bindLabel="label" bindValue="value" [placeholder]="''" [keyDownFn]="multiSelectKeyDownFn"
+        (keydown.enter)="handleEnter($event)"
+        [ngClass]="size ? 'ng-select-size-' + size.replace('form-control-', '') + ' ng-select-multiple-size-' + size.replace('form-control-', '') : ''">
+        <ng-template ng-option-tmp let-item="item">
+          <span [title]="item.label">{{ item.label }}</span>
+        </ng-template>
+        <ng-template ng-label-tmp let-item="item" let-clear="clear"> <span class="ng-value-label"> {{ item.label
+            }}</span>
+          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        </ng-template>
+      </ng-select>
+    </div>
+  </div>
+
+  <!-- Upload ảnh: imageShape round = avatar tròn, rectangle = khung chữ ký; click ảnh → ngx-lightbox -->
+  <div *ngIf="type === 'image-upload'" class="form-input-image-upload"
+    [class.form-input-image-upload--percent-width]="imageUploadUsesPercentWidth">
+    <div class="photo-upload-container">
+      <div class="form-input-image-upload__preview-wrap"
+        [class.form-input-image-upload__preview-wrap--percent-width]="imageUploadUsesPercentWidth"
+        [class.form-input-image-upload__preview-wrap--round]="imageShape === 'round'"
+        [class.form-input-image-upload__preview-wrap--clickable]="imageUploadPreviewInteractive"
+        [class.form-input-image-upload__preview-wrap--with-clear]="hasCustomImageUploadPreview && imageClearEnabled"
+        (click)="onImageUploadPreviewClick($event)" (keydown.enter)="onImageUploadPreviewKeydown($event)"
+        (keydown.space)="onImageUploadPreviewKeydown($event)" [attr.tabindex]="imageUploadPreviewInteractive ? 0 : -1"
+        [attr.role]="imageUploadPreviewInteractive ? 'button' : null"
+        [attr.aria-label]="imageUploadPreviewInteractive ? imageUploadLightboxTitle : null">
+        <button *ngIf="hasCustomImageUploadPreview && imageClearEnabled" type="button"
+          class="form-input-image-upload__clear-btn" (click)="onImageUploadClearClick($event)"
+          [attr.aria-label]="'COMMON.DELETE_BY_CONDITION' | translate">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <img [src]="displayImageUploadSrc" [alt]="imageAltText"
+          [title]="imageUploadPreviewInteractive ? imageUploadLightboxTitle : null"
+          [class.form-input-image-upload__img--round]="imageShape === 'round'"
+          [class.form-input-image-upload__img--rectangle]="imageShape === 'rectangle'"
+          [style.width.px]="imageUploadWidthPx" [style.width.%]="imageUploadWidthPercent"
+          [style.height.px]="imageCustomHeight" />
+      </div>
+      <div class="d-flex justify-content-center">
+        <label class="btn btn-outline-primary btn-sm mb-0" style="margin-top: 10px;">
+          <i class="bi bi-upload"></i> {{ imageButtonLabel || (placeholder || label) }}
+          <input #imageNativeFileInput type="file" [accept]="imageAccept" (change)="onImageFileNativeChange($event)"
+            hidden #inputEl />
+        </label>
+      </div>
+      <ng-container *ngFor="let err of imageErrors">
+        <div *ngIf="err.type === imageErrorKey" class="text-danger mt-1 text-center">
+          <span>{{ err.label }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="type === 'file-upload'" class="form-input-file-upload">
+    <label *ngIf="!fileUploadDisabled" class="form-input-file-upload__trigger mb-0"
+      [class.form-input-file-upload__trigger--disabled]="fileUploadDisabled">
+      <i [class]="fileUploadIconClass"></i>
+      <input #inputEl type="file" [accept]="fileUploadAccept" [disabled]="fileUploadDisabled"
+        (change)="onFileUploadNativeChange($event)" hidden />
+    </label>
+    <div *ngIf="hasFileUploadValue && fileUploadBadgeText" class="form-input-file-upload__badge-wrap">
+      <button type="button"
+        class="badge badge-pill badge-light-primary form-input-file-upload__view-badge"
+        (click)="onFileUploadViewClick($event)">
+        {{ fileUploadBadgeText }}
+      </button>
+      <button *ngIf="fileUploadClearable" type="button" class="form-input-file-upload__clear-badge"
+        [attr.aria-label]="'Xóa file đính kèm'" [title]="'Xóa file'"
+        (click)="onFileUploadClearClick($event)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+<style>
+  .custom-checkbox-form .form-group {
+    margin-bottom: 0px !important;
+  }
+</style>

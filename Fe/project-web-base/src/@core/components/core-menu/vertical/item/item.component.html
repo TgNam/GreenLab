@@ -1,0 +1,24 @@
+<ng-container *ngIf="!item.hidden">
+  <!-- item with router url -->
+  <a class="d-flex align-items-center" [ngClass]="item.classes" *ngIf="item.url && !item.externalUrl"
+    [routerLink]="[item.url]" [target]="item.openInNewTab ? '_blank' : '_self'">
+    <ng-container *ngTemplateOutlet="itemContent"></ng-container>
+  </a>
+
+  <!-- item with external url -->
+  <a class="d-flex align-items-center" [ngClass]="item.classes" *ngIf="item.url && item.externalUrl" [href]="item.url"
+    [target]="item.openInNewTab ? '_blank' : '_self'">
+    <ng-container *ngTemplateOutlet="itemContent"></ng-container>
+  </a>
+
+  <ng-template #itemContent>
+    <span>
+      <span [data-feather]="item.icon" *ngIf="item.icon" class="menu-icon"></span>
+    </span>
+    <span class="menu-title text-truncate flex-grow-1" [translate]="item.translate">{{ item.title }}</span>
+    <span class="badge ml-auto mr-1" *ngIf="item.badge" [translate]="item.badge.translate"
+      [ngClass]="item.badge.classes">
+      {{ item.badge.title }}
+    </span>
+  </ng-template>
+</ng-container>

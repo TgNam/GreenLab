@@ -1,0 +1,56 @@
+<div class="form-group">
+  <label *ngIf="label" class="form-label fw-semibold">
+    {{ label }}
+    <span *ngIf="labelType === 'required'" class="text-danger ms-1">
+      *
+    </span>
+  </label>
+  <ng-select class="break-word-select" [ngClass]="size ? 'ng-select-size-' + size.replace('form-control-', '') : 'normal'" (open)="onSelectOpen()" (close)="onSelectClose()" #ngSelect [items]="results"
+    [bindLabel]="bindLabel" [bindValue]="bindValue" [(ngModel)]="selectedItem" [typeahead]="searchText$"
+    [loading]="isLoading" [clearable]="true" [searchable]="true" [placeholder]="placeholder" [attr.title]="getTitleFromOptions(selectedItem)"
+    [appendTo]="shouldAppendDropdownToBody ? 'body' : null"
+    [dropdownPosition]="shouldAppendDropdownToBody ? 'auto' : null"
+    [keyDownFn]="arrowKeyDownFn"
+    (change)="onItemSelect($event)" (ngModelChange)="onSelectedItemChange($event)" (scrollToEnd)="loadMore()"
+    (keydown.enter)="handleSelectEnter($event)">
+    <ng-template ng-typetosearch-tmp>
+      <div class="p-1 text-muted">
+        {{ searchPlaceholderText }}
+      </div>
+    </ng-template>
+
+    <!-- Template "Loading..." -->
+    <ng-template ng-loadingtext-tmp>
+      <div class="p-1 d-flex align-items-center">
+        <i class="fa fa-spinner fa-spin me-1" style="margin-right: 5px;"></i>
+        {{ loadingText }}
+      </div>
+    </ng-template>
+
+    <ng-template ng-notfound-tmp>
+      <div class="p-1">{{ noDataText }}</div>
+    </ng-template>
+
+    <!-- Dropdown template - Display: label - value -->
+    <ng-template ng-option-tmp let-item="item">
+      <div class="d-flex align-items-center">
+        <div class="cell-line-height">
+          <div>
+            <a class="font-medium-1 d-block">
+              <span class="font-weight-bold" style="font-size: 13px;">{{ getItemValue(item) }} - {{ getItemLabel(item) }} {{labelRightField ? ' - ' + getItemRightLabel(item) : ''}}</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </ng-template>
+
+    <!-- Selected label template -->
+    <ng-template ng-label-tmp let-item="item" let-clear="clear">
+      <div class="selected-item" style="min-width: 270px;font-size: 13px;">
+        <span>{{ getItemDisplayText(item) }}</span>
+        <span class="ng-value-icon right" (click)="clear(item)">×</span>
+      </div>
+    </ng-template>
+  </ng-select>
+</div>

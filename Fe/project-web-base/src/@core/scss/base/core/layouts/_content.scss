@@ -1,0 +1,1250 @@
+// ================================================================================================
+//     File Name: content.scss
+//     Description: Page content level SCSS for different screen size, layout and device.
+//     ----------------------------------------------------------------------------------------------
+//     Item Name: Vuexy - Vuejs, React, Angular, HTML & Laravel Admin Dashboard Template
+//     Author: PIXINVENT
+//     Authuseror URL: http://www.themeforest.net//pixinvent
+// ================================================================================================
+
+
+// Contest margin left for expanded & collapsed stats width & margin left
+// ================================================================================================
+
+@import '../mixins/main-menu-mixin';
+@import '@core/scss/angular/libs/blockui.component.scss';
+
+html {
+  font-size: $base-font-size;
+  height: 100%;
+  letter-spacing: 0.01rem;
+  
+
+  body {
+    height: 100%;
+    background-color: $body-bg;
+    direction: $body-direction;
+    font-family: "Google Sans Flex", sans-serif !important;
+
+    // paragraph line-height
+    p {
+      line-height: 1.5rem;
+    }
+
+    .log-dropdown-panel {
+      z-index: 1100 !important;
+    }
+  }
+
+  .overflow-y-hidden {
+    overflow-y: hidden !important;
+  }
+
+  .block-ui-wrapper {
+    z-index: 500 !important;
+  }
+
+  .mr-5px {
+    margin-right: 5px !important;
+  }
+  .form-floating {
+    position: relative;
+
+.ng-select-container {
+    height: calc(3.5rem + 2px) !important;
+    line-height: 1.25;
+}
+
+label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; // allow textareas
+    padding: 1rem 0.75rem;
+    overflow: hidden;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    border: 1px solid transparent; // Required for aligning label's text with the input as it affects inner box model
+    transform-origin: 0 0;
+    transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.ng-select-container {
+    padding-top: 1.625rem;
+    padding-bottom: .625rem;
+
+    .ng-input {
+        top: unset !important;
+    }
+}
+
+ng-select {
+    ~label {
+        opacity: 0.65;
+        transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+        z-index: 1001;
+    }
+
+
+    &:focus .ng-select-container {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+
+    &.is-valid .ng-select-container {
+        border-color: #198754 !important;
+    }
+
+    &.is-valid.ng-select-focused .ng-select-container {
+        box-shadow: 0 0 0 0.25rem rgb(25 135 84 / 25%);
+    }
+
+    &.is-invalid .ng-select-container {
+        border-color: #dc3545 !important;
+
+    }
+
+    &.is-invalid.ng-select-focused .ng-select-container {
+        box-shadow: 0 0 0 0.25rem rgb(220 53 69 / 25%);
+    }
+} }
+  .dark-layout  .p-name {
+    color: rgb(206, 204, 204) !important;
+  }
+
+  .dark-layout .active .p-name {
+    color: black !important;
+  }
+
+  .ng-select-size-sm .ng-arrow-wrapper {
+    padding-top: 3px;
+  }
+
+  .ng-select-size-normal .ng-arrow-wrapper {
+    padding-top: 4px;
+  }
+
+  .phone-active {
+    color: var(--success) !important;
+    cursor: pointer !important;
+  }
+  .phone-disabled {
+    color: #ccc;
+    cursor: not-allowed !important;
+  }
+  .ng-select.ng-select-size-normal .ng-select-container .ng-value-container .ng-input {
+    top: 8px !important;
+  }
+  
+ .ng-select.ng-select-size-sm .ng-select-container .ng-value-container .ng-input {
+    top: 5px !important;
+  }
+
+  .ng-select.ng-select-size-sm .ng-select-container .ng-value-container .ng-input {
+    font-size: 0.857rem;
+  }
+
+  .form-check-input {
+    accent-color: var(--primary);
+  }
+
+  .ng-select.ng-select-size-sm .ng-select-container .ng-placeholder {
+    top: 8px !important;
+    font-size: 0.857rem !important;
+  }
+
+  .ng-select.ng-multi-select-size-sm .ng-select-container .ng-placeholder {
+    top: 8px !important;
+    font-size: 0.857rem !important;
+  }
+
+  .ng-select.ng-select-size-sm .ng-select-container .ng-value {
+    font-size: 0.857rem !important;
+  }
+
+
+
+  .fa-file-excel-o::before {
+    font-size: 10px;
+  }
+
+  .ng-select.ng-select-focused .ng-select-container {
+    z-index: 500 !important;
+  }
+
+  .badge-blue-bold {
+    background-color: rgba($color: #0049e8, $alpha: 0.12);
+    color: blue !important;
+  }
+
+  .badge-light-yellow {
+    background-color: rgba($color: yellow, $alpha: 0.12);
+    color: #bbbb46 !important;
+  }
+
+
+
+  .wrap-text {
+    white-space: normal !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
+  }
+
+  .execution-time-info {
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .time-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 6px 0;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .time-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .dark-layout .time-info-item {
+    border-bottom-color: #3b4253 !important;
+  }
+
+
+  .time-info-item:last-child {
+    border-bottom: none;
+  }
+
+  .dark-layout .execution-time-info {
+    background: #283046 !important;
+    border-color: #3b4253 !important;
+  }
+
+  .dark-layout .time-info-item {
+    border-bottom-color: #3b4253 !important;
+  }
+
+  .btn-icon-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 100% !important;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
+
+  .btn-icon-icon i {
+    font-size: 12px !important;
+    line-height: 1;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  .btn-group .btn i {
+    font-size: 1rem;
+    /* icon vừa với nút */
+  }
+
+
+
+
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  // .ng-dropdown-panel-items {
+  //   z-index: 9999999 !important;
+  //   position: fixed !important;
+  //   width: var(--ng-select-panel-width) !important;
+  // }
+
+  // ng-dropdown-panel {
+  //     z-index: 9999999 !important;
+  //     position: sticky !important;
+  //     margin-top: 10px;
+  //   }
+
+  // .modal-content {
+  //   overflow: unset !important;
+  // }
+  // .modal-body {
+  //   overflow-y: auto !important;
+  // }
+
+  .modal-content-no-overflow {
+    overflow: unset !important;
+  }
+
+  .dark-layout .ng-select.ng-select-single .ng-select-container {
+    background-color: #283046 !important;
+  }
+
+  button:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.6;
+  }
+
+  .ng-select.ng-select-opened .ng-select-container {
+    z-index: 500 !important;
+  }
+
+  .ng-dropdown-panel {
+    z-index: 504 !important;
+  }
+  .dropdown-append-body-class {
+    .ng-dropdown-panel {
+      z-index: 1500 !important;
+    }
+  }
+
+ 
+  // button:disabled:hover {
+  //   background-color: var(--primary) !important;
+  // }
+
+  // .btn-icon {
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   height: 12px;
+  //   margin-right: 5px;
+  // }
+  // .btn-icon i {
+  //   font-size: 12px;
+  //   line-height: 1;
+  // }
+  .card-header .row {
+    width: 100%;
+  }
+
+  .group-badge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .badge-purple {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #e1bee7;
+  }
+
+  /* Di truyền */
+  .badge-orange {
+    background-color: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffe0b2;
+  }
+
+  .text-blue {
+    color: #1565c0;
+  }
+
+
+  .text-end {
+    text-align: end !important;
+  }
+
+  /* Sàng lọc */
+  .badge-blue {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #bbdefb;
+  }
+
+  .btn-flat-primary:active,
+  .btn-flat-primary.active,
+  .btn-flat-primary:focus {
+    background-color: transparent !important;
+    border-color: transparent !important;
+  }
+  .custom-floating-calendar {
+    position: relative;
+  
+    .field-wrapper {
+      position: relative;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      transition: all 0.2s ease;
+  
+      // Tác động vào input do Flatpickr sinh ra
+      ::ng-deep input {
+        border: none !important;
+        outline: none !important;
+        padding: 15px 12px 5px 12px !important; // Đẩy text xuống để dành chỗ cho label
+        height: 48px;
+        width: 100%;
+        background: transparent !important;
+      }
+    }
+  
+    .floating-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-60%);
+      background: transparent;
+      padding: 0 4px;
+      color: #999;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      z-index: 10;
+    }
+  
+    // Trạng thái nhãn bay lên
+    &.is-active {
+  
+      .floating-label {
+        top: 0;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--primary);
+        background: white !important; // Tạo nền trắng đè lên border
+        transform: translateY(-60%);
+      }
+    }
+  
+    .icon-suffix {
+      background: none;
+      border: none;
+      padding: 0 10px;
+      color: #666;
+      cursor: pointer;
+    }
+  }
+  .btn-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    min-width: 0;
+
+    >* {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+  }
+
+  .modal-body-scroll {
+    overflow-y: unset !important;
+  }
+
+  .bg-primary .custom-checkbox .custom-control-label {
+    color: white !important
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    padding-left: 6px;
+  }
+
+
+  .action-buttons-row {
+    display: flex;
+    gap: 8px;
+    padding-left: 6px;
+  }
+
+
+  /* Mobile */
+  @media (max-width: 766px) {
+    .action-buttons {
+      display: grid;
+      padding-left: 0px;
+      grid-template-columns: repeat(3, 1fr);
+      /* 3 nút / 1 hàng */
+      gap: 8px;
+    }
+
+    .action-buttons button {
+      font-size: 12px;
+      white-space: nowrap;
+      /* tránh xuống dòng chữ */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-buttons-row button {
+      font-size: 12px;
+      white-space: nowrap;
+      /* tránh xuống dòng chữ */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+  }
+
+
+  .btn-parent {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .btn-group-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    /* cho phép xuống hàng khi không đủ */
+    gap: 0.5rem;
+    justify-content: flex-start;
+    padding-left: 1rem;
+  }
+
+  @media (max-width: 648px) {
+    .content-header .breadcrumb {
+      display: flex;
+    }
+
+    .breadcrumbs-top {
+      .content-header-title {
+        display: contents !important;
+      }
+    }
+  }
+
+  /* Mobile: mỗi nút 1 hàng */
+  @media (max-width: 766px) {
+    .btn-group-responsive {
+      flex-direction: column;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      width: 100%;
+      gap: 0.5rem;
+      /* khoảng cách giữa các nút */
+    }
+
+    .btn-group-responsive .btn {
+      width: 100%;
+      /* nút chiếm full width */
+    }
+  }
+
+  .btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    color: white !important;
+  }
+
+
+  .btn-primary:not(:disabled):not(.disabled):active {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    color: white !important;
+  }
+
+
+  .btn-primary:focus {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    color: white !important;
+  }
+
+  .form-control:focus {
+    border-color: var(--primary) !important;
+  }
+
+  .form-control-sm:focus {
+    border-color: var(--primary) !important;
+    box-shadow: none !important;
+  }
+
+  .multi-select .ng-select-size-sm {
+    height: unset !important;
+    max-height: unset !important;
+  }
+
+  .ng-select.ng-select-size-sm .ng-select-container {
+    min-height: 30px !important;
+  }
+
+  .form-control-sm .form-group .form-label {
+    font-size: 0.8rem;
+  }
+
+  .card-body {
+    padding: 0.5rem !important;
+  }
+
+  .card-header {
+    padding: 0.5rem !important;
+  }
+
+  
+
+  .ng-select-size-sm {
+    height: 30px;
+    max-height: 30px;
+    font-size: 13px;
+    border-radius: 3px;
+  }
+
+  .ng-multi-select-size-sm {
+    height: 30px;
+    max-height: 30px;
+    font-size: 13px;
+    border-radius: 3px;
+  }
+
+  .ng-select-size-sm.ng-select-single .ng-select-container {
+    height: 30px !important;
+  }
+
+
+  .ng-select.ng-select-size-sm .ng-select-container .ng-value {
+    font-size: 13px !important;
+    z-index: 503 !important;
+  }
+
+  .ng-select.ng-multi-select-size-sm .ng-select-container .ng-value {
+    font-size: 13px !important;
+  }
+
+  a:hover {
+    color: var(--primary) !important;
+  }
+
+  .ng-select .ng-option.ng-option-marked {
+    background-color: var(--primary) !important;
+    font-weight: bold !important;
+    color: white !important
+  }
+
+  .ng-select .ng-option.ng-option-marked span {
+    background-color: var(--primary) !important;
+    font-weight: bold !important;
+    color: white !important;
+    font-size: 13px !important;
+  }
+  .ng-dropdown-panel .ng-option.ng-option-marked {
+    background-color: var(--primary) !important;
+    font-weight: bold !important;
+    color: white !important;
+  }
+  
+
+  .ng-dropdown-panel .ng-option.ng-option-selected {
+    background-color: var(--primary) !important;
+    color: white !important;
+  }
+  
+  .ng-dropdown-panel .ng-option.ng-option-marked span {
+    background-color: var(--primary) !important;
+    font-weight: bold !important;
+    color: white !important;
+  }
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    word-break: break-word !important;
+    white-space: normal !important;
+    text-overflow: unset !important;
+    font-size: 13px !important;
+  }
+  .form-control-sm {
+    border: 1px solid #d8d6de;
+  }
+
+  .ng-option-label {
+    font-size: 13px !important;
+  }
+
+  .ng-option {
+    font-size: 13px !important;
+  }
+
+
+  .breadcrumb a {
+    color: var(--primary) !important;
+  }
+
+  .dropdown-item:hover {
+    color: var(--primary) !important;
+  }
+
+  .dropdown-item:active {
+    color: #fff !important;
+    background-color: var(--primary) !important;
+  }
+
+  .dropdown-item:focus {
+    background-color: var(--primary) !important;
+    color: #fff !important;
+  }
+
+  .bg-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+  }
+
+  /* Checkbox chưa checked */
+  .custom-control-input~.custom-control-label::before {
+    border: 1px solid var(--primary);
+    /* border box */
+    background-color: #eaeaea;
+    /* nền trắng khi chưa check */
+  }
+
+  /* Khi checked */
+  .custom-control-input:checked~.custom-control-label::before {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    /* nền xanh khi check */
+  }
+
+  /* Check mark */
+  .custom-control-input:checked~.custom-control-label::after {
+    border-color: #fff;
+    /* màu tick */
+  }
+
+  .selected-language {
+    color: var(--primary);
+  }
+
+  /* Nếu muốn luôn giữ border khi hover/focus */
+  .custom-control-input:focus~.custom-control-label::before,
+  .custom-control-input:hover~.custom-control-label::before {
+    border-color: var(--primary);
+  }
+
+
+  .btn-primary:focus {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+  }
+
+  .btn-outline-primary {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+  }
+
+  .custom-radio .custom-control-input:checked~.custom-control-label::before {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+  }
+
+
+  .text-primary {
+    color: var(--primary) !important;
+  }
+
+  .content {
+    padding: 0;
+    position: relative;
+    transition: 300ms ease all;
+    backface-visibility: hidden;
+    min-height: calc(100% - #{$footer-height});
+    margin-left: $menu-expanded-width;
+
+    &.app-content {
+      padding: calc(#{$content-padding} + #{$navbar-height} + #{$floating-nav-margin} - 1.5rem) #{$content-padding} 0;
+
+      &.show-overlay {
+        .content-overlay {
+          z-index: 10;
+          opacity: 1;
+
+          ~.header-navbar-shadow {
+            display: none;
+          }
+        }
+      }
+
+      .content-overlay {
+        position: fixed;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba($black, 0.5);
+        cursor: pointer;
+        transition: all 0.7s, z-index 0s;
+        z-index: -1;
+      }
+
+      .content-area-wrapper {
+        display: flex;
+        position: relative;
+        overflow: hidden; // Required in apps
+
+        .content-wrapper,
+        .content-body {
+          height: 100%;
+        }
+      }
+    }
+
+    .body-content-overlay {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+      display: block;
+      z-index: 4;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+
+      &.show {
+        visibility: visible;
+        transition: all 0.3s ease;
+        opacity: 1;
+        background-color: rgba($black, 0.2);
+        border-radius: $border-radius*0.5;
+      }
+    }
+
+    .content-wrapper {
+      .content-header-title {
+        font-weight: 500;
+        color: $gray-400;
+        padding-right: $spacer;
+        border-right: 1px solid lighten($gray-600, 10%);
+      }
+
+      .content-header-right {
+        .dropdown-toggle {
+          &::after {
+            display: none;
+          }
+
+          i,
+          svg {
+            margin-right: 0;
+          }
+        }
+
+        .btn-icon {
+          padding: 0.8rem;
+
+          i,
+          svg {
+            height: $font-size-base;
+            width: $font-size-base;
+          }
+        }
+      }
+    }
+  }
+
+  // kanban app uses kanban-wrapper class as not having content-layout so added this class with all the options
+  // For floating navbar
+  .navbar-floating {
+    &.footer-static {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            #{$floating-nav-margin});
+        }
+      }
+    }
+
+    &.footer-hidden {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding},
+            #{$navbar-height},
+            0rem,
+            #{$floating-nav-margin},
+            0rem,
+            2);
+        }
+      }
+    }
+
+    &.footer-fixed {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            #{$floating-nav-margin},
+            0rem,
+            2);
+        }
+      }
+    }
+  }
+
+  //for navbar hidden
+  .navbar-hidden {
+    .app-content {
+      padding: #{$content-padding} #{$content-padding} 0 #{$content-padding} !important;
+    }
+
+    &.footer-static {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, 0rem, #{$footer-height});
+        }
+      }
+    }
+
+    &.footer-hidden {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, 0rem, 0rem, 0rem, 0rem, 2);
+        }
+      }
+    }
+
+    &.footer-fixed {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, 0rem, #{$footer-height}, 0rem, 0rem, 2);
+        }
+      }
+    }
+  }
+
+  // for static navbar
+  .navbar-static {
+    .main-menu {
+      top: 0;
+    }
+
+    .content {
+      min-height: calc(100% - calc(#{$navbar-height} + #{$footer-height}));
+    }
+
+    .app-content {
+      padding: #{$content-padding} #{$content-padding} 0 #{$content-padding};
+    }
+
+    &.footer-static {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, #{$navbar-height}, #{$footer-height});
+        }
+      }
+    }
+
+    &.footer-hidden {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, #{$navbar-height}, 0rem, 0rem, 0rem, 2);
+        }
+      }
+    }
+
+    &.footer-fixed {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            0rem,
+            0rem,
+            2);
+        }
+      }
+    }
+  }
+
+  // for sticky navbar
+  .navbar-sticky {
+    .app-content {
+      padding: calc(#{$content-padding} + #{$navbar-height}) #{$content-padding} 0 #{$content-padding};
+    }
+
+    &.footer-static {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, #{$navbar-height}, #{$footer-height});
+        }
+      }
+    }
+
+    &.footer-hidden {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding}, #{$navbar-height}, 0rem, 0rem, 0rem, 2);
+        }
+      }
+    }
+
+    &.footer-fixed {
+      .app-content {
+
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(#{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            0rem,
+            0rem,
+            2);
+        }
+      }
+    }
+  }
+
+  // navbar search width for sticky and static navbar
+  .navbar-static,
+  .navbar-sticky {
+    .nav.header-navbar {
+      .navbar-container {
+        padding-left: 1.6rem;
+        padding-right: 1.6rem;
+
+        .search-input {
+          .search-list {
+            &.show {
+              width: 98%;
+              left: 1%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Fixed layout
+  .footer-fixed {
+    .content {
+      &.app-content {
+        padding-bottom: $footer-height !important; // ? Added extra padding bottom due to fixed footer height
+      }
+    }
+  }
+
+  //Remove left margin for 1 column layout
+  [data-col='1-column'] {
+    .header-navbar {
+
+      // Custom width for floating nav
+      &.floating-nav {
+        width: calc(100vw - (100vw - 100%) - calc(#{$content-padding} * 2)) !important; // ? override all navbar type width
+      }
+
+      width: 100%; // Full width for other nav options
+      left: 0 !important;
+    }
+
+    .content,
+    .footer {
+      margin-left: 0px !important;
+    }
+
+    // horizontal layout
+    &.horizontal-layout {
+      .header-navbar {
+        width: 100% !important;
+      }
+
+      .app-content {
+        padding: calc(#{$content-padding} + #{$navbar-height} + #{$floating-nav-margin}) #{$content-padding} 0 #{$content-padding} !important; // ? need to check all navbar types case
+      }
+
+      &.footer-fixed {
+        .app-content {
+          padding: calc(#{$content-padding} + #{$navbar-height} + #{$floating-nav-margin}) #{$content-padding} #{$footer-height} #{$content-padding} !important; // ? need to check all navbar types case
+        }
+      }
+    }
+  }
+
+  /*
+    * Blank page
+    */
+
+  .blank-page {
+    .content {
+      margin-left: 0; // not using in both cases
+
+      // overflow-x hidden, overflow for y in sm screen issue resolved default
+      &.app-content {
+        overflow: overlay;
+        overflow-x: hidden;
+        padding: 0 !important;
+        transition: none;
+
+        // remove white space on top by header-navbar-shadow class
+        .header-navbar-shadow {
+          display: none;
+        }
+      }
+    }
+
+    // blank page content-wrapper
+    .content-wrapper {
+      padding: 0 !important;
+
+      // content to be in center horizontally and vertically
+      .flexbox-container {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+        justify-content: center;
+      }
+    }
+  }
+
+  .pace {
+    .pace-progress {
+      background: var(--primary);
+    }
+  }
+}
+
+.app-content.center-layout {
+  overflow: hidden;
+}
+
+/*
+* Col 3 layout for detached and general type
+*/
+
+@include media-breakpoint-up(lg) {
+  body {
+
+    // Normal sidebar
+    .content-right {
+      width: calc(100vw - (100vw - 100%) - #{$sidebar-width});
+      float: right;
+    }
+
+    .content-left {
+      width: calc(100vw - (100vw - 100%) - #{$sidebar-width});
+      float: left;
+    }
+
+    // Detached sidebar
+    .content-detached {
+      width: 100%;
+
+      &.content-right {
+        float: right;
+        margin-left: -$sidebar-width;
+
+        .content-body {
+          margin-left: calc(#{$sidebar-width} + #{$content-padding});
+        }
+      }
+
+      &.content-left {
+        float: left;
+        margin-right: -$sidebar-width;
+
+        .content-body {
+          margin-right: calc(#{$sidebar-width} + #{$content-padding});
+        }
+      }
+    }
+  }
+
+  .sidebar-right.sidebar-sticky {
+    float: right !important;
+    margin-left: -$sidebar-width;
+    width: $sidebar-width !important;
+    margin-top: $navbar-height + 1.25;
+  }
+}
+.ng-select.ng-select-multiple-size-sm .ng-select-container .ng-value-container .ng-placeholder {
+  top: 5px !important;
+}
+
+@include media-breakpoint-down(xs) {
+  html body .app-content {
+    padding: calc(#{$content-padding} - 1.5rem + #{$navbar-height} + #{$floating-nav-margin}) calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+
+  // For static navbar
+  html body.navbar-static .app-content {
+    padding: calc(#{$content-padding} - 0.8rem) calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+
+  // For sticky navbar
+  html body.navbar-sticky .app-content {
+    padding: calc(#{$content-padding} - 0.8rem + #{$navbar-height}) calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+
+  // For Hidden navbar
+  html body.navbar-hidden .app-content {
+    padding: calc(#{$content-padding} - 0.8rem) calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+}
+
+@include media-breakpoint-down(xs) {
+
+  .navbar-static,
+  .navbar-sticky {
+    .app-content {
+      .header-navbar {
+        .navbar-container {
+          padding-left: 1rem;
+          padding-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+// For Fullscreen IE
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  html.full-screen {
+    width: 100%;
+
+    .content.app-content {
+      height: 100%;
+      overflow: scroll;
+      overflow-x: hidden;
+    }
+  }
+}

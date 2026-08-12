@@ -1,0 +1,9 @@
+FROM nginx:stable-alpine
+
+COPY /vuexy /usr/share/nginx/html
+COPY 404.html /usr/share/nginx/html/404.html
+EXPOSE 80
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+CMD ["nginx", "-g", "daemon off;"]

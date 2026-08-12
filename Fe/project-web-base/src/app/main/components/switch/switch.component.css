@@ -1,0 +1,120 @@
+.switch-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.switch-title {
+  font-weight: 500;
+  user-select: none;
+}
+
+.switch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  background-color: #888;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.switch:not(.disabled) {
+  cursor: pointer;
+}
+
+.switch .slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch.checked {
+  background-color: var(--primary) !important; /* tím */
+}
+
+.switch.checked .slider {
+  transform: translateX(22px);
+}
+
+/* Small size - chỉ áp dụng khi có size="small" */
+.switch.size-small {
+  width: 32px;
+  height: 16px;
+  border-radius: 16px;
+}
+
+.switch.size-small .slider {
+  top: 50%;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%);
+}
+
+.switch.size-small.checked .slider {
+  transform: translateY(-50%) translateX(16px);
+}
+
+/* Medium size - chỉ áp dụng khi có size="medium" - nhỏ hơn 10% so với 28px (45x25) */
+.switch.size-medium {
+  width: 45px;
+  height: 25px;
+  border-radius: 50px;
+}
+
+.switch.size-medium .slider {
+  top: 50%;
+  left: 3.5px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.switch.size-medium.checked .slider {
+  transform: translateY(-50%) translateX(18px);
+}
+
+/* Large size - chỉ áp dụng khi có size="large" */
+.switch.size-large {
+  width: 60px;
+  height: 34px;
+  border-radius: 34px;
+}
+
+.switch.size-large .slider {
+  top: 4px;
+  left: 4px;
+  width: 26px;
+  height: 26px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switch.size-large.checked .slider {
+  transform: translateX(26px);
+}
+
+/* Disabled state */
+.switch.disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  background-color: #ccc !important;
+}
+
+.switch.disabled.checked {
+  background-color: #999 !important;
+}
+
+.switch.disabled .slider {
+  background-color: #f5f5f5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}

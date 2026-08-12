@@ -1,0 +1,123 @@
+.btn-primary {
+    display: flex;
+  }
+
+  .btn-icon-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 12px;
+    margin-right: 5px;
+  }
+
+  :host ::ng-deep .test-table-wrapper
+  .datatable-header
+  .datatable-header-cell:nth-child(3) {
+  display: flex;
+  justify-content: center;
+  padding: 0px !important;
+}
+
+:host ::ng-deep .test-table-wrapper
+  .datatable-row-center
+  .datatable-body-cell:nth-child(3) {
+  padding: 0px !important;
+}
+
+
+
+  .btn-icon-icon i {
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  ::ng-deep .datatable-body-cell-label {
+    width: 100% !important;
+  }
+
+  /* Mobile responsive styles */
+  @media (max-width: 768px) {
+
+    /* Card header - filters section */
+    .card-header {
+      padding: 1rem !important;
+    }
+
+    .card-header .row {
+      margin: 0;
+    }
+
+    /* Action buttons row - justify start on mobile */
+    .action-buttons-row {
+      justify-content: flex-start !important;
+    }
+
+
+
+    /* Search button group */
+    .btn-group-responsive {
+      flex-direction: column;
+    }
+
+    .btn-group-responsive app-button,
+    .btn-group-responsive button {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Permission name and URI - wrap text on mobile */
+    .permission-name {
+      word-wrap: break-word;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .permission-uri {
+      font-size: 0.85rem;
+      word-wrap: break-word;
+      word-break: break-word;
+      margin-top: 0.25rem;
+    }
+
+    /* Children permissions - stack vertically on mobile */
+    .d-flex.justify-content-between.align-items-center {
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+
+
+
+    /* Action buttons - full width on mobile */
+    .btn-parent {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .btn-parent button {
+      margin-bottom: 0.5rem;
+      margin-right: 0 !important;
+    }
+
+    /* Table wrapper - horizontal scroll on mobile */
+    ::ng-deep .ngx-datatable {
+      overflow-x: auto;
+    }
+
+    ::ng-deep .datatable-body-cell,
+    ::ng-deep .datatable-header-cell {
+      min-width: 120px;
+    }
+
+    /* Reduce padding on mobile */
+    .card-body {
+      padding: 0.5rem !important;
+    }
+  }
+
+  /* Tablet responsive */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .card-header .row [class*="col-md-3"] {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }

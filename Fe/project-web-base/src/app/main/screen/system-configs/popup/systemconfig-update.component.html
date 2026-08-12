@@ -1,0 +1,76 @@
+<app-modal-content [visible]="visible" [size]="'lg'" [title]="'SYSTEMCONFIG.EDIT_TITLE' | translate" [saveButtonText]="'COMMON.SAVE' | translate"
+    [closeButtonText]="'COMMON.CLOSE' | translate" [disableSave]="!systemconfig?.name?.trim() || !systemconfig?.value?.trim() || errMsg.length > 0 || saving"
+    [loading]="saving"
+    (onSave)="onSave()" (onClose)="onClose()">
+
+
+    <!-- Body -->
+    <div class="modal-body">
+        <div *ngIf="systemconfig; else loading">
+            <div class="mb-2">
+                <span *ngIf="mode === 'view'" class="fw-semibold">{{ 'SYSTEMCONFIG.KEY' | translate }}: </span>
+                <app-form-input *ngIf="mode === 'edit'" [label]="'SYSTEMCONFIG.KEY' | translate" type="text" [(model)]="systemconfig.key"
+                    [disabled]="true" labelType="required">
+                </app-form-input>
+                <span *ngIf="mode === 'view'" style="font-weight: bold;">&nbsp;{{ systemconfig.key }}</span>
+            </div>
+            <div class="mb-2">
+                <span *ngIf="mode === 'view'" class="fw-semibold">{{ 'SYSTEMCONFIG.CONFIG_NAME' | translate }}: </span>
+                <app-form-input *ngIf="mode === 'edit'" [label]="'SYSTEMCONFIG.CONFIG_NAME' | translate" type="text" [(model)]="systemconfig.name"
+                    [max]="250" labelType="required" (modelChange)="validateParam('name', $event)">
+                </app-form-input>
+                <span *ngIf="mode === 'view'" style="font-weight: bold;">&nbsp;{{ systemconfig.name }}</span>
+                <ng-container *ngIf="mode === 'edit'">
+                    <div *ngFor="let err of errMsg" class="text-danger mt-1">
+                        <span *ngIf="err.type == 'name'">{{ err.label }}</span>
+                    </div>
+                </ng-container>
+             </div>
+
+            <div class="mb-2">
+                <span *ngIf="mode === 'view'" class="fw-semibold">{{ 'SYSTEMCONFIG.VALUE' | translate }}: </span>
+                <app-form-input *ngIf="mode === 'edit'" [label]="'SYSTEMCONFIG.VALUE' | translate" type="textarea" [(model)]="systemconfig.value" 
+                    [rows]="4" [placeholder]="'SYSTEMCONFIG.ENTER_VALUE' | translate" labelType="required" (modelChange)="onValueChange()">
+                </app-form-input>
+                <span *ngIf="mode === 'view'" style="font-weight: bold; display: block; margin-top: 8px;">&nbsp;{{ systemconfig.value }}</span>
+                <ng-container *ngIf="mode === 'edit'">
+                    <div *ngFor="let err of errMsg" class="text-danger mt-1">
+                        <span *ngIf="err.type == 'value'">{{ err.label }}</span>
+                    </div>
+                </ng-container>
+            </div>
+            
+            <!-- JSON Viewer -->
+            <div class="mb-2" *ngIf="mode === 'edit' && isValidJson && parsedJsonData">
+                <label class="fw-semibold mb-2">{{ 'SYSTEMCONFIG.JSON_VIEW' | translate }}:</label>
+                <div class="json-viewer-container" style="border: 1px solid #dee2e6; border-radius: 4px; padding: 12px; background-color: #f8f9fa; max-height: 180px; overflow-y: auto;">
+                    <ngx-json-viewer [json]="parsedJsonData"></ngx-json-viewer>
+                </div>
+            </div>
+            <div class="mb-2">
+                <span *ngIf="mode === 'view'" class="fw-semibold">{{ 'SYSTEMCONFIG.NOTE' | translate }}: </span>
+                <app-form-input *ngIf="mode === 'edit'" [label]="'SYSTEMCONFIG.NOTE' | translate" type="text" [(model)]="systemconfig.note"
+                    [max]="250">
+                </app-form-input>
+                <span *ngIf="mode === 'view'" style="font-weight: bold;">&nbsp;{{ systemconfig.note }}</span>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-2">
+                <app-form-input type="checkbox" [for]="'status'" [(model)]="systemconfig.active"
+                    [label]="systemconfig.active ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate)"
+                    (modelChange)="changeStatus($event)">
+                </app-form-input>
+            </div>
+
+        </div>
+
+        <ng-template #loading>
+            <div class="text-center p-3">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+        </ng-template>
+    </div>
+
+    <!-- Footer -->
+</app-modal-content>

@@ -1,0 +1,80 @@
+.floating-print-shell {
+  display: contents;
+}
+
+.floating-print-modal-inner {
+  padding: 0.25rem 0 0;
+}
+
+.floating-print-section {
+  margin-bottom: 1.25rem;
+}
+
+.floating-print-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.floating-print-section__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+.floating-print-section__body {
+  gap: 0.5rem;
+}
+
+.floating-print-section__body--tight {
+  row-gap: 4px;
+}
+
+.floating-print-section__print-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+}
+
+.floating-print-section__row {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  gap: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.floating-print-section__row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.floating-print-actions-bar__fab {
+  cursor: move; /* Hiển thị biểu tượng bàn tay di chuyển */
+  user-select: none;
+  touch-action: none; /* Tốt cho thiết bị di động */
+  
+  // Tránh việc nhấn giữ gây ra hiệu ứng chuyển động chậm (nếu có)
+  transition: none !important; 
+}
+:host .no-mb ::ng-deep .form-group {
+  margin-bottom: 0px;
+}
+.floating-print-signature__select {
+  flex: 1 1 230px;
+  min-width: 230px;
+  max-width: 230px;
+}
+
+:host ::ng-deep .floating-print-signature__select .form-group {
+  width: 100%;
+  min-width: 230px;
+  margin-bottom: 0px;
+}
+
+@media (max-width: 576px) {
+  .floating-print-section__print-grid {
+    grid-template-columns: 1fr;
+  }
+}

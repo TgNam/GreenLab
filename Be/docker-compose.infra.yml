@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+    mongodb:
+        image: mongo:7
+        container_name: mongodb
+        restart: unless-stopped
+        ports:
+            - "27018:27017"
+        volumes:
+            - mongo_data:/data/db
+        environment:
+            MONGO_INITDB_DATABASE: greenlab
+        networks:
+            - backend
+    
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
+        restart: unless-stopped
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root123
+            MYSQL_DATABASE: greenlab
+            MYSQL_USER: dev
+            MYSQL_PASSWORD: 552502102
+        volumes:
+            - mysql_data:/var/lib/mysql
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        networks:
+            - backend
+    
+    redis:
+        image: redis:7-alpine
+        container_name: redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        networks:
+            - backend
+
+volumes:
+    mongo_data:
+    mysql_data:
+    redis_data:
+
+networks:
+    backend:
+        driver: bridge

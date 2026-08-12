@@ -1,0 +1,222 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{ 
+      headerTitle: 'ROLE.TITLE' | translate, 
+      actionButton: false, 
+      breadcrumb: { 
+        links: [
+          { name: 'COMMON.HOME' | translate, isLink: true, link: '/' }, 
+          { name: 'ROLE.TITLE' | translate, isLink: false }
+        ] 
+      } 
+    }">
+  </app-content-header>
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter [showAdvanced]="showAdvancedSearch" (toggleAdvanced)="toggleAdvancedSearch()"
+          style="width: 100% !important;">
+          <!-- Tất cả filters - chỉ viết một lần, TypeScript sẽ tự động di chuyển các input có advanced-filter -->
+          <div basic-filters class="row g-2 w-100">
+            <!-- Basic filters - luôn hiển thị -->
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'COMMON.GROUP_NAME' | translate" type="text" [(model)]="name"
+                (onEnter)="fetchPage()" (modelChange)="filterUpdate($event, 'name')">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <label class="form-label fw-semibold">
+                {{'COMMON.EMPLOYEE' | translate}}
+              </label>
+              <app-user-autocomplete [searchFunction]="searchUsers" [(searchText)]="searchTextAutocomplete"
+                [onSelect]="onUserSelected" [placeholder]="'COMMON.SEARCH_EMPLOYEE' | translate">
+              </app-user-autocomplete>
+            </div>
+
+            <!-- Advanced filters - sẽ tự động di chuyển vào advanced-filters trên mobile -->
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.DESCRIPTION' | translate" type="text" [(model)]="description"
+                (onEnter)="fetchPage()"
+                placeholder="{{ 'COMMON.SEARCH' | translate }} {{ 'COMMON.DESCRIPTION' | translate | lowercase }}..."
+                (modelChange)="filterUpdate($event, 'description')">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'COMMON.STATUS' | translate" type="select-search" [(model)]="isActive"
+                (modelChange)="filterUpdate($event, 'status')" [options]="statusOptions" optionLabel="label"
+                optionValue="value">
+              </app-form-input>
+            </div>
+          </div>
+        </app-advanced-search-filter>
+        <div class="action-buttons">
+          <app-button [text]="'COMMON.SEARCH' | translate" type="primary" [buttonClass]="'btn-sm btn-center'"
+            [loading]="isSearching" icon="fa fa-search" (clickBtn)="fetchPage()" [title]="'COMMON.SEARCH' | translate">
+          </app-button>
+          <button class="btn btn-center btn-sm btn-outline-secondary waves-effect waves-float waves-light"
+            (click)="resetFilters()" title="{{ 'COMMON.RESET_FILTERS' | translate }}">
+            <div class="btn-icon-icon">
+              <i class="fa fa-refresh"></i>
+            </div>
+            <div class="btn-text">
+              {{'COMMON.RESET' | translate}}
+            </div>
+          </button>
+          <button class="btn btn-center btn-sm btn-primary waves-effect waves-float waves-light"
+            (click)="openModalCreate()" title="{{ 'ROLE.CREATE_ROLE' | translate }}">
+            <div class="btn-icon-icon">
+              <i class="fa fa-plus"></i>
+            </div>
+            <div class="btn-text">
+              {{'ROLE.CREATE_ROLE' | translate}}
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card card-body" style="padding: 0px !important;">
+
+    <ng-template #infomationTemplate let-row="row">
+      <div class="config-info-wrapper">
+        <div class="d-flex">
+          <!-- Icon bên trái -->
+          <div class="config-icon-wrapper">
+            <i *ngIf="row.icon" [featherIcon]="row.icon" class="config-icon"></i>
+            <i *ngIf="!row.icon" class="fa fa-users config-icon"></i>
+          </div>
+          
+          <!-- Nội dung bên phải -->
+          <div class="config-content">
+            <!-- Title -->
+            <div class="config-title" title="Tên">
+              <strong class="text-ellipsis">{{ row.name || ('COMMON.NOT_HAVE' | translate) }}</strong>
+            </div>
+            
+            <!-- Description -->
+            <div class="config-description" title="Mô tả" *ngIf="row.description">
+             <span class="text-ellipsis">{{ row.description }}</span>
+            </div>
+            
+            <!-- Metadata -->
+            <div class="config-metadata">
+              <span class="metadata-item" *ngIf="row.position" style="margin-right: 5px;">
+                <i class="fa fa-bars text-muted me-1" style="margin-right: 1px;"></i>
+                <span style="margin-bottom: 1px;">{{ 'COMMON.POSITION' | translate }}: <span style="font-weight: bold;">{{ row.position }}</span></span>
+              </span>
+              <span class="metadata-item" *ngIf="row.update_time">
+                <i class="fa fa-clock text-muted me-1" style="margin-right: 1px;"></i>
+                <span style="margin-bottom: 1px;">{{ 'COMMON.UPDATED_TIME' | translate }}: <span style="font-weight: bold;">{{ row.update_time | date:'HH:mm dd/MM/yy' }}</span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #statusTemplate let-row="row">
+      <!-- <app-switch [title]="'COMMON.STATUS' | translate" [checked]="row.active" [isChange]="false"
+        (onToggle)="openModalChangeStatus(row)">
+      </app-switch> -->
+      <div class="badge badge-pill" [ngClass]="{
+                  'badge-light-primary': row.active == true,
+                  'badge-light-danger': row.active == false
+                }">
+        {{ (row.active ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}
+      </div>
+    </ng-template>
+
+
+    <ng-template #actionTemplate let-row="row">
+      <!-- <a (click)="openModal(row, 'edit')" class="btn btn-sm btn-primary mr-1 "
+        [title]="'ROLE_MANAGEMENT.UPDATE' | translate">
+        <i class="fa fa-edit"></i>
+        {{'COMMON.EDIT' | translate}}
+      </a> -->
+      <div class="action-buttons-row">
+        <button (click)="openModal(row, 'edit')" class="btn btn-sm btn-center btn-primary"
+          [title]="'ROLE_MANAGEMENT.UPDATE' | translate">
+          <div class="btn-icon-icon">
+            <i class="fa fa-edit"></i>
+          </div>
+          <div class="btn-text">
+            {{'COMMON.EDIT' | translate}}
+          </div>
+        </button>
+
+        <button (click)="showPermissionDialog(row)" class="btn btn-sm btn-primary btn-center"
+          title="{{ 'ROLE.UPDATE_PERMISSIONS' | translate }}">
+          <div class="btn-icon-icon">
+            <i class="fa fa-random"></i>
+          </div>
+          <div class="btn-text">
+            {{'ROLE.UPDATE_PERMISSIONS' | translate}}
+          </div>
+        </button>
+
+
+        <!-- add a 3 dots menu -->
+        <div ngbDropdown class="btn-group" container="body">
+          <button class="btn btn-sm btn-primary" ngbDropdownToggle>
+            <div class="btn-icon-icon" style="margin-right: -5px;">
+              <i class="fa fa-ellipsis-v"></i>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button (click)="removeFunction(row)" class="dropdown-item" style="width: 100%;"
+              title="{{ 'ROLE.DELETE_ROLE_GROUP' | translate }}">
+              {{'ROLE.DELETE_ROLE_GROUP' | translate}}
+            </button>
+
+            <button (click)="cloneRole(row.id)" class="dropdown-item" style="width: 100%;"
+              title="{{ 'ROLE.CLONE_ROLE_GROUP' | translate }}">
+              {{'ROLE.CLONE_ROLE_GROUP' | translate}}
+            </button>
+
+
+
+            <button (click)="openMemberModal(row)" class="dropdown-item" style="width: 100%;"
+              title="{{ 'ROLE.ADD_EMPLOYEE' | translate }}">
+              {{'ROLE.ADD_EMPLOYEE' | translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+    </ng-template>
+
+    <app-dynamic-table (timeTypeChange)="onTimeTypeChange($event)" [columns]="columns" [timeType]="timeType"
+      (timeFromChange)="createdFrom = $event" (timeToChange)="createdTo = $event" [timeOpts]="timeOpts"
+      [timeFrom]="createdFrom" [timeTo]="createdTo" [total]="total" [sizeOptions]="sizeOptions" [page]="page"
+      [selectedOption]="selectedOption" [onPageChange]="onPageChange.bind(this)" [rows]="rows"
+      [onPageSizeChange]="onPageSizeChange.bind(this)" *ngIf="rows" [totalCnt]="total" [totalPage]="totalPage">
+
+    </app-dynamic-table>
+  </div>
+</div>
+
+<app-role-detail [visible]="showModal" [mode]="modalMode" [saving]="isUpdating" [role]="selectedAdmin"
+  (close)="closeModal()" (save)="saveAdmin($event)">
+</app-role-detail>
+
+<app-role-change-status [saving]="changing" [visible]="showModalChangeStatus" [role]="selectedAdminChangeStatus"
+  (close)="closeModalChangeStatus()" (save)="changeStatus($event)">
+</app-role-change-status>
+
+<app-role-create [visible]="showModalCreate" [creating]="isCreating" [role]="creatingRole" (close)="closeModalCreate()"
+  (save)="create($event)">
+</app-role-create>
+
+<assign-permission *ngIf="showAssignPermission" [loading]="assigning" [visible]="showAssignPermission"
+  [selectedGroup]="selectedGroupName" [selectedGroupId]="selectedGroupNameId" (close)="onPermissionClose()"
+  (save)="onPermissionSave($event)">
+</assign-permission>
+
+<app-add-group-members-modal [visible]="showModalMember" [groupId]="groupMemberId" [groupName]="groupMemberName"
+  (close)="closeMemberModal()" (save)="saveMembers($event)">
+</app-add-group-members-modal>
+
+<app-confirm-modal [visible]="confirmVisible" [loading]="deleting" [header]="confirmHeader" [message]="confirmMessage"
+  [type]="confirmType" (onCancel)="handleCancel()" (onConfirm)="handleConfirm()">
+</app-confirm-modal>

@@ -1,0 +1,31 @@
+
+<div #modalElement class="modal fade show" tabindex="-1" *ngIf="visible" style="display: block; background-color: rgba(0,0,0,0.5)">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0">
+
+      <div class="modal-header" [ngClass]="{
+  'bg-danger': type === 'danger',
+  'bg-primary': type === 'primary'
+}" style="padding-top: 10px; padding-bottom: 10px;">
+        <h5 class="modal-title" style="color: white !important;">{{ header }}</h5>
+        <button type="button" class="btn-close-custom" (click)="handleCancel()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p>{{ message  }}</p>
+      </div>
+
+      <div class="modal-footer justify-content-end">
+        <button type="button" class="btn btn-secondary-outline" style="font-weight: bold;"
+          (click)="handleCancel()">Hủy</button>
+
+        <app-button [class]="type === 'danger' ? 'confirm-action-btn-danger' : 'confirm-action-btn'" [text]="'Xác nhận'"
+          [type]="type === 'danger' ? 'danger' : 'primary'" [buttonClass]="'btn-center'" [disabled2]="loading" (clickBtn)="handleConfirm()"></app-button>
+
+      </div>
+
+    </div>
+  </div>
+</div>

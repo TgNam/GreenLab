@@ -1,0 +1,50 @@
+<!-- Overlay -->
+<div *ngIf="visible" #backdropElement class="modal-backdrop-custom"></div>
+
+<!-- Modal -->
+<div #modalElement class="modal fade show d-block" tabindex="-1" *ngIf="visible">
+  <div [class]="modalDialogClass">
+    <div class="modal-content shadow-lg rounded-3 border-0 d-flex flex-column" *blockUI="blockUIName"  style="max-height: 90vh;background-color: #f8f8f8">
+
+      <!-- Header -->
+      <div class="modal-header custom-header bg-primary flex-shrink-0" style="display: flex; align-items: center;padding-top: 3px; padding-bottom: 3px;">
+        <h5 *ngIf="!customHtmlHeader && !customHeader" [title]="title" class="modal-title mb-0 text-white">
+          {{ title }}
+        </h5>
+        <div *ngIf="customHtmlHeader && !customHeader" class="modal-title mb-0 text-white" [innerHTML]="title"></div>
+        <ng-content *ngIf="customHeader" select="[modalHeader]"></ng-content>
+        <button type="button" class="btn-close-custom bg-primary" (click)="handleClose()">×</button>
+      </div>
+
+      <!-- Body -->
+      <div class="flex-grow-1 " [ngClass]="overflowY ? 'modal-body' : 'modal-bodyX'" >
+        <div>
+          <ng-content></ng-content>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 flex-shrink-0" *ngIf="!customFooter">
+        <button type="button" class="btn btn-outline-secondary" (click)="handleClose()">
+          {{ closeButtonText }}
+        </button>
+        <app-button
+          *ngIf="!hideSave"
+          [text]="saveButtonText"
+          [buttonClass]="'btn-center'"
+          type="primary"
+          [disabled]="loading"
+          [onlyDisabled]="disableSave"
+          [loading]="loading"
+          (clickBtn)="handleSave()">
+        </app-button>
+      </div>
+      
+      <!-- Custom Footer -->
+      <div class="modal-footer border-0 flex-shrink-0" *ngIf="customFooter">
+        <ng-content select="[modalFooter]"></ng-content>
+      </div>
+
+    </div>
+  </div>
+</div>

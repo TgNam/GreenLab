@@ -1,0 +1,1011 @@
+// /* dynamic-table.component.scss */
+
+// /* === DARK THEME === */
+
+// ::ng-deep .datatable-header {
+//   /* Viền ngoài toàn bảng */
+//   height: unset !important;
+// }
+
+// .sort-btn {
+//   display: none !important;
+// }
+
+// /* Ô trong bảng */
+
+// /* Dark mode */
+// ::ng-deep .table-dark1 .datatable-body-cell {
+//   padding: 12px 16px;
+//   // border-top: none;
+//   // border-left: none;
+//   // border-right: 1px solid rgba(255, 255, 255, 0.1);
+//   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+// }
+
+// ::ng-deep .table-dark1 .datatable-header-cell {
+//   padding: 12px 16px;
+//   // border-top: 1px solid rgba(255, 255, 255, 0.1);
+//   // border-left: none;
+//   // border-right: 1px solid rgba(255, 255, 255, 0.1);
+//   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+// }
+
+// /* Light mode */
+// ::ng-deep .table-light1 .datatable-body-cell{
+//   padding: 12px 16px;
+//   // border-top: none;
+//   // border-left: none;
+//   // border-right: 1px solid rgba(0, 0, 0, 0.1);
+//   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+// }
+// ::ng-deep .table-light1 .datatable-header-cell {
+//   padding: 12px 16px;
+//   // border-top: 1px solid rgba(0, 0, 0, 0.1);
+//   // border-left: none;
+//   // border-right: 1px solid rgba(0, 0, 0, 0.1);
+//   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+// }
+
+// ::ng-deep .table-light1 .datatable-header-cell {
+//   border-top: 1px solid rgba(0, 0, 0, 0.1);
+// }
+// .ngx-datatable {
+//   overflow: auto !important;
+// }
+
+// /* Header */
+// ::ng-deep .table-dark1 .datatable-header-cell {
+//   font-weight: bold !important;
+//   box-sizing: border-box;
+// }
+
+
+
+// // ::ng-deep .table-light1 .datatable-body-cell {
+// //   padding: 12px 16px;
+// //   border-right: 1px solid rgba(0, 0, 0, 0.1);
+// //   border-bottom: 1px solid rgba(0, 0, 0, 0.1);;
+// //   border-left: 1px solid rgba(0, 0, 0, 0.1);
+// //   border-top: 1px solid rgba(0, 0, 0, 0.1);
+// // }
+
+// // ::ng-deep .table-light1 .datatable-header-cell {
+// //   padding: 12px 16px;
+// //   border-right: 1px solid rgba(0, 0, 0, 0.1);
+// //   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+// //   border-left: 1px solid rgba(0, 0, 0, 0.1);
+// //   border-top: 2px solid rgba(0, 0, 0, 0.1);
+// // }
+
+// ::ng-deep .table-dark1 .datatable-row-center .datatable-body-cell:first-child,
+// ::ng-deep .table-dark1 .datatable-header-cell:first-child {
+//   // border-left: 1px solid rgba(255, 255, 255, 0.1);
+// }
+
+// ::ng-deep .table-light1 .datatable-row-center .datatable-body-cell:first-child,
+// ::ng-deep .table-light1 .datatable-header-cell:first-child {
+//   // border-left: 1px solid rgba(0, 0, 0, 0.1);
+// }
+.table, .datatable-body {
+  &:focus {
+      outline: none !important; // Xóa đường viền khi focus
+      box-shadow: none !important; 
+  }
+}
+.virtual-body {
+  height: 600px;        /* hoặc dùng biến */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.virtual-body,
+cdk-virtual-scroll-viewport {
+  width: 100% !important;
+  display: block;
+}
+.datatable-body .empty-row  {
+  display: none !important;
+}
+.mx-25 .form-group {
+  margin-bottom: 0 !important;
+}
+.th-center .column-name {
+  text-align: center !important;
+}
+
+// /* === Cột settings === */
+// /* Ẩn body */
+// ::ng-deep .datatable-body .column-settings {
+//   display: none !important;
+//   width: 0 !important;
+//   min-width: 0 !important;
+//   flex: 0 0 0 !important;
+//   padding: 0 !important;
+//   margin: 0 !important;
+//   border: none !important;
+// }
+
+// /* Giữ header cột settings */
+// ::ng-deep .datatable-header .column-settings {
+//   width: 40px !important;
+//   min-width: 40px !important;
+//   flex: 0 0 40px !important;
+//   text-align: center !important;
+// }
+
+// /* === Chung === */
+// ::ng-deep .datatable-row-center {
+//   align-items: stretch !important;
+// }
+
+// .icon-settings {
+//   font-size: 18px;
+//   cursor: pointer;
+//   transition: color 0.2s;
+// }
+
+.icon-settings:hover {
+  color: #007bff;
+}
+.mobile-card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mobile-card-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.mobile-pagination {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-right: 1rem; /* padding cho mobile */
+}
+:host {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; // Important for flex items to shrink
+}
+
+:host ::ng-deep .ngx-datatable {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.table-wrapper {
+    width: 100%;
+    min-width: 0; // Important for flex items to shrink
+    overflow-x: auto;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0; // Important for flex items to shrink
+    display: block;
+    height: 100%;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 101; // cao hơn body và sticky cell, giống hiệu ứng trong excel import
+}
+
+// Đồng bộ một số style nền từ excel-import-modal để tránh cell bị trong suốt khi dùng cột cố định
+:host ::ng-deep td {
+  background-color: #ffffff;
+}
+:host ::ng-deep thead {
+  z-index: 1200;
+}
+
+// ===== STICKY COLUMNS CLASS - FOR OPTIONAL USE =====
+.sticky-columns {
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+
+    // First column (Checkbox) - sticky at left: 0
+    th:first-child,
+    td:first-child {
+      position: sticky !important;
+      left: 0 !important;
+      z-index: 10 !important;
+      background: white !important;
+      box-shadow: none !important;
+      width: 40px !important;
+      min-width: 40px !important;
+      max-width: 40px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+
+    // Header checkbox - center
+    thead th:first-child {
+      padding: 0 !important;
+
+      .th-content {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      input[type="checkbox"] {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    }
+
+    // Body checkbox cells - center alignment
+    tbody td:first-child {
+      padding: 0 !important;
+      text-align: center !important;
+      vertical-align: middle !important;
+
+      input[type="checkbox"] {
+        margin: 0 !important;
+        padding: 0 !important;
+        vertical-align: middle !important;
+      }
+    }
+
+    // Second column (Số phiếu) - sticky directly after first column (no gap)
+    th:nth-child(2),
+    td:nth-child(2) {
+      position: sticky !important;
+      left: 40px !important;
+      z-index: 10 !important;
+      background: white !important;
+      box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1) !important;
+      margin-left: 0 !important;
+    }
+
+    // Header cells - higher z-index and different background
+    thead th:first-child,
+    thead th:nth-child(2) {
+      background: #f8f9fa !important;
+      z-index: 11 !important;
+    }
+
+    // Hover state for ALL body rows - match Bootstrap table-hover color
+    tbody tr:hover {
+      td {
+        background-color: #f5f5f5 !important;
+      }
+    }
+
+    // Override hover for sticky columns to be same color as other columns
+    tbody tr:hover td:first-child {
+      background-color: #f5f5f5 !important;
+    }
+
+    tbody tr:hover td:nth-child(2) {
+      background-color: #f5f5f5 !important;
+    }
+
+    // Dark theme support
+    &.table-dark1 {
+      thead th:first-child,
+      thead th:nth-child(2) {
+        background: #2d2d30 !important;
+      }
+
+      tbody td:first-child,
+      tbody td:nth-child(2) {
+        background: #2d2d30 !important;
+      }
+
+      tbody tr:hover td:first-child {
+        background: #3d3d42 !important;
+      }
+
+      tbody tr:hover td:nth-child(2) {
+        background: #3d3d42 !important;
+      }
+    }
+  }
+}
+
+// Fixed header mode
+.fixed-header-table {
+    
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+  }
+    
+    // Dark theme sticky header background
+    .table-dark1 thead {
+        background-color: #343a40 !important;
+    }
+    
+    .table-dark1 thead tr {
+        background-color: #343a40 !important;
+    }
+    
+    // Light theme sticky header background
+    .table-light1 thead {
+        background-color: #fff !important;
+    }
+    
+    .table-light1 thead tr {
+        background-color: #fff !important;
+    }
+}
+.mobile-pagination ngb-pagination {
+  min-width: 0;
+  flex-shrink: 0;
+}
+::ng-deep ngx-datatable.limit-body .datatable-body {
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.mobile-padding {
+  padding-right: 1rem !important;
+}
+.mobile-card-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-card-label {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+.toolbar-container {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.toolbar-container-center {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Time controls on top row
+.toolbar-time-top-row {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-time-top-row .toolbar-item {
+  margin-top: 0;
+}
+
+.toolbar-time-top-row .toolbar-date-range {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: flex-start;
+  margin-top: 0;
+}
+
+.toolbar-time-top-row .toolbar-date-range .toolbar-date-item {
+  min-width: 150px;
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+}
+
+// When time is on top row, adjust toolbar-info margin
+.toolbar-time-on-top .toolbar-info {
+  margin-top: 0 !important;
+}
+
+
+/* Bên trái */
+.toolbar-info {
+  margin: 10px 0;
+  font-size: 14px;
+  margin-top: 20px;
+}
+.toolbar-mobile-row {
+  display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toolbar-mobile-row-no-date {
+  margin-top: 38px;
+}
+.truncate-text {
+  display: block;           /* hoặc inline-block nếu cần */
+  white-space: nowrap;      /* không xuống dòng */
+  overflow: hidden;         /* ẩn phần dư */
+  text-overflow: ellipsis;  /* hiển thị ... */
+  max-width: 100%;          /* giới hạn chiều ngang theo container */
+}
+/* Mobile - nằm ngang */
+@media (max-width: 766px) {
+  .toolbar-mobile-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 3px;
+  }
+
+  .toolbar-mobile-row .toolbar-item {
+    flex: 1;
+  }
+
+  .toolbar-mobile-row .toolbar-settings {
+    margin-left: 10px;
+    margin-bottom: 15px;
+  }
+  .toolbar-container-center {
+    margin-top: 15px;
+  }
+}
+/* Chỉ áp dụng max-width cho text content, không ảnh hưởng đến buttons */
+.datatable-body-cell-label {
+  max-width: 100% !important;
+}
+
+/* Đảm bảo buttons và icons không bị ảnh hưởng */
+.datatable-body-cell-label .btn,
+.datatable-body-cell-label button,
+.datatable-body-cell-label i,
+.datatable-body-cell-label .fa,
+.datatable-body-cell-label .btn-icon-icon {
+  max-width: none !important;
+  width: auto !important;
+  flex-shrink: 0 !important;
+}
+
+/* Đảm bảo action buttons container không bị ảnh hưởng */
+.datatable-body-cell-label .action-buttons,
+.datatable-body-cell-label .btn-parent,
+.datatable-body-cell-label .btn-group {
+  max-width: none !important;
+  width: auto !important;
+  flex-shrink: 0 !important;
+}
+/* Bên phải */
+.toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+/* Mỗi block filter */
+.toolbar-item {
+  min-width: 150px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+
+/* Wrapper cho 2 input thời gian - Desktop: hiển thị như các item khác */
+.toolbar-date-range {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: flex-start;
+  margin-top: 15px;
+}
+
+.toolbar-date-range .toolbar-date-item {
+  min-width: 150px;
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Nút settings */
+.toolbar-settings {
+  margin-left: 5px;
+  margin-top: 10px;
+}
+
+@media (max-width: 1400px) {
+  .toolbar-container-center {
+    margin-top: 15px !important;
+  }
+}
+
+/* iPad (768px - 1024px) */
+@media (min-width: 767px) and (max-width: 1024px) {
+  .toolbar-container {
+    padding: 0 1rem;
+  }
+
+  .toolbar-controls {
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .toolbar-item {
+    min-width: 140px;
+    margin-top: 15px;
+  }
+ 
+  /* Wrapper cho 2 input thời gian - điều chỉnh cho iPad */
+  .toolbar-date-range {
+    gap: 8px;
+    flex-wrap: nowrap;
+    width: 100% !important;
+  }
+
+  .toolbar-date-range .toolbar-date-item {
+    flex: 0 1 calc(50% - 4px) !important;
+    max-width: calc(50% - 4px) !important;
+    min-width: 0 !important;
+  }
+
+  /* Đảm bảo toolbar-info và controls căn chỉnh tốt */
+  .toolbar-info {
+    margin-top: 15px;
+  }
+  .toolbar-container {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+  .toolbar-item2 {
+    margin-top: 0px !important;
+  }
+  .toolbar-controls {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .toolbar-item {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Wrapper cho 2 input thời gian - giữ nguyên layout row trên iPad */
+  .toolbar-date-range {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100% !important;
+    margin-top: 0px !important;
+  }
+
+  .toolbar-date-range .toolbar-date-item {
+    flex: 0 1 calc(50% - 4px) !important;
+    max-width: calc(50% - 4px) !important;
+    min-width: 0 !important;
+  }
+  .toolbar-settings {
+    margin-bottom: 8px !important;
+  }
+}
+
+/* Mobile xuống 1 cột */
+@media (max-width: 766px) {
+  .toolbar-container {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+
+  .toolbar-settings {
+    margin-top: 15px !important;
+  }
+  .toolbar-item2 {
+    margin-top: 0px !important;
+  }
+  .toolbar-controls {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .toolbar-item {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Wrapper cho 2 input thời gian - hiển thị cùng hàng trên mobile (date only) */
+  .toolbar-date-range {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    width: 100% !important;
+    margin-top: 0 !important;
+  }
+
+  .toolbar-date-range .toolbar-date-item {
+    flex: 1;
+    width: auto;
+    min-width: 0 !important;
+  }
+
+  /* Chỉ áp dụng layout dọc cho datetime picker (dateStatus = false) */
+  .toolbar-date-range.toolbar-date-range-datetime {
+    flex-direction: column;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime .toolbar-date-item {
+    width: 100% !important;
+  }
+
+  /* Sửa layout datetime picker trên mobile - chỉ khi dateStatus = false */
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group {
+    flex-wrap: wrap !important;
+    width: 100%;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group input {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group-append {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group-append .calendar {
+    flex: 0 0 auto;
+    margin-right: 0 !important;
+    margin-bottom: 8px;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group-append ngb-timepicker {
+    flex: 1 1 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group-append ngb-timepicker .ngb-tp {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .toolbar-date-range.toolbar-date-range-datetime app-form-input ::ng-deep .input-group-append ngb-timepicker .ngb-tp-input-container {
+    width: auto;
+    min-width: 50px;
+  }
+}
+.sortable-header {
+  vertical-align: middle !important; /* fallback */
+}
+.table thead th {
+  padding: 0.5rem !important
+}
+.table td {
+  padding: 0.5rem !important
+}
+
+// Cột cố định (sticky) khi scroll ngang — bên trái che nội dung bên phải khi kéo scroll
+.table-wrapper {
+  isolation: isolate; // Tạo stacking context để sticky + z-index hoạt động đúng
+}
+.table thead th.sticky-col {
+  z-index: 1000 !important;
+}
+.table tbody td.sticky-col {
+  /* z-index gán theo từng cột (fixedStickyZIndex) để cột sticky sau nằm trên nội dung cuộn */
+  background-color: #f8f8f8 !important;
+}
+.table tbody .selected-row td {
+  background-color: rgb(231 241 252) !important ;
+
+}
+.table tbody .selected-row td.sticky-col {
+  background-color: rgb(231 241 252) !important ;
+
+}
+:host .select-checkbox-dtr ::ng-deep .custom-control {
+  padding-left: 0px !important;
+}
+.table-light1 .table thead th.sticky-col {
+  background-color: #fff !important;
+}
+.table-dark1 .table thead th.sticky-col {
+  background-color: #343a40 !important;
+}
+.table-light1 .table tbody td.sticky-col {
+  background-color: #fff !important;
+}
+.table-dark1 .table tbody td.sticky-col {
+  background-color: #343a40 !important;
+}
+.table-light1 .table tbody tr:hover td.sticky-col {
+  background-color: #f8f9fa !important;
+}
+.table-dark1 .table tbody tr:hover td.sticky-col {
+  background-color: #3d444d !important;
+}
+.th-content {
+  display: flex;
+  align-items: center;   /* 🔥 căn giữa theo chiều dọc */
+  gap: 2px;              /* khoảng cách text – icon */
+  height: 100%;
+}
+.mobile-card-value {
+  font-size: 14px;
+}
+
+// .card .card-footer {
+//   border: none !important;
+// }
+@import '@core/scss/angular/libs/datatables.component.scss';
+
+.datatable-scroll {
+  width: auto !important;
+}
+
+// Selected row styles
+.selected-row {
+  background-color: rgba(0, 123, 255, 0.1) !important;
+  border-left: 3px solid #007bff !important;
+  border-right: 3px solid #007bff !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.selected-row {
+  background-color: rgba(0, 123, 255, 0.1) !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.selected-row:hover {
+  background-color: rgba(0, 123, 255, 0.15) !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.selected-row .datatable-body-cell {
+  background-color: transparent !important;
+}
+
+// Tắt tính năng resize width tự động của cột
+::ng-deep .ngx-datatable.bootstrap .datatable-header-cell .resize-handle {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-header-cell {
+  cursor: default !important;
+}
+
+// Column popup scroll styles
+.column-popup {
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-list-scroll {
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+// Custom scrollbar for column list
+.column-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.column-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.column-list-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.column-list-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+// Dark theme scrollbar
+.bg-primary .column-list-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.bg-primary .column-list-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+// Order row status styling - for patient order list and other tables
+// Apply to regular HTML table rows - using :host to scope within component
+:host ::ng-deep .table tbody tr.order-row-new,
+:host ::ng-deep table tbody tr.order-row-new {
+  background-color: #e3f2fd !important; /* Light blue for new */
+}
+
+:host ::ng-deep .table tbody tr.order-row-edited,
+:host ::ng-deep table tbody tr.order-row-edited {
+  background-color: #fff9c4 !important; /* Light yellow for edited */
+}
+
+:host ::ng-deep .table tbody tr.order-row-edited:hover,
+:host ::ng-deep table tbody tr.order-row-edited:hover {
+  background-color: #fff59d !important; /* Slightly darker yellow on hover */
+}
+
+:host ::ng-deep .table tbody tr.order-row-deleted,
+:host ::ng-deep table tbody tr.order-row-deleted {
+  background-color: #e0e0e0 !important; /* Light gray for deleted */
+  opacity: 0.8;
+}
+
+:host ::ng-deep .table tbody tr.order-row-deleted td,
+:host ::ng-deep .table tbody tr.order-row-deleted td *,
+:host ::ng-deep table tbody tr.order-row-deleted td,
+:host ::ng-deep table tbody tr.order-row-deleted td * {
+  text-decoration: line-through !important;
+  color: #666 !important;
+}
+
+:host ::ng-deep .table tbody tr.order-row-deleted:hover,
+:host ::ng-deep table tbody tr.order-row-deleted:hover {
+  background-color: #d0d0d0 !important; /* Slightly darker gray on hover */
+}
+
+// Global fallback (since ViewEncapsulation.None)
+.table tbody tr.order-row-new,
+table tbody tr.order-row-new {
+  background-color: #e3f2fd !important;
+}
+
+.table tbody tr.order-row-edited,
+table tbody tr.order-row-edited {
+  background-color: #fff9c4 !important;
+}
+
+.table tbody tr.order-row-edited:hover,
+table tbody tr.order-row-edited:hover {
+  background-color: #fff59d !important;
+}
+
+.table tbody tr.order-row-deleted,
+table tbody tr.order-row-deleted {
+  background-color: #e0e0e0 !important;
+  opacity: 0.8;
+}
+
+.table tbody tr.order-row-deleted td,
+.table tbody tr.order-row-deleted td *,
+table tbody tr.order-row-deleted td,
+table tbody tr.order-row-deleted td * {
+  text-decoration: line-through !important;
+  color: #666 !important;
+}
+
+.table tbody tr.order-row-deleted:hover,
+table tbody tr.order-row-deleted:hover {
+  background-color: #d0d0d0 !important;
+}
+
+// Also apply to ngx-datatable rows if used
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-new {
+  background-color: #e3f2fd !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-edited {
+  background-color: #fff9c4 !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-edited:hover {
+  background-color: #fff59d !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-deleted {
+  background-color: #e0e0e0 !important;
+  opacity: 0.8;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-deleted:hover {
+  background-color: #d0d0d0 !important;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-deleted .datatable-body-cell,
+::ng-deep .ngx-datatable.bootstrap .datatable-body-row.order-row-deleted .datatable-body-cell * {
+  text-decoration: line-through !important;
+  color: #666 !important;
+}
+
+// Fixed header mode 2 - applies overflow unset and sticky header styles
+:host.fixed-header2 {
+  ::ng-deep .table-responsive {
+    overflow-x: unset !important;
+  }
+  
+  ::ng-deep .table-wrapper {
+    overflow-y: unset !important;
+  }
+  
+  ::ng-deep thead th {
+    position: sticky;
+    top: 0;
+  }
+}
+
+// Size form-control-sm - Apply font-size 0.8rem to th and td
+:host {
+  &[ng-reflect-size="form-control-sm"],
+  &[data-size="form-control-sm"] {
+    ::ng-deep table thead th,
+    ::ng-deep table tbody td {
+      font-size: 0.8rem !important;
+    }
+  }
+}
+
+// Alternative approach using class binding
+.table-size-sm {
+  thead th,
+  tbody td {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Mat-table + virtual scroll (ng-table-virtual-scroll) */
+.mat-table-virtual-viewport {
+  width: 100%;
+  .cdk-virtual-scroll-content-wrapper {
+    width: 100%;
+  }
+}
+
+.dynamic-mat-table {
+  width: 100%;
+  background: transparent;
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .mat-header-row {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .mat-row {
+    cursor: pointer;
+    &:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+    &.selected-row {
+      background: rgba(0, 123, 255, 0.1);
+    }
+  }
+
+  &.table-dark1 {
+    .mat-header-cell,
+    .mat-cell {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    .mat-header-row {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .mat-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .mat-row.selected-row {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+

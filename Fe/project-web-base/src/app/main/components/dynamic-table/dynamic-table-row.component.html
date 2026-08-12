@@ -1,0 +1,49 @@
+<tr [ngClass]="meta.class" [title]="meta.tooltip ? meta.tooltip : ''" [attr.data-row-index]="rowIndex"
+  [style.cursor]="(config.selectMode || config.multiSelectMode || config.enableDoubleClick) ? 'pointer' : 'default'"
+  [style.user-select]="'auto'" (click)="onRowClick($event)" (dblclick)="onRowDoubleClick($event)">
+  <td *ngIf="config.multiSelectMode" style="width: 40px; min-width: 40px; text-align: center;"
+    [ngClass]="{'sticky-col': config.multiSelectFixedColumn}" [ngStyle]="{
+        'position': config.multiSelectFixedColumn ? 'sticky' : null,
+        'left.px': config.multiSelectFixedColumn ? 0 : null,
+        'z-index': config.multiSelectFixedColumn ? 20 : null,
+        'font-size': config.size === 'form-control-sm' ? '0.8rem' : null
+      }" (click)="$event.stopPropagation()" (mousedown)="onRowMouseDown($event)">
+      <app-form-input type="checkbox" [for]="'row_' + rowIndex" class="select-checkbox-dtr" [model]="meta.selected"
+        (modelChange)="onToggleSelection($event)" >
+    </app-form-input>
+  </td>
+
+  <td *ngIf="!config.multiSelectMode && config.selectMode && config.showSelectCheckbox"
+    style="width: 70px; min-width: 70px; text-align: center;"
+    [ngStyle]="config.size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}" (click)="$event.stopPropagation()"
+    (mousedown)="onRowMouseDown($event)">
+    <app-form-input class="select-checkbox-dtr" type="checkbox" [for]="'row_' + rowIndex" [model]="meta.selected"
+      (modelChange)="onSelectCheckboxChange($event)" >
+    </app-form-input>
+  </td>
+  <td *ngIf="config.showIndexColumn" style="width: 2%; text-align: center;"
+    [ngStyle]="config.size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}">
+    <span>{{ rowIndex + 1 }}</span>
+  </td>
+  <td *ngFor="let col of config.displayedColumns; trackBy: trackByColumn; let colIndex = index" [ngClass]="{
+        'sticky-col': col.fixed,
+        'cell-size-sm': config.size === 'form-control-sm'
+      }" [style.--cell-left.px]="col.fixed && config.fixedLeftPx ? config.fixedLeftPx[colIndex] : null"
+    [ngStyle]="col.fixed && config.fixedStickyZIndex && config.fixedStickyZIndex[colIndex] > 0 ? { 'z-index': config.fixedStickyZIndex[colIndex] } : null"
+    [style.text-align]="getCellTextAlign(col, row)" [style.width]="col.width ? col.width + 'px' : null"
+    [style.min-width]="col.minWidth ? col.minWidth + 'px' : null" [style.color]="getCellColor(col, row)"
+    [style.background-color]="getCellBgColor(col, row)"
+    (click)="onCellClick($event, col)"
+    (dblclick)="onCellDoubleClick($event, col)">
+    <div class="cell-inner" [ngClass]="{'cell-dynamic-width': config.dynamicWidth}">
+      <ng-container *ngIf="col.cellTemplate; else defaultCell">
+        <app-dynamic-cell [template]="col.cellTemplate" [row]="row" [value]="row[col.key]" [index]="rowIndex"
+          [column]="col">
+        </app-dynamic-cell>
+      </ng-container>
+    </div>
+    <ng-template #defaultCell>
+      {{ row[col.key] }}
+    </ng-template>
+  </td>
+</tr>

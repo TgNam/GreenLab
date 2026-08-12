@@ -1,0 +1,32 @@
+<div class="multi-select">
+    <div [ngClass]="{
+      'select-dark1': currentSkin === 'dark',
+      'select-light1': currentSkin !== 'dark'
+    }" (click)="toggleDropdown()">
+        <span class="selected-text">
+            {{ getSelectedLabels() }}
+        </span>
+        <i class="fa" [ngClass]="{ 'fa-chevron-up': isOpen, 'fa-chevron-down': !isOpen }"></i>
+    </div>
+
+    <div [ngClass]="{
+      'dropdown-dark1': currentSkin === 'dark',
+      'dropdown-light1': currentSkin !== 'dark'
+    }" *ngIf="isOpen">
+        <div class="dropdown-actions flex flex-col p-1">
+            <button class="btn btn-sm btn-outline-secondary" [ngClass]="{
+      'btn-dark1': currentSkin === 'dark',
+      'btn-light1': currentSkin !== 'dark'
+    }" (click)="toggleSelectAll($event)">
+                {{ areAllSelected() ? 'Bỏ chọn tất cả' : 'Chọn tất cả' }}
+            </button>
+        </div>
+
+
+        <div class="option" *ngFor="let option of options" (click)="toggleSelection(option.value)"
+            [class.selected]="isSelected(option.value)">
+            <input type="checkbox" [checked]="isSelected(option.value)" />
+            <span>{{ option.label }}</span>
+        </div>
+    </div>
+</div>

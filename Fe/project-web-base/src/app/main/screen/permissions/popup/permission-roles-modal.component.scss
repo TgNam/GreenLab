@@ -1,0 +1,118 @@
+.gap-2 {
+    gap: 0.5rem;
+  }
+  
+  .d-flex.gap-2 > * {
+    margin: 0;
+  }
+
+  /* Mobile card styles - giống dynamic-table */
+  .mobile-card {
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .mobile-card-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-card-item:last-child {
+    border-bottom: none;
+  }
+  .name-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+  }
+  .mobile-card-label {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: #666;
+  }
+
+  .mobile-card-value {
+    font-size: 14px;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Mobile responsive for modal */
+  @media (max-width: 768px) {
+    /* Search and add button section - stack vertically */
+    .d-flex.justify-content-between.align-items-end {
+      flex-direction: column;
+      align-items: stretch !important;
+    }
+
+    .d-flex.justify-content-between.align-items-end > div:first-child {
+      margin-right: 0 !important;
+      margin-bottom: 1rem;
+    }
+
+    .d-flex.justify-content-between.align-items-end > div:last-child {
+      width: 100%;
+    }
+
+    .d-flex.justify-content-between.align-items-end > div:last-child button {
+      width: 100%;
+    }
+
+    /* Table - make it scrollable horizontally */
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+      min-width: 600px;
+    }
+
+    /* Table cells - reduce padding on mobile */
+    .table td,
+    .table th {
+      padding: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    /* Action buttons in table - stack vertically */
+    .table td .d-flex.gap-2 {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .table td .d-flex.gap-2 button {
+      width: 100%;
+      margin: 0;
+    }
+
+    /* Children permissions in main list - stack on mobile */
+    .d-flex.justify-content-between.align-items-center.ms-2 {
+      flex-direction: column;
+      align-items: flex-start !important;
+      margin-left: 0.5rem !important;
+    }
+
+    .d-flex.justify-content-between.align-items-center.ms-2 > div:last-child {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+
+    .d-flex.justify-content-between.align-items-center.ms-2 > div:last-child button {
+      width: 100%;
+    }
+  }
+
+  /* Tablet responsive */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .table td,
+    .table th {
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+  }

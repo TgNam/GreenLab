@@ -1,0 +1,157 @@
+<app-modal-content [visible]="visible" [size]="'xl'" [hideSave]="'true'"
+  [title]="'ROLE.ADD_EMPLOYEE_TO_GROUP' | translate : { groupName: groupName }"
+  [saveButtonText]="'COMMON.SAVE' | translate" [closeButtonText]="'COMMON.CLOSE' | translate" [loading]="loading"
+  (onSave)="onSave()" (onClose)="onClose()">
+
+  <!-- Body -->
+  <div class="modal-body">
+    <!-- Add Member Section -->
+    <div *ngIf="!isDataLoaded" class="text-center p-5">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="sr-only">Đang tải...</span>
+      </div>
+      <p class="mt-3 text-muted">Đang tải dữ liệu...</p>
+    </div>
+    <div *ngIf="isDataLoaded">
+      <div>
+        <div class="row g-2 align-items-end" style="padding: 0.438rem 1rem;">
+          <div>
+            <div class="label-button-wrapper d-flex align-items-center justify-content-between mb-1">
+              <label class="form-label fw-semibold mb-0">{{ 'ROLE.SELECT_EMPLOYEE' | translate }}</label>
+              <button type="button" class="btn btn-primary fw-semibold flex-shrink-0 add-member-btn-mobile"
+                style="min-width: 20px; height: 38px; display: flex; align-items: center; justify-content: center;"
+                [ngClass]="{'btn-disabled': !selectedUser}" (click)="addMember()" [disabled]="!selectedUser">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+            <div class="d-flex align-items-center gap-2 autocomplete-wrapper">
+              <div class="flex-grow-1">
+                <app-user-autocomplete style="width: 300px ; " [removeAfterSearch]="'true'"
+                  [searchFunction]="searchUsers" [searchText]="searchTextAutocomplete" [onSelect]="onUserSelected"
+                  [placeholder]="'ROLE.SEARCH_EMPLOYEE' | translate">
+                </app-user-autocomplete>
+              </div>
+
+              <button type="button" class="btn btn-primary fw-semibold flex-shrink-0 ml-1 add-member-btn-desktop"
+                style="min-width: 20px; height: 38px; display: flex; align-items: center; justify-content: center;"
+                [ngClass]="{'btn-disabled': !selectedUser}" (click)="addMember()" [disabled]="!selectedUser">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Section -->
+      <div class="mb-1" style="width: 100% !important;">
+        <input type="text" class="form-control" [placeholder]="'ROLE.SEARCH_EMPLOYEE_NAME' | translate"
+          [(ngModel)]="searchText" (ngModelChange)="filterMembers($event)">
+      </div>
+
+      <!-- Members Table - Mobile View -->
+      <ul *ngIf="isMobile" class="list-group mt-2">
+        <li *ngFor="let member of filteredMembers; let i = index;" class="list-group-item p-2">
+          <div class="mobile-card">
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'COMMON.ID' | translate }}</div>
+              <div class="mobile-card-value text-muted">{{ member.id }}</div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'COMMON.NAME' | translate }}</div>
+              <div class="mobile-card-value fw-semibold">
+                <div class="cell-line-height">
+                  <div class="font-medium-1 ellipsis name-wrapper">
+                    <div class="font-weight-bold" [title]="member.full_name">{{ member.full_name || 'Chưa có' }}</div>
+                    <div class="badge badge-pill badge-light-primary" style="margin-left: 5px;" *ngIf="member.user_name"
+                      [title]="'COMMON.USERNAME' | translate">{{ member.user_name }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">Email</div>
+              <div class="mobile-card-value">{{ member.email }}</div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'COMMON.STATUS' | translate }}</div>
+              <div class="mobile-card-value">
+                <span class="badge badge-pill"
+                  [ngClass]="member.status === 1 ? 'badge-light-success' : 'badge-light-secondary'">
+                  {{ member.status === 1 ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+                </span>
+              </div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'COMMON.OPERATION' | translate }}</div>
+              <div class="mobile-card-value">
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeMember(member.id)"
+                  title="{{ 'COMMON.DELETE' | translate }}">
+                  <i class="fa fa-trash me-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="filteredMembers.length === 0" class="list-group-item p-2">
+          <div class="text-center text-muted py-4">
+            <i class="fa fa-inbox me-2 ml-1"></i>&nbsp;{{ 'ROLE.NO_EMPLOYEE' | translate }}
+          </div>
+        </li>
+      </ul>
+
+      <!-- Members Table - Desktop View -->
+      <div *ngIf="!isMobile" class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background-color: rgba(var(--primary-rgb), 0.1);">
+            <tr>
+              <th style="width: 120px;">{{ 'COMMON.ID' | translate }}</th>
+              <th style="width: 250px;">{{ 'COMMON.NAME' | translate }}</th>
+              <th style="width: 250px;">Email</th>
+              <th style="width: 120px;">{{ 'COMMON.STATUS' | translate }}</th>
+              <th style="width: 100px;">{{ 'COMMON.OPERATION' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let member of filteredMembers; let i = index;">
+              <td class="text-muted">{{ member.id }}</td>
+              <td class="fw-semibold">
+                <div class="cell-line-height">
+                  <div class="font-medium-1  text-truncate name-wrapper">
+                    <div class="font-weight-bold" [title]="member.full_name">{{ member.full_name || 'Chưa có' }}</div>
+                    <div class="badge badge-pill badge-light-primary" style="margin-left: 5px;" *ngIf="member.user_name"
+                      [title]="'COMMON.USERNAME' | translate">{{ member.user_name }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ member.email }}</td>
+              <td>
+                <span class="badge badge-pill"
+                  [ngClass]="member.status === 1 ? 'badge-light-success' : 'badge-light-secondary'">
+                  {{ member.status === 1 ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+                </span>
+              </td>
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeMember(member.id)"
+                  title="{{ 'COMMON.DELETE' | translate }}">
+                  <i class="fa fa-trash me-1"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredMembers.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">
+                <i class="fa fa-inbox me-2 ml-1"></i>&nbsp;{{ 'ROLE.NO_EMPLOYEE' | translate }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Info Text -->
+      <div class="text-muted small">
+        <i class="fa fa-info-circle me-2"></i>
+        {{ 'ROLE.TOTAL_EMPLOYEE' | translate : { count: filteredMembers.length } }}
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  greenlab-admin-web:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    container_name: greenlab-admin-web
+    ports:
+      - "4200:80"
+    restart: unless-stopped

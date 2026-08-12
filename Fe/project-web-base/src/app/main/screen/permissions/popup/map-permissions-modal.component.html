@@ -1,0 +1,103 @@
+<app-modal-content [visible]="visible" [size]="'lgxl'" [title]="'PERMISSION.MAP_TITLE' | translate"
+  [saveButtonText]="'COMMON.SAVE' | translate" [loading]="disabledSave" [overflowY]="false"
+  [closeButtonText]="'COMMON.CLOSE' | translate" (onSave)="onSave()" (onClose)="onCancel()">
+
+  <!-- Table -->
+  <div class="table-scroll-wrapper" #wrapper>
+    <div class="table-container" #tableContainer>
+      <div class=" real-table-scroll" #tableScroll>
+        <table class="table table-hover">
+          <thead>
+            <tr style="background-color: #f5f5f5;">
+              <th>{{ 'PERMISSION.FUNCTION_DEFINITION' | translate }}</th>
+              <th style="width: 80px; text-align: center;">{{ 'PERMISSION.SKIP' | translate }}</th>
+              <th *ngIf="!parentPermission" style="width: 80px; text-align: center;">{{ 'PERMISSION.PARENT_LEVEL' |
+                translate }}</th>
+              <th *ngIf="!parentPermission" style="width: 80px; text-align: center;">{{ 'PERMISSION.MENU_ACCESS' |
+                translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let func of allFunctions; let i = index">
+              <td>
+                <input class="form-control" [(ngModel)]="func.name" />
+                <div class="function-uri mt-1">{{ func.method + ' - ' + func.uri }}</div>
+              </td>
+              <td style="text-align: center;">
+                <div style="display: flex;justify-content: center;">
+                  <div class="custom-control custom-checkbox" >
+                    <input *ngIf="func.method != 'GROUP'" class="custom-control-input"
+                      [id]="'group-ele-' + (func.method + '-' + func.uri)" type="checkbox" [(ngModel)]="func.skip"
+                      (change)="onFunctionChange(func)">
+                    <label class="form-check-label custom-control-label fw-semibold"
+                      [for]="'group-ele-' + (func.method + '-' + func.uri)">
+                    </label>
+                  </div>
+                </div>
+              </td>
+              <td *ngIf="!parentPermission && func.parentId" style="text-align: center;">
+                <div style="display: flex;justify-content: center;">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" [(ngModel)]="func.parentId"
+                      [id]="'parentId-ele-' + (func.method + '-' + func.uri)" class="custom-control-input"
+                      (change)="onParentIdChange(func, $event)">
+                    <label class="form-check-label custom-control-label fw-semibold"
+                      [for]="'parentId-ele-' + (func.method + '-' + func.uri)">
+                    </label>
+                  </div>
+                </div>
+              </td>
+              <td *ngIf="!parentPermission && !func.parentId" style="text-align: center;">
+                <div style="display: flex;justify-content: center;">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" [(ngModel)]="func.parent" class="custom-control-input"
+                      [id]="'parent-ele-' + (func.method + '-' + func.uri)"
+                      (ngModelChange)="onParentIdChange(func, $event)">
+                    <label class="form-check-label custom-control-label fw-semibold"
+                      [for]="'parent-ele-' + (func.method + '-' + func.uri)">
+                    </label>
+                  </div>
+                </div>
+              </td>
+              <td *ngIf="!parentPermission && (func.parent === true || func.parentId)" style="text-align: center;">
+                <div style="display: flex;justify-content: center;">
+                  <div class="custom-control custom-checkbox" style="padding-left: 0px !important;">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                        [id]="'hidden-ele-' + (func.method + '-' + func.uri)" [(ngModel)]="func.hidden">
+                      <label class="form-check-label custom-control-label fw-semibold"
+                        [for]="'hidden-ele-' + (func.method + '-' + func.uri)">
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- fake scrollbar: cần có inner div đặt width bằng table.scrollWidth -->
+    <div class="fake-scrollbar" #fakeScroll>
+      <div class="fake-scrollbar-inner" #fakeInner></div>
+    </div>
+  </div>
+
+
+
+  <!-- System Parent Checkbox -->
+  <div *ngIf="parentPermission" class="form-check mt-3">
+    <input class="form-check-input" type="checkbox" id="systemParentCheck" [(ngModel)]="systemHasParent"
+      (change)="onSystemParentChange()">
+    <label class="form-check-label" for="systemParentCheck">
+      {{ 'PERMISSION.SYSTEM_HAS_PARENT' | translate }}
+    </label>
+    <span class="function-uri ml-1"><strong>{{ parentPermission.name }} ({{ parentPermission.uri }})</strong></span>
+  </div>
+
+</app-modal-content>
+
+<app-confirm-modal [visible]="confirmVisible" [header]="confirmHeader" [message]="confirmMessage" [type]="confirmType"
+  (onCancel)="handleCancel()" (onConfirm)="handleConfirm()">
+</app-confirm-modal>

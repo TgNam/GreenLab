@@ -1,0 +1,185 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="{ 
+      headerTitle: ('PERMISSION.TITLE' | translate), 
+      actionButton: false, 
+      breadcrumb: { 
+        links: [
+          { name: ('COMMON.HOME' | translate), isLink: true, link: '/' }, 
+          { name: ('PERMISSION.TITLE' | translate), isLink: false }
+        ] 
+      } 
+    }">
+  </app-content-header>
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <app-advanced-search-filter [showAdvanced]="showAdvancedSearch" (toggleAdvanced)="toggleAdvancedSearch()"
+          style="width: 100% !important;">
+          <!-- Tất cả filters - chỉ viết một lần, TypeScript sẽ tự động di chuyển các input có advanced-filter -->
+          <div basic-filters class="row g-2 w-100">
+            <!-- Basic filters - luôn hiển thị -->
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'PERMISSION.FUNCTION_NAME' | translate" type="text" [(model)]="searchName"
+                (onEnter)="search()">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <app-form-input [label]="'PERMISSION.URI' | translate" type="text" [(model)]="searchUri"
+                (onEnter)="search()">
+              </app-form-input>
+            </div>
+
+            <!-- Advanced filters - sẽ tự động di chuyển vào advanced-filters trên mobile -->
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'PERMISSION.HIDDEN' | translate" type="select-search" [(model)]="searchHidden"
+                [options]="hiddenOptions">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'PERMISSION.SKIP' | translate" type="select-search" [(model)]="searchSkip"
+                [options]="skipOptions">
+              </app-form-input>
+            </div>
+
+            <div class="col-md-3 col-sm-6" advanced-filter>
+              <app-form-input [label]="'PERMISSION.LEVEL' | translate" type="select-search"
+                [(model)]="searchFilterParent" [options]="parentOptions">
+              </app-form-input>
+            </div>
+
+            <!-- <div class="col-md-3 col-sm-6" advanced-filter>
+              <label class="form-label fw-semibold">
+                {{'PERMISSION.ADMINISTRATOR' | translate}}
+              </label>
+              <app-user-autocomplete [searchFunction]="searchUsers" [(searchText)]="searchTextAutocomplete"
+                [onSelect]="onUserSelected" [placeholder]="'COMMON.SEARCH_EMPLOYEE' | translate">
+              </app-user-autocomplete>
+            </div> -->
+          </div>
+        </app-advanced-search-filter>
+        <div class="action-buttons">
+          <app-button [text]="'COMMON.SEARCH' | translate" type="primary" [buttonClass]="'btn-sm btn-center'"
+            [loading]="isSearching" icon="fa fa-search" (clickBtn)="search()" [title]="'COMMON.SEARCH' | translate">
+          </app-button>
+
+          <button class="btn btn-sm btn-outline-secondary btn-center waves-effect waves-float waves-light"
+            (click)="resetSearch()" [title]="'COMMON.RESET' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-refresh"></i>
+            </div>
+            <div class="btn-text">
+              {{'COMMON.RESET' | translate}}
+            </div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <div class="card card-body" style="padding: 0px !important;">
+      <ng-template #infoTemplate let-row="row">
+        <div class="mb-1 d-flex justify-content-between align-items-center ms-2">
+          <div class="flex-grow-1">
+            <div class="permission-name">
+              <strong>{{ row.name }}</strong>
+              <span *ngIf="row.hidden" class="badge bg-primary ml-1">{{ 'PERMISSION.HIDDEN' | translate }}</span>
+              <span *ngIf="row.skip" class="badge bg-primary ml-1">{{ 'PERMISSION.SKIP' | translate }}</span>
+            </div>
+            <div class="permission-uri">{{ row.method + ' - ' + row.uri }}</div>
+          </div>
+          <div *ngIf="row.method !== 'GROUP'" class="">
+            <button (click)="openRolesModal(row)" class="btn btn-sm btn-flat-primary btn-center waves-effect waves-float waves-light"
+              [title]="'PERMISSION.VIEW_ROLES' | translate">
+              <div class="btn-icon-icon">
+                <i class="fa fa-eye"></i>
+              </div>
+              <div class="btn-text">
+                {{'COMMON.VIEW' | translate}}
+              </div>
+            </button>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #functionTemplate let-row="row">
+        <!-- hiển thị children nếu có -->
+        <div *ngIf="row.children?.length" style="width: 100% !important;">
+          <div *ngFor="let child of row.children" class="mb-1 d-flex justify-content-between align-items-center ms-2">
+            <div class="flex-grow-1">
+              <div class="permission-name">
+                <strong>{{ child.name }}</strong>
+                <span *ngIf="child.hidden" class="badge bg-primary ml-1">{{ 'PERMISSION.HIDDEN' | translate
+                  }}</span>
+                <span *ngIf="child.skip" class="badge bg-primary ml-1">{{ 'PERMISSION.SKIP' | translate }}</span>
+              </div>
+              <div class="permission-uri">{{ child.method + ' - ' + child.uri }}</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button (click)="openRolesModal(child)" class="btn btn-sm btn-flat-primary btn-center waves-effect waves-float waves-light"
+                [title]="'PERMISSION.VIEW_ROLES' | translate">
+                <div class="btn-icon-icon">
+                  <i class="fa fa-eye"></i>
+                </div>
+                <div class="btn-text">
+                  {{'COMMON.VIEW' | translate}}
+                </div>
+              </button>
+              <button (click)="deletePermission(child)" class="btn btn-sm btn-flat-danger btn-center waves-effect waves-float waves-light"
+                [title]="'COMMON.DELETE' | translate">
+                <div class="btn-icon-icon">
+                  <i class="fa fa-trash"></i>
+                </div>
+                <div class="btn-text">
+                  {{'COMMON.DELETE' | translate}}
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #actionTemplate let-row="row">
+        <div class="action-buttons-row" style="display: flex; justify-content: center;padding-left: 0px;padding-top: 0px; gap: 8px;">
+          <button (click)="mapMode = 'edit'; openMapPermissionsEditModal(row)"
+            class="btn btn-sm btn-primary btn-center waves-effect waves-float waves-light"
+            [title]="'COMMON.EDIT' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-edit"></i>
+            </div>
+            <div class="btn-text">
+              {{'COMMON.EDIT' | translate}}
+            </div>
+          </button>
+          <button (click)="deletePermission(row)"
+            class="btn btn-sm btn-danger btn-center waves-effect waves-float waves-light"
+            [title]="'COMMON.DELETE' | translate">
+            <div class="btn-icon-icon">
+              <i class="fa fa-trash"></i>
+            </div>
+            <div class="btn-text">
+              {{'COMMON.DELETE' | translate}}
+            </div>
+          </button>
+        </div>
+      </ng-template>
+      <div class="test-table-wrapper">
+        <app-dynamic-table [columns]="columns" [hideTime]="'true'" [timeType]="timeType" [timeOpts]="[]"
+          [total]="totalPages" [sizeOptions]="sizeOptions" [page]="page" [selectedOption]="size" [rows]="allPermissions"
+          *ngIf="allPermissions" [totalCnt]="totalPages" [onPageChange]="onPageChange.bind(this)"
+          [onPageSizeChange]="onPageSizeChange.bind(this)" [totalPage]="ttps">
+        </app-dynamic-table>
+      </div>
+    </div>
+  </div>
+</div>
+<app-map-permissions-modal [mode]="mapMode" [visible]="isMapModalVisible" [uri]="mapModalUri"
+  [allFunctions]="permissionsModal" (close)="onMapModalClose()" (save)="onMapModalSave($event)">
+</app-map-permissions-modal>
+<app-confirm-modal [visible]="confirmVisible" [loading]="deleting" [header]="confirmHeader" [message]="confirmMessage" [type]="confirmType"
+  (onCancel)="handleCancel()" (onConfirm)="handleConfirm()">
+</app-confirm-modal>
+
+<!-- Modal quản lý nhóm quyền -->
+<app-permission-roles-modal [visible]="showRolesModal" [permissionId]="selectedPermissionId"
+  [permissionName]="selectedPermission?.name || ''" (close)="closeRolesModal()" (save)="onRolesModalSave()">
+</app-permission-roles-modal>

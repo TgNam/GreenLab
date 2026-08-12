@@ -1,0 +1,870 @@
+@import 'ngx-lightbox/lightbox.css';
+
+@import '@core/scss/base/colors';
+@import '@core/scss/base/bootstrap-extended/include'; // Bootstrap includes
+@import '@core/scss/base/components/include'; // Bootstrap includes
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/angular/libs/flatpickr.component.scss';
+
+// variable declaration
+$date-time-picker-weekdays-color: $gray-700;
+$date-time-picker-days-bg: $white;
+$date-time-picker-days-color: $gray-900;
+
+$date-time-picker-dark-bg-color: $theme-dark-body-bg;
+$date-time-picker-dark-text-color: $theme-dark-body-color;
+$date-time-picker-dark-day-hover: $gray-700;
+
+.custom-checkbox .custom-control-label:before {
+  border-radius: 3px
+}
+
+.custom-checkbox-flex {
+  display: flex;
+  align-items: center;
+}
+.custom-checkbox-sm {
+  padding-left: 1.2rem !important;
+  align-items: unset !important;
+}
+// Checkbox size support for form-control-sm
+.checkbox-sm {
+  .custom-control-input.checkbox-input-sm {
+    width: 0.9rem;
+    height: 0.9rem;
+
+    &:before {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
+    ::ng-deep .custom-checkbox,
+    .custom-radio {
+      &.custom-control {
+        padding-left: 1.2rem;
+
+      }
+    }
+
+    .custom-checkbox-flex {
+      align-items: unset !important;
+    }
+
+    &:after {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+  }
+
+  .custom-control-label.checkbox-label-sm {
+    font-size: 0.8rem;
+    line-height: 1.5;
+
+    &:before {
+      width: 0.9rem;
+      height: 0.9rem;
+      left: 0;
+    }
+
+    &:after {
+      width: 0.9rem;
+      height: 0.9rem;
+      left: 0;
+    }
+  }
+}
+
+.input-group:focus-within {
+  box-shadow: none !important;
+}
+
+// Input group merge styles are handled by Bootstrap extended styles
+// No additional custom styles needed as input-group-merge class handles it
+.custom-checkbox-flex .custom-control-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-control-label.text-ellipsis1 {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label:after {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9.5 7.5'%3E%3Cpolyline points='0.75 4.35 4.18 6.75 8.75 0.75' style='fill:none;stroke:%23fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px'/%3E%3C/svg%3E");
+  border: 1px solid white;
+}
+
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label:before {
+  border-color: #7367f0;
+  background-color: #7367f0
+}
+
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label:after {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-minus'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E")
+}
+
+// Flatpickr size support
+.flatpickr-size-sm {
+  height: 2.142rem;
+  ::ng-deep {
+
+    // Main input (hidden, used for binding)
+    input.flatpickr-input {
+      height: calc(1.5em + 0.5rem + 2px);
+      padding: 0.25rem 0.5rem;
+      padding-right: 35px !important; // Khoảng trống cho icon khi size sm
+      font-size: 0.82rem; // Changed from 0.875rem to 0.75rem for form-control-sm
+      line-height: 1.5;
+      border-radius: 0.2rem;
+    }
+
+
+    .form-control {
+      font-size: 0.82rem !important;
+      height: 2.142rem;
+    }
+
+    // Alt input (displayed input)
+    input.flatpickr-input.altInput {
+      font-size: 0.82rem !important; // Ensure altInput also has 0.75rem font-size
+    }
+  }
+
+  .calendar-icon-btn {
+    padding: 0 0.5rem;
+
+    i {
+      font-size: 0.75rem; // Changed from 0.875rem to 0.75rem for form-control-sm
+    }
+  }
+}
+
+// Calendar input wrapper - position relative để chứa button absolute
+.calendar-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+
+  // Input field styling
+  ::ng-deep {
+    .flatpickr-input {
+      border: 1px solid #d8d6de;
+      border-radius: 4px;
+      padding-right: 40px !important; // Tạo khoảng trống cho icon calendar
+      width: 100%;
+
+      &:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(var(--primary), 0.25);
+      }
+
+      // Disabled state styling
+      &:disabled,
+      &[disabled] {
+        background-color: #e9ecef !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        opacity: 1; // Keep opacity at 1 for better visibility
+      }
+    }
+
+    // Alt input (displayed input) disabled state
+    .flatpickr-input.altInput {
+
+      &:disabled,
+      &[disabled] {
+        background-color: #e9ecef !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Disabled state for input-group wrapper
+.input-group.disabled {
+  ::ng-deep {
+
+    .flatpickr-input,
+    .flatpickr-input.altInput {
+      background-color: #e9ecef !important;
+      color: #6c757d !important;
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+      opacity: 1;
+    }
+  }
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month .numInputWrapper {
+  font-size: 0.9rem !important;
+}
+
+.ng2-flatpickr-input-container .form-control {
+  border-right: 1px solid #d8d6de !important;
+}
+
+// Calendar icon button styling - position absolute bên trong input
+.calendar-icon-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: transparent;
+  color: #6e6b7b;
+  padding: 0 0.75rem;
+  border: none !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+  z-index: 10;
+
+  &:hover:not(:disabled) {
+    color: #5e5873;
+    background-color: transparent;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: 1rem;
+  }
+
+  &.calendar-icon-btn-sm {
+    padding: 0 0.5rem;
+
+    i {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Ng-select size support
+.ng-select-size-sm {
+  ::ng-deep .ng-select {
+    .ng-select-container {
+      min-height: calc(1.5em + 0.5rem + 2px);
+      font-size: 0.875rem;
+    }
+
+    .ng-value {
+      font-size: 0.875rem;
+    }
+
+    .ng-placeholder {
+      font-size: 0.875rem;
+    }
+
+    .ng-input input {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.ng-multi-select-size-sm {
+  ::ng-deep .ng-select {
+    .ng-select-container {
+      min-height: calc(1.5em + 0.5rem + 2px);
+      font-size: 0.875rem;
+    }
+
+    .ng-value {
+      font-size: 0.875rem;
+    }
+
+    .ng-placeholder {
+      font-size: 0.875rem;
+    }
+
+    .ng-input input {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Bỏ margin-bottom cho checkbox
+.form-group.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+
+.custom-checkbox .custom-control-input:disabled:checked~.custom-control-label:before {
+  background-color: var(--primary)
+}
+
+.custom-checkbox .custom-control-input:disabled:indeterminate~.custom-control-label:before {
+  background-color: var(--primary)
+}
+
+pre {
+  color: $white;
+}
+
+.select-search-container {
+  position: relative;
+
+  .search-dropdown {
+    background: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+
+    .dropdown-item {
+      padding: 6px 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f8f9fa;
+      }
+
+      &.active {
+        background-color: #007bff;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.input-group-text {
+  background: transparent;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.input-group .form-control {
+  border-right: 0;
+
+  app-date-time-adapter & {
+    border-right: 1px solid #d8d6de;
+    border-radius: 4px;
+  }
+}
+
+
+
+[ngbdatepickerdayview] {
+  &.btn-light {
+    cursor: pointer !important;
+    color: $date-time-picker-days-color !important;
+    background-color: $date-time-picker-days-bg !important;
+    border-radius: 0;
+
+    &.bg-primary {
+      background-color: var(--primary) !important;
+      color: $white !important;
+      // border-radius: 50%;
+    }
+
+    &:focus {
+      outline: 0;
+      outline-width: 0;
+
+      &:active {
+        box-shadow: none !important;
+      }
+    }
+
+    &.active {
+      border: 0;
+    }
+
+    &:hover {
+      background-color: rgba(var(--primary), 0.1) !important;
+      // border-radius: 50%;
+    }
+  }
+}
+
+.w-0 {
+  width: 0 !important;
+}
+
+::ng-deep .ngb-dp-header,
+.ngb-dp-weekdays,
+.ngb-dp-month-name,
+.ngb-dp-day {
+  background-color: $date-time-picker-days-bg !important;
+}
+
+.ngb-dp-weekday {
+  color: $date-time-picker-weekdays-color !important;
+  background-color: $white !important;
+}
+
+.custom-day {
+  text-align: center;
+  padding: 0.7rem 0.25rem;
+  display: inline-block;
+  height: 2.5rem;
+  width: 2.5rem;
+
+  &.bg-primary {
+    background-color: var(--primary) !important;
+    color: $white !important;
+  }
+}
+
+.custom-day.focused {
+  background-color: var(--primary);
+}
+
+.custom-day.range,
+.custom-day:hover {
+  background-color: var(--primary);
+  color: $white;
+}
+
+.custom-day.faded {
+  background-color: rgba(var(--primary), 0.5);
+}
+
+.weekend {
+  background-color: $warning;
+  color: $white;
+}
+
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+  font-style: normal !important;
+  font-weight: 500 !important;
+}
+
+.ngb-dp-weekdays {
+  padding-top: 0.4rem;
+}
+
+.custom-select {
+  &[aria-label='Select month'] {
+    margin-right: 7px;
+  }
+}
+
+.ngb-dp-header {
+  padding-top: 0.55rem !important;
+}
+
+.ngb-dp-day {
+  background-color: $date-time-picker-days-bg;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.btn-link {
+  color: $gray-100;
+}
+
+.ngb-dp-arrow-btn:focus {
+  outline-style: none !important;
+}
+
+// dark layout style
+.dark-layout {
+
+  .ngb-dp-header,
+  .ngb-dp-weekday {
+    background-color: $date-time-picker-dark-bg-color !important;
+  }
+
+  [ngbdatepickerdayview].btn-light {
+    background-color: $date-time-picker-dark-bg-color !important;
+    color: $date-time-picker-dark-text-color !important;
+
+    &:hover {
+      background-color: $date-time-picker-dark-day-hover !important;
+      box-shadow: none !important;
+    }
+
+    &.bg-primary {
+      background-color: var(--primary) !important;
+    }
+  }
+
+  .ngb-dp-week.ngb-dp-weekdays {
+    background-color: $date-time-picker-dark-bg-color !important;
+  }
+
+  .ngb-dp-day {
+    background-color: $date-time-picker-dark-bg-color !important;
+  }
+}
+
+::ng-deep ngb-datepicker-navigation-select select {
+  min-width: 95px !important;
+}
+
+// Orange label color
+.text-orange {
+  color: #ff9800 !important;
+}
+
+// Floating Label Styles
+.floating-input-wrapper {
+  margin-bottom: 0;
+}
+
+.floating-label-group {
+  position: relative;
+
+  .floating-input {
+    padding: 0.75rem 0.75rem;
+    border: 1px solid #d8d6de;
+    border-radius: 0.357rem;
+    background-color: #fff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    font-size: 1rem;
+    line-height: 1.45;
+    color: #6e6b7b;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(var(--primary), 0.25);
+    }
+
+    &:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+
+    &.floating-active {
+      padding-top: 1.25rem;
+      padding-bottom: 0.75rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
+
+  .floating-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    margin: 0;
+    padding: 0;
+    color: rgba(110, 107, 123, 0.6);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.45;
+    pointer-events: none;
+    transition: all 0.2s ease-in-out;
+    transform-origin: left top;
+    background-color: transparent;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    margin-left: -0.25rem;
+    z-index: 1;
+
+    &.floating-label-active {
+      top: -1rem;
+      left: 1rem;
+    
+      font-size: 0.8rem;
+      color: var(--primary);
+      transform: translateY(0);
+      background-color: #fff;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      margin-left: -0.5rem;
+      margin-top: 0.5rem;
+      z-index: 10;
+      // Label có background trắng và z-index cao để che border
+      // Border sẽ tự động bị cắt ở chỗ label
+    }
+  }
+
+  .floating-input:focus~.floating-label {
+    color: var(--primary);
+  }
+
+  .floating-input:disabled~.floating-label {
+    color: rgba(110, 107, 123, 0.4);
+  }
+
+  // Required asterisk styling
+  .floating-label .text-danger {
+    color: #ea5455 !important;
+  }
+}
+
+// image-upload (type="image-upload")
+.form-input-image-upload {
+  .photo-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &--percent-width .photo-upload-container {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .form-input-image-upload__preview-wrap {
+    display: inline-block;
+    line-height: 0;
+    position: relative;
+
+    &--percent-width {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    &--round {
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    &--clickable {
+      cursor: zoom-in;
+      border-radius: inherit;
+
+      &:focus {
+        outline: 2px solid var(--primary, #7367f0);
+        outline-offset: 2px;
+      }
+    }
+
+    &--with-clear:hover .form-input-image-upload__clear-btn,
+    &--with-clear .form-input-image-upload__clear-btn:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  .form-input-image-upload__clear-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 1.25rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(0, 0, 0, 0.75);
+      opacity: 1;
+    }
+  }
+
+  @media (hover: none) {
+    .form-input-image-upload__preview-wrap--with-clear .form-input-image-upload__clear-btn {
+      opacity: 0.9;
+    }
+  }
+
+  .form-input-image-upload__img--round {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: inherit;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    background-color: #f8f9fa;
+  }
+
+  .form-input-image-upload__img--rectangle {
+    width: 180px;
+    height: 120px;
+    object-fit: inherit;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    background-color: #f8f9fa;
+  }
+
+  .btn-outline-primary.btn-sm {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+  }
+}
+
+// file-upload (type="file-upload")
+.form-input-file-upload {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  .form-input-file-upload__trigger {
+    width: 24px;
+    height: 24px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    transition: all 0.18s ease-in-out;
+
+    i {
+      font-size: 0.95rem;
+    }
+
+    &:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 4px 12px rgba(var(--primary), 0.2);
+      transform: translateY(-1px);
+    }
+  }
+
+  .form-input-file-upload__trigger--disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .form-input-file-upload__badge-wrap {
+    position: relative;
+    display: inline-block;
+    margin-top: 2px;
+  }
+
+  .form-input-file-upload__view-badge {
+    border: 1px solid rgba(115, 103, 240, 0.28);
+    font-size: 0.67rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    line-height: 1.1;
+  }
+
+  .form-input-file-upload__clear-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    z-index: 2;
+    width: 10px;
+    height: 10px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(234, 84, 85, 0.95);
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.12s ease, filter 0.12s ease;
+
+    span {
+      margin-top: -1px;
+    }
+
+    &:hover {
+      filter: brightness(1.08);
+      transform: scale(1.05);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary, #7367f0);
+      outline-offset: 1px;
+    }
+  }
+}
+
+.custom-ng-select-container {
+  position: relative;
+
+  .floating-label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    padding: 0 4px;
+    color: rgba(0, 0, 0, 0.5);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); // Animation mượt chuẩn Material
+    pointer-events: none;
+    z-index: 503;
+    white-space: nowrap;
+  }
+
+
+  // Trạng thái Active (khi focus hoặc có dữ liệu)
+  &.is-active {
+    .floating-label {
+      top: 0;
+      left: 10px;
+      transform: translateY(-60%);
+      // Màu nền trắng đè border nhưng diện tích nhỏ nhất có thể
+      padding: 0 4px; 
+      color: var(--primary);
+      font-weight: 500;
+      opacity: 1;
+      z-index: 503!important;
+    }
+    ng-select.ng-select-size-sm .ng-select-container,
+    ng-select.ng-select-multiple-size-sm .ng-select-container,
+    input {
+      /* Độ rộng mép notch phải = cạnh phải vùng text label; set từ TS qua --floating-notch-right */
+      clip-path: polygon(
+        0% 0%,
+        10px 0%,
+        10px 2px,
+        var(--floating-notch-right, 70px) 2px,
+        calc(var(--floating-notch-right, 70px) - 10px) 0%,
+        100% 0%,
+        100% 100%,
+        0% 100%
+      );
+    }
+  
+  }
+  /*
+   * Góc cắt cho ô multi-select floating: chỉ có MỘT .custom-ng-select-container bọc ng-select,
+   * không được lặp lại selector cha trong nesting (sinh ... .custom-ng-select-container .custom-ng-select-container).
+   * Nội dung .ng-select-container nằm trong Shadow/template của ngx-ng-select → cần ::ng-deep.
+   */
+ 
+ 
+}

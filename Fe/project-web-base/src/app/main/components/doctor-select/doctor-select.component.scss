@@ -1,0 +1,77 @@
+
+
+.doctor-select-wrapper {
+  ::ng-deep .ng-select.ng-select-size-sm .ng-select-container .ng-value {
+    font-size: 0.857rem !important;
+  }
+
+  ::ng-deep .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+    top: 6px
+  }
+
+  .d-flex {
+    align-items: flex-end !important;
+  }
+  // .has-label  {
+  //   margin-top: 1.75rem; /* hoặc 8px / 12px tùy UI */
+  // }
+  // .has-label-sm {
+  //   margin-top: 1.6rem;
+  //   height: 30px !important;
+  // }
+  .btn {
+    min-width: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 0.875rem;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .reset-sm {
+    height: 30px !important;
+  }
+
+  ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup, ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    word-break: break-word;
+    white-space: normal;
+    text-overflow: unset;
+  }
+
+  // Đảm bảo input và button cùng chiều cao trên mobile
+  @media (max-width: 576px) {
+   
+  }
+
+  // City filter icon
+  .city-filter-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    pointer-events: none;
+    font-size: 1rem;
+  }
+
+  .doctor-select-inside ::ng-deep .form-group {
+    margin-bottom: 0 !important;
+  }
+
+  // Adjust select padding when city filter icon is present
+  .position-relative {
+    ::ng-deep {
+      select {
+        padding-left: 35px !important;
+      }
+    }
+  }
+}
+

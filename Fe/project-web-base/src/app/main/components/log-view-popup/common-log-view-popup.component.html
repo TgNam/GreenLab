@@ -1,0 +1,70 @@
+<app-modal-content [visible]="visible" [size]="'lgxl'" [title]="'LOG.VIEW_TITLE' | translate"
+  [closeButtonText]="'COMMON.CLOSE' | translate" [hideSave]="true" [blockUIName]="'log-view-block'" (onClose)="onClose()">
+
+  <div class="modal-body">
+    <div>
+      <div class="row g-2">
+        <div class="col-md-4">
+          <app-form-input [label]="'LOG.SEARCH_KEYWORD' | translate" type="text" [(model)]="keyword"
+            (modelChange)="onKeywordChange()" (onEnter)="onKeywordChange()"
+            [placeholder]="'LOG.SEARCH_KEYWORD_PLACEHOLDER' | translate">
+          </app-form-input>
+        </div>
+        <div class="col-md-3">
+          <app-form-input [label]="'LOG.ACTION' | translate" type="select-search" [selectOpen]="onSelectOpen" 
+            [(model)]="selectedAction" (modelChange)="onActionChange()" [placeholder]="'-- Chọn hành động --'"
+            [options]="actionOptions" optionLabel="label" [appendBody]="true" optionValue="value" >
+          </app-form-input>
+        </div>
+      </div>
+
+      <div class="log-table-container" *ngIf="!loading">
+        <ng-template #timeTemplate let-row="row">
+          <div class="d-flex align-items-center" style="margin-bottom: 10px;">
+            <div style="margin-right: 5px; font-weight: bold;" title="Nhân viên tạo">
+              {{ row.actor?.username ? row.actor.username : '-' }}
+            </div>
+            <div>
+              <span class="action-badge" title="Hành động" [ngClass]="'action-' + row.action">{{ getActionName(row.action) }}</span>
+            </div>
+          </div>
+          <div class="info-line" [title]="'COMMON.CREATED_TIME' | translate">
+            <strong class="text-muted font-small-2">{{ row.create_time | date:'HH:mm dd/MM/yyyy' }}</strong>
+          </div>
+          <div class="info-line" *ngIf="row.actor?.ip" [title]="'IP'">
+            <strong class="text-muted font-small-2">{{ row.actor?.ip }}</strong>
+          </div>
+        </ng-template>
+
+        <ng-template #userTemplate let-row="row">
+          <div>{{ row.actor?.username ? row.actor.username : '-' }}</div>
+        </ng-template>
+
+        <ng-template #changesTemplate let-row="row">
+          <button *ngIf="row.id" class="btn btn-sm btn-primary" (click)="getDetailChanges(row.id)">
+            {{ 'COMMON.VIEW_MORE' | translate }}
+          </button>
+          <span *ngIf="!row.id" class="text-muted">-</span>
+        </ng-template>
+
+        <ng-template #descriptionTemplate let-row="row">
+          <div *ngIf="row.action === 'UPDATE'" style="font-weight: bold;">Cập nhật thông tin:</div>
+          <div class="description-text">{{ row.description || '-' }}</div>
+        </ng-template>
+
+        <app-dynamic-table [columns]="tableColumns" [prefix]="'logs'" [rows]="paginatedRows" [totalCnt]="total"
+          [total]="total" [totalPage]="totalPage" [page]="page" [enablePagination]="false"
+          [selectedOption]="selectedOption" [sizeOptions]="sizeOptions" [hideTime]="true" [dateStatus]="false"
+          [enableSort]="true" [showSetting]="false" [onPageChange]="onPageChangeFN"
+          [onPageSizeChange]="onPageSizeChangeFN" [applySort]="onApplySortFN">
+        </app-dynamic-table>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<app-json-modal [visible]="jsonModalVisible" [data]="jsonData" [title]="'LOG.CHANGES_TITLE' | translate"
+  [modalDialogClass]="'modal-dialog modal-lg modal-dialog-centered'" (onClose)="onCancel()"
+  (visibleChange)="jsonModalVisible = $event">
+</app-json-modal>
+

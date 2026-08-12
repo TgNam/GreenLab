@@ -1,0 +1,29 @@
+<!-- vertical-layout -->
+<ng-container *ngIf="coreConfig && coreConfig.layout.type === 'vertical' && loadedApp">
+  <vertical-layout (click)="toggleSidebarOut()"></vertical-layout>
+</ng-container>
+<!-- / vertical-layout -->
+
+<!-- horizontal-layout -->
+<ng-container  *ngIf="coreConfig && coreConfig.layout.type === 'horizontal' && loadedApp">
+  <horizontal-layout (click)="toggleSidebarOut()"></horizontal-layout>
+</ng-container>
+<!-- / horizontal-layout -->
+<app-loading-bar></app-loading-bar>
+<!-- theme customizer -->
+<core-sidebar
+  name="themeCustomizer"
+  class="customizer d-none d-md-block"
+  [invisibleOverlay]="true"
+  *ngIf="coreConfig && coreConfig.layout.customizer"
+>
+  <a
+    class="customizer-toggle d-flex align-items-center justify-content-center"
+    (click)="toggleSidebar('themeCustomizer')"
+    title="Thiết lập menu"
+  >
+    <span [data-feather]="'settings'" [class]="'spinner'"></span>
+  </a>
+  <core-theme-customizer></core-theme-customizer>
+</core-sidebar>
+<!-- / theme customizer -->

@@ -1,0 +1,119 @@
+@import '@core/scss/angular/libs/select.component.scss';
+
+.truncate-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  align-self: flex-start;
+}
+
+.employee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.info-line {
+  line-height: 1.5;
+}
+
+.info-label-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.info-label-wrapper i {
+  margin-top: 2px;
+  width: 16px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.info-label-wrapper strong {
+  font-weight: 600;
+}
+
+.info-value {
+  display: inline;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  vertical-align: top;
+}
+
+.info-line i {
+  width: 16px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.info-line strong {
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.page-count {
+  display: none !important;
+}
+
+.btn-primary {
+  display: flex;
+}
+
+.btn-icon-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12px;
+  margin-right: 5px;
+}
+
+.btn-icon-icon i {
+  font-size: 12px;
+  line-height: 1;
+}
+
+// Action buttons styles - responsive
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ngx-datatable.bootstrap.core-bootstrap .datatable-body-row .datatable-body-cell {
+  align-items: flex-start !important;
+}
+
+@media (max-width: 576px) {
+  .name-wrapper {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+
+  /* Đảm bảo card header không có padding thừa trên mobile */
+  .card-header {
+    padding: 1rem;
+  }
+
+  /* Đảm bảo các input có width 100% trên mobile */
+  .card-header app-form-input {
+    width: 100%;
+  }
+}
+
+/* Responsive cho tablet */
+@media (min-width: 576px) and (max-width: 767px) {
+  .card-header {
+    padding: 1rem;
+  }
+}

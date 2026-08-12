@@ -1,0 +1,33 @@
+/* display: contents để host không tạo box, <tr> trở thành con trực tiếp của tbody về mặt layout */
+:host {
+  display: contents;
+
+}
+
+:host .select-checkbox-dtr ::ng-deep .custom-control {
+  padding-left: 0px !important;
+}
+ 
+/* Cỡ chữ nhỏ (form-control-sm) — dùng class thay ngStyle để giảm lag */
+.cell-size-sm {
+  font-size: 0.8rem;
+}
+
+/* Cột sticky: dùng biến --cell-left (set từ binding), tránh ngStyle phức tạp */
+.sticky-col {
+  position: sticky;
+  left: var(--cell-left, 0);
+}
+
+/* Max-width theo biến --cell-max-width (set từ binding khi col.width có) */
+.cell-max-width {
+  max-width: var(--cell-max-width);
+}
+
+.cell-inner {
+  max-width: var(--cell-max-width);
+}
+
+.cell-dynamic-width {
+  white-space: nowrap;
+}

@@ -1,0 +1,109 @@
+.advanced-search-filter {
+  width: 100%;
+
+  .basic-filters {
+    width: 100%;
+  }
+
+  .advanced-filters {
+    width: 100%;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.3s ease,
+                margin 0.3s ease,
+                padding 0.3s ease;
+
+    &.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    &.show {
+      max-height: 5000px;
+      opacity: 1;
+    }
+  }
+
+  .advanced-toggle-wrapper {
+    margin-top: -12px;
+
+    .btn {
+      transition: all 0.3s ease;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      
+    
+
+      i {
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+
+  // Mobile specific styles
+  @media (max-width: 767px) {
+    .basic-filters {
+      .row {
+        margin: 0;
+      }
+
+      .col-md-3,
+      .col-sm-6 {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .advanced-filters {
+      .row {
+        margin: 0;
+      }
+
+      .col-md-3,
+      .col-sm-6 {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    
+  }
+  .advanced-toggle-wrapper {
+    display: flex;
+    justify-content: end;
+  }
+  // Desktop styles
+  @media (min-width: 768px) {
+    // Ẩn advanced-filters trên desktop (vì TypeScript đã di chuyển elements về basic-filters)
+    .advanced-filters {
+      display: none !important;
+    }
+
+    .basic-filters {
+      width: 100%;
+      
+      .row {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+      }
+    }
+
+    // Đảm bảo các col-md-3 hoạt động đúng với Bootstrap (mỗi row 4 input)
+    ::ng-deep .basic-filters .col-md-3 {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+   
+  }
+}
+

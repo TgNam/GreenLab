@@ -1,0 +1,60 @@
+.modal {
+  /* z-index sẽ được set động trong component */
+}
+.modal.show {
+  opacity: 1;
+}
+.btn-close-custom {
+  border: none;
+  color: white;
+  font-size: 16px;
+  background-color: transparent !important;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.btn-close-custom:hover {
+  opacity: 0.8;
+}
+.disabled-btn:disabled {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+
+/* Custom green color (#36803e) for primary type confirm modal */
+.modal-header.bg-primary {
+  background-color: #36803e !important;
+}
+
+.modal-footer .btn-primary,
+.modal-footer app-button ::ng-deep .btn-primary {
+  background-color: #36803e !important;
+  border-color: #36803e !important;
+}
+
+.modal-footer .btn-primary:hover,
+.modal-footer app-button ::ng-deep .btn-primary:hover {
+  background-color: #2d6b33 !important;
+  border-color: #2d6b33 !important;
+}
+
+/* Highlight focused confirm button (auto-focus + keyboard nav). */
+.modal-footer app-button.confirm-action-btn ::ng-deep button:focus,
+.modal-footer app-button.confirm-action-btn ::ng-deep button:focus-visible,
+.modal-footer app-button.confirm-action-btn ::ng-deep .btn:focus,
+.modal-footer app-button.confirm-action-btn ::ng-deep .btn:focus-visible {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(var(--primary), 0.45) !important;
+}
+
+.modal-footer app-button.confirm-action-btn-danger ::ng-deep button:focus,
+.modal-footer app-button.confirm-action-btn-danger ::ng-deep button:focus-visible,
+.modal-footer app-button.confirm-action-btn-danger ::ng-deep .btn:focus,
+.modal-footer app-button.confirm-action-btn-danger ::ng-deep .btn:focus-visible {
+  outline: 2px solid #EA5455 !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(#EA5455, 0.45) !important;
+}

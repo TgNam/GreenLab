@@ -1,0 +1,44 @@
+<li class="nav-item nav-search">
+  <a class="nav-link nav-link-search" (click)="toggleSearch()"><span [data-feather]="'search'"
+      [class]="'ficon'"></span></a>
+
+  <div class="search-input" [class.open]="openSearchRef === true">
+    <div class="search-input-icon"><span [data-feather]="'search'"></span></div>
+    <input class="form-control input" type="text" placeholder="Tìm kiếm chức năng, màn hình..." tabindex="-1"
+      data-search="search" (keyup)="onSearchChange(searchText)" (keydown)="onKeyDown($event)" [(ngModel)]="searchText"
+      #openSearch /><button class="btn search-input-close p-0" (click)="toggleSearch()"><span
+        [data-feather]="'x'"></span></button>
+
+    <ul class="search-list search-list-main" style="max-height: 300px; overflow-y: auto;" [perfectScrollbar]
+      [class.show]="searchText !== ''" #pageList>
+
+      <ng-container *ngIf="(pages).length; else noResultsPages">
+        <li class="auto-suggestion" *ngFor="let page of pages; let i = index"
+          [ngClass]="{ current_item: i === activeIndex }" [class.current_item]="page.hover"
+          (mouseover)="page.hover = true" (mouseout)="page.hover = false">
+          <a class="d-flex align-items-center justify-content-between w-100" (click)="navigate(page.uri)"
+            (keyup.enter)="navigate(page.uri)" [routerLink]="page.link">
+            <div class="d-flex justify-content-start align-items-center">
+              <div>
+                <div class="permission-name">
+                  {{ page.name }}
+                </div>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ng-container>
+
+      <ng-template #noResultsPages>
+        <li class="auto-suggestion justify-content-between">
+          <a class="d-flex align-items-center justify-content-between w-100 py-50">
+            <div class="d-flex justify-content-start">
+              <i data-feather="alert-circle" class="mr-25"></i>
+              <span>{{'COMMON.NO_RESULT' | translate}}</span>
+            </div>
+          </a>
+        </li>
+      </ng-template>
+    </ul>
+  </div>
+</li>

@@ -1,0 +1,283 @@
+<!-- Modal chính: Danh sách nhóm quyền có quyền -->
+<app-modal-content 
+  *ngIf="visible" 
+  [visible]="visible" 
+  [size]="'lgxl'" 
+  [title]="('PERMISSION.PERMISSION_NAME_LABEL' | translate) + ' ' + permissionName"
+  [hideSave]="true"
+  [closeButtonText]="'COMMON.CLOSE' | translate" 
+  (onClose)="onClose()">
+
+  <div class="">
+    <!-- Search và nút thêm -->
+    <div class="d-flex justify-content-between align-items-end mb-3">
+      <div class="flex-grow-1 me-3 mr-2">
+        <label class="form-label fw-semibold mb-1">{{ 'COMMON.SEARCH' | translate }}:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [placeholder]="'PERMISSION.SEARCH_PLACEHOLDER' | translate"
+          [(ngModel)]="searchText" 
+          (ngModelChange)="filterRoles()" />
+      </div>
+      <div>
+        <button 
+          class="btn btn-primary" 
+          (click)="openAddRoleModal()"
+          [title]="'PERMISSION.ADD_ROLE_GROUP' | translate">
+          <i class="fa fa-plus"></i>&nbsp;
+          {{ 'PERMISSION.ADD_ROLE_GROUP' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center p-4">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span class="ml-2">{{ 'COMMON.LOADING' | translate }}...</span>
+    </div>
+
+    <!-- Danh sách nhóm quyền -->
+    <div *ngIf="!isLoading">
+      <div *ngIf="filteredRoles.length === 0" class="text-center p-4">
+        <i class="fa fa-info-circle text-muted" style="font-size: 2rem;"></i>
+        <p class="text-muted mt-2">{{ 'PERMISSION.NO_ROLE_GROUPS' | translate }}</p>
+      </div>
+
+      <!-- Mobile view: Card layout -->
+      <ul *ngIf="isMobile && filteredRoles.length > 0" class="list-group mt-2">
+        <li *ngFor="let role of filteredRoles; let i = index" class="list-group-item p-2">
+          <div class="mobile-card">
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'PERMISSION.ROLE_GROUP_NAME' | translate }}</div>
+              <div class="mobile-card-value">{{ role.name }}</div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'PERMISSION.DESCRIPTION' | translate }}</div>
+              <div class="mobile-card-value">{{ role.description || '-' }}</div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'PERMISSION.OPERATION' | translate }}</div>
+              <div class="mobile-card-value">
+                <div class="d-flex gap-2 flex-column">
+                  <button 
+                    class="btn btn-sm btn-primary" 
+                    (click)="openEmployeesModal(role)"
+                    [title]="'PERMISSION.VIEW_EMPLOYEES' | translate">
+                    <i class="fa fa-eye"></i>&nbsp;
+                    {{ 'PERMISSION.VIEW_EMPLOYEES' | translate }}
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-danger" 
+                    (click)="openRemoveConfirm(role)"
+                    [title]="'PERMISSION.REMOVE_PERMISSION' | translate">
+                    <i class="fa fa-user-times"></i>&nbsp;
+                    {{ 'PERMISSION.REMOVE_PERMISSION' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Desktop view: Table -->
+      <div *ngIf="!isMobile && filteredRoles.length > 0" class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>{{ 'PERMISSION.ROLE_GROUP_NAME' | translate }}</th>
+              <th>{{ 'PERMISSION.DESCRIPTION' | translate }}</th>
+              <th style="padding-left: 0px !important; padding-right: 0px !important;">{{ 'PERMISSION.OPERATION' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let role of filteredRoles; let i = index">
+              <td style="text-wrap: wrap;">{{ role.name }}</td>
+              <td style="text-wrap: wrap;">{{ role.description || '-' }}</td>
+              <td style="padding-left: 0px !important; padding-right: 0px !important;">
+                <div class="d-flex gap-2">
+                  <button 
+                    class="btn btn-sm btn-primary" 
+                    (click)="openEmployeesModal(role)"
+                    [title]="'PERMISSION.VIEW_EMPLOYEES' | translate">
+                    <i class="fa fa-eye"></i>&nbsp;
+                    {{ 'PERMISSION.VIEW_EMPLOYEES' | translate }}
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-danger" 
+                    (click)="openRemoveConfirm(role)"
+                    [title]="'PERMISSION.REMOVE_PERMISSION' | translate">
+                    <i class="fa fa-user-times"></i>&nbsp;
+                    {{ 'PERMISSION.REMOVE_PERMISSION' | translate }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<!-- Modal thêm quyền vào nhóm quyền -->
+<app-modal-content 
+  *ngIf="showAddRoleModal" 
+  [visible]="showAddRoleModal" 
+  [size]="'md'" 
+  [title]="('PERMISSION.ADD_PERMISSION_TO_ROLE_TITLE' | translate: {permissionName: permissionName})"
+  [saveButtonText]="'COMMON.SAVE' | translate"
+  [closeButtonText]="'COMMON.CANCEL' | translate"
+  [loading]="isAddingRole"
+  (onSave)="addPermissionToRole()"
+  (onClose)="closeAddRoleModal()"
+  class="permission-role-add-modal">
+
+  <div class="p-3">
+    <div class="mb-3">
+      <app-form-input 
+        [label]="'PERMISSION.SELECT_ROLE_GROUP' | translate" 
+        [selectOpen]="selectOpen" 
+        [selectClose]="selectClose"
+        type="select-search" 
+        [(model)]="selectedRoleId"
+        [options]="allRoles"
+        [searchText]="searchRoleText"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="'PERMISSION.SELECT_ROLE_GROUP_PLACEHOLDER' | translate">
+      </app-form-input>
+    </div>
+  </div>
+</app-modal-content>
+
+<!-- Modal danh sách nhân viên -->
+<app-modal-content 
+  *ngIf="showEmployeesModal" 
+  [visible]="showEmployeesModal" 
+  [size]="'lgxl'" 
+  [title]="('PERMISSION.EMPLOYEES_IN_ROLE_TITLE' | translate: {roleName: (selectedRole?.name || '')})"
+  [hideSave]="true"
+  [closeButtonText]="'COMMON.CLOSE' | translate"
+  (onClose)="closeEmployeesModal()"
+  class="permission-employees-modal">
+
+  <div class="p-1">
+    <!-- Search -->
+    <div class="mb-1">
+      <label class="form-label fw-semibold">{{ 'PERMISSION.SEARCH_EMPLOYEE_LABEL' | translate }}</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Nhập tên cần tìm"
+        [(ngModel)]="searchEmployeeText" />
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loadingEmployees" class="text-center p-4">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span class="ml-2">{{ 'COMMON.LOADING' | translate }}...</span>
+    </div>
+
+    <!-- Danh sách nhân viên -->
+    <div *ngIf="!loadingEmployees">
+      <!-- Tổng số nhân viên -->
+      <div *ngIf="filterEmployees().length > 0" class="mb-1">
+        <div class="d-flex align-items-center">
+          <span class="text-muted">
+            <strong>{{ 'PERMISSION.TOTAL_EMPLOYEES' | translate }}:</strong> {{ filterEmployees().length }}
+          </span>
+        </div>
+      </div>
+
+      <div *ngIf="filterEmployees().length === 0" class="text-center p-4">
+        <i class="fa fa-info-circle text-muted" style="font-size: 2rem;"></i>
+        <p class="text-muted mt-2">{{ 'PERMISSION.NO_EMPLOYEES' | translate }}</p>
+      </div>
+
+      <!-- Mobile view: Card layout -->
+      <ul *ngIf="isMobile && filterEmployees().length > 0" class="list-group mt-2">
+        <li *ngFor="let emp of filterEmployees(); let i = index" class="list-group-item p-2">
+          <div class="mobile-card">
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'PERMISSION.EMPLOYEE_CODE' | translate }}</div>
+              <div class="mobile-card-value">{{ emp.id }}</div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'PERMISSION.EMPLOYEE_NAME' | translate }}</div>
+              <div class="mobile-card-value">
+              <div class="cell-line-height">
+                <div class="font-medium-1  ellipsis name-wrapper">
+                  <div class="font-weight-bold" [title]="emp.full_name">{{ emp.full_name || ('COMMON.NOT_HAVE' | translate) }}</div>
+                  <div class="badge badge-pill badge-light-primary" style="margin-left: 5px;" *ngIf="emp.user_name"
+                    [title]="'COMMON.USERNAME' | translate">{{ emp.user_name }}</div>
+                </div>
+              </div>
+            </div>
+                        </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'COMMON.EMAIL' | translate }}</div>
+              <div class="mobile-card-value">{{ emp.email || '-' }}</div>
+            </div>
+            <div class="mobile-card-item">
+              <div class="mobile-card-label">{{ 'COMMON.STATUS' | translate }}</div>
+              <div class="mobile-card-value">
+                <span class="badge" [ngClass]="emp.status === 1 ? 'badge-light-success' : 'badge-light-secondary'">
+                  {{ emp.status === 1 ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Desktop view: Table -->
+      <div *ngIf="!isMobile && filterEmployees().length > 0" class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>{{ 'PERMISSION.EMPLOYEE_CODE' | translate }}</th>
+              <th>{{ 'PERMISSION.EMPLOYEE_NAME' | translate }}</th>
+              <th>{{ 'COMMON.EMAIL' | translate }}</th>
+              <th>{{ 'COMMON.STATUS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let emp of filterEmployees(); let i = index">
+              <td>{{ emp.id }}</td>
+              <td>
+                <div class="cell-line-height">
+                    <div class="font-medium-1  ellipsis name-wrapper">
+                      <div class="font-weight-bold" [title]="emp.full_name">{{ emp.full_name || ('COMMON.NOT_HAVE' | translate) }}</div>
+                      <div class="badge badge-pill badge-light-primary" style="margin-left: 5px;" *ngIf="emp.user_name"
+                        [title]="'COMMON.USERNAME' | translate">{{ emp.user_name }}</div>
+                    </div>
+                  </div>
+              </td>
+              <td>{{ emp.email || '-' }}</td>
+              <td>
+                <span class="badge" [ngClass]="emp.status === 1 ? 'badge-light-success' : 'badge-light-secondary'">
+                  {{ emp.status === 1 ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-modal-content>
+
+<!-- Modal xác nhận xóa -->
+<app-confirm-modal 
+  [visible]="confirmVisible" 
+  [header]="confirmHeader" 
+  [message]="confirmMessage" 
+  [type]="confirmType"
+  (onCancel)="closeConfirm()" 
+  (onConfirm)="confirmRemove()">
+</app-confirm-modal>
+
+
+

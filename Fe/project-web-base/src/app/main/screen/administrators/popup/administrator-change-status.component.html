@@ -1,0 +1,33 @@
+<div class="modal fade show d-block" tabindex="-1" *ngIf="visible" style="background: rgba(0, 0, 0, 0.5)">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-3 border-0">
+            <div class="modal-header custom-header flex align-items-center" style="background-color: var(--primary) !important;padding-top: 3px; padding-bottom: 3px;">
+                <h5 class="modal-title mb-0 text-white">
+                    {{ 'COMMON.STATUS' | translate }}
+                </h5>
+                <button type="button" class="btn-close-custom" (click)="onClose()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div *ngIf="admin; else loading">
+                    {{admin.status == 1 
+                        ? ('ADMINISTRATOR.BLOCK_ADMIN' | translate) 
+                        : ('ADMINISTRATOR.UNBLOCK_ADMIN' | translate)}}
+                </div>
+
+                <ng-template #loading>
+                    <div class="text-center p-3">
+                        <div class="spinner-border text-primary" role="status"></div>
+                    </div>
+                </ng-template>
+            </div>
+
+            <div class="modal-footer border-0">
+                <app-button [text]="'COMMON.CONFIRM' | translate" type="primary" [disabled]="chaging"
+                    (clickBtn)="onSave()"></app-button>
+                <button type="button" class="btn btn-outline-secondary" (click)="onClose()">
+                    {{ 'COMMON.CLOSE' | translate }} </button>
+            </div>
+        </div>
+    </div>
+</div>

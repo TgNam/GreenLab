@@ -1,0 +1,320 @@
+
+<div class="position-relative">
+    <!-- Thanh header trên bảng -->
+    <div id="toolbar-containerId" [ngClass]="dateStatus == true ? 'toolbar-container' : 'toolbar-container-center'"
+        [ngStyle]="{
+        'margin-bottom': hideTime ? '8px' : '0',
+        'margin-top': hideTime ? '5px' : '0'
+     }">
+
+        <div *ngIf="enablePagination && showResultInfo && resultText" class="toolbar-info" [ngStyle]="{
+        'margin-top': dateStatus == true ? (toolbarActionsTemplate ? '5px' : '20px') : '0'
+     }">
+            {{ effectiveResultTextDisplay }}
+        </div>
+        <div *ngIf="enablePagination && showResultInfo && !resultText" class="toolbar-info" [ngStyle]="{
+        'margin-top': dateStatus == true ? (toolbarActionsTemplate ? '5px' : '20px') : '0'
+     }">
+            {{'COMMON.FIND' | translate}}
+            <strong>{{ clientSidePagination ? effectiveTotal : totalCnt }}</strong>
+            {{'COMMON.RESULT_IN' | translate}}
+            <strong>{{ clientSidePagination ? effectiveTotalPage : totalPage }}</strong>
+            {{'COMMON.PAGE' | translate}}
+        </div>
+        <div *ngIf="!enablePagination && showResultInfo && !resultText" class="toolbar-info" [ngStyle]="{
+            'margin-top': dateStatus == true ? (toolbarActionsTemplate ? '5px' : '20px') : '0'
+        }">
+            {{'COMMON.FIND' | translate}}
+            <strong>{{ totalCnt }}</strong>
+            {{'COMMON.RESULT' | translate}}
+        </div>
+
+        <div *ngIf="!enablePagination && showResultInfo && resultText" class="toolbar-info" [ngStyle]="{
+            'margin-top': dateStatus == true ? (toolbarActionsTemplate ? '5px' : '20px') : '0'
+        }">
+            {{ resultTextDisplay }}
+        </div>
+
+        <div class="toolbar-controls">
+            <div class="toolbar-item" *ngIf="timeOpts?.length > 0 && !showSingleTimeFilter && enablePagination">
+                <app-form-input style="width: 100% !important;" (modelChange)="filterUpdate($event, 'timeType')"
+                    type="select-search" [placeholder]="'COMMON.TIME' | translate" [(model)]="timeType"
+                    [options]="timeOpts" optionLabel="label" optionValue="value" [size]="'form-control-sm'">
+                </app-form-input>
+            </div>
+            <div class="toolbar-date-range" *ngIf="!hideTime && enablePagination"
+                [class.toolbar-date-range-datetime]="dateStatus != true">
+                <div class="toolbar-item toolbar-date-item">
+                    <!-- <app-form-input style="width: 100% !important;" [type]="'datetime2'"
+                    [(model)]="timeFrom" (modelChange)="filterUpdate($event, 'timeFrom')"
+                    [placeholder]="'COMMON.CREATED_FROM' | translate">
+                </app-form-input> -->
+                    <app-form-input style="width: 100% !important;" [type]="dateStatus == true ? 'date' : 'datetime2'"
+                        [(model)]="timeFrom" (modelChange)="filterUpdate($event, 'timeFrom')"
+                        [placeholder]="'COMMON.CREATED_FROM' | translate" [size]="'form-control-sm'">
+                    </app-form-input>
+                </div>
+                <div class="toolbar-item toolbar-date-item" *ngIf="!showSingleTimeFilter">
+                    <app-form-input style="width: 100% !important;" [type]="dateStatus == true ? 'date' : 'datetime2'"
+                        [(model)]="timeTo" (modelChange)="filterUpdate($event, 'timeTo')"
+                        [placeholder]="'COMMON.CREATED_TO' | translate" [size]="'form-control-sm'">
+                    </app-form-input>
+                </div>
+            </div>
+
+
+
+            <div class="toolbar-mobile-row">
+
+                <div *ngIf="enablePagination && showPageSize" class="toolbar-item toolbar-item2">
+                    <label class="d-flex align-items-center">
+                        {{'COMMON.SHOW' | translate}}&nbsp;
+                        <div class="mx-25" style="width:80px;">
+                            <app-form-input type="select-search" [options]="sizeOptions" optionLabel="label"
+                                optionValue="value" [(model)]="selectedOption" (modelChange)="onPageSizeChange($event)"
+                                [size]="'form-control-sm'" [searchable]="false">
+                            </app-form-input>
+                        </div>
+                        &nbsp;{{'COMMON.ENTRIES' | translate}}
+                    </label>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <ng-container *ngIf="toolbarActionsTemplate" style="margin-right: 10px;">
+                        <ng-container *ngTemplateOutlet="toolbarActionsTemplate"></ng-container>
+                    </ng-container>
+                    <button *ngIf="showSetting" type="button" class="btn btn-link text-secondary p-0 toolbar-settings"
+                        [ngStyle]="{'margin-top': toolbarActionsTemplate ? '0px' : '8px'}" (click)="toggleColumnPopup()"
+                        #columnPopupButton>
+                        <i class="feather icon-settings"></i>
+                    </button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <!-- Bảng -->
+    <ul *ngIf="isMobile && displayedRows" class="list-group mt-2">
+        <li *ngFor="let row of displayedRows; trackBy: trackByRow; let rowIndex = index" class="list-group-item p-2"
+            [ngClass]="{'selected-row': (selectMode || multiSelectMode) && (clientSidePagination ? isRowSelectedByDisplayedIndex(rowIndex) : rowSelectedByIndex[rowIndex])}"
+            (click)="onRowClick(row, $event, getFullRowIndex(rowIndex))" (dblclick)="onRowDoubleClick(row, $event)"
+            [style.cursor]="multiSelectMode || enableDoubleClick ? 'pointer' : 'default'" [style.userSelect]="'auto'">
+
+            <div class="mobile-card">
+                <div *ngIf="multiSelectMode" class="mobile-card-item" style="margin-bottom: 10px;"
+                    (click)="$event.stopPropagation()">
+                    <app-form-input type="checkbox" [for]="'mobile_row_' + getFullRowIndex(rowIndex)" [model]="clientSidePagination ? isRowSelectedByDisplayedIndex(rowIndex) : rowSelectedByIndex[rowIndex]"
+                        (modelChange)="toggleRowSelection(row)">
+                    </app-form-input>
+                </div>
+
+                <div *ngFor="let col of displayedColumns; trackBy: trackByColumn" class="mobile-card-item">
+                    <div class="mobile-card-label">{{ col.name }}</div>
+
+                    <div class="mobile-card-value">
+                        <span [style.color]="getCellColor(col, row)">
+                            <ng-container *ngTemplateOutlet="col.cellTemplate; context: {
+              row: row,
+              rowIndex: rowIndex,
+              index: rowIndex,
+              value: row[col.key],
+              column: col
+            }">
+                            </ng-container>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </li>
+    </ul>
+
+    <div #tableWrapper id="table-wrapper" class="table-wrapper" [ngClass]="{
+        'table-responsive': !fixedHeader,
+        'fixed-header-table': fixedHeader
+      }">
+
+        <app-dynamic-table-body [detachMode]="detachMode" [selectMode]="selectMode" [multiSelectMode]="multiSelectMode">
+        <table *ngIf="!isMobile && displayedColumns.length > 0 && displayedRows" class="table table-hover" [ngClass]="{
+            'table-dark1': currentSkin === 'dark',
+            'table-light1': currentSkin !== 'dark',
+            'limit-body': maxHeight,
+            'fixed-header-mode': fixedHeader,
+            'table-size-sm': size === 'form-control-sm'
+          }" style="table-layout: auto;width: 100%;">
+
+            <thead>
+                <tr>
+                    <th *ngIf="multiSelectMode"
+                        style="width: 40px; max-width: 40px;vertical-align: middle;"
+                        [class.sticky-col]="multiSelectFixedColumn"
+                        [ngStyle]="{
+                          'position': multiSelectFixedColumn ? 'sticky' : null,
+                          'left.px': multiSelectFixedColumn ? 0 : null,
+                          'z-index': multiSelectFixedColumn ? 30 : null,
+                          'font-size': size === 'form-control-sm' ? '0.8rem' : null
+                        }"
+                        >
+                        <div class="th-content" style="align-items: center;">
+                            <app-form-input type="checkbox" [for]="'selectAllRows'" class="select-checkbox-dtr" [model]="allRowsSelected"
+                                (modelChange)="toggleSelectAll($event)"
+                                [title]="allRowsSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả'">
+                            </app-form-input>
+                        </div>
+                    </th>
+                    <th *ngIf="!multiSelectMode && (selectMode && showSelectCheckboxInSelectMode)"
+                        style="width: 70px; min-width: 70px;vertical-align: middle;"
+                        [ngStyle]="size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}">
+                        <div class="th-content" style="justify-content: center; align-items: center;">
+                            <span>{{ selectModeCheckboxColumnLabel }}</span>
+                        </div>
+                    </th>
+                    <th *ngIf="showIndexColumn" style="width: 2%; vertical-align: middle;"
+                        [ngStyle]="size === 'form-control-sm' ? {'font-size': '0.8rem'} : {}">
+                        <div class="th-content" style="justify-content: center; align-items: center;">
+                            <span>#</span>
+                        </div>
+                    </th>
+                    <th *ngFor="let col of displayedColumns; trackBy: trackByColumn; let colIndex = index" [title]="col.title ? col.title : col.name"
+                        style="word-wrap: normal !important;cursor: pointer;" [ngStyle]="{
+                        'justify-content': col.right 
+                          ? 'flex-end' 
+                          : col.center 
+                            ? 'center' 
+                            : null,
+                        'min-width.px': col.minWidth && col.minWidth !== 0 ? col.minWidth : null,
+                        'max-width.px': col.width && col.width !== 0 ? col.width : null,
+                        'font-size': size === 'form-control-sm' ? '0.8rem' : null,
+                        'position': col.fixed ? 'sticky' : null,
+                        'left.px': col.fixed && tableConfig.fixedLeftPx ? tableConfig.fixedLeftPx[colIndex] : null,
+                        'z-index': col.fixed ? 10 : null
+                      }" [class.sticky-col]="col.fixed" (click)="enableSort && onSort(col)" class="sortable-header" [class.sortable]="enableSort">
+                        <div class="th-content" [ngStyle]="{
+                            'justify-content': col.right 
+                              ? 'flex-end' 
+                              : col.center 
+                                ? 'center' 
+                                : null
+                          }">
+                            <ng-container *ngIf="col.headerTemplate; else defaultHeader">
+                                <ng-container [ngTemplateOutlet]="col.headerTemplate"></ng-container>
+                            </ng-container>
+
+                            <ng-template #defaultHeader>
+                                {{ col.name }}
+                            </ng-template>
+
+                            <span *ngIf="enableSort" class="datatable-icon-sort-unset sort-btn"
+                                style="position: relative;top: 1px;">
+
+                            </span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+          
+            <tbody (mousedown)="multiSelectMode ? onTbodyMouseDown($event) : null">
+                <app-dynamic-table-row *ngFor="let row of displayedRows; trackBy: trackByRow; let rowIndex = index"
+                    [row]="row"
+                    [detachMode]="detachMode"
+                    [rowIndex]="getFullRowIndex(rowIndex)"
+                    [tableConfig]="tableConfig"
+                    [rowMeta]="displayedRowMeta[rowIndex]"
+                    (rowClick)="onRowClick($event.row, $event.event, $event.rowIndex)"
+                    (rowDoubleClick)="onRowDoubleClick($event.row, $event.event)"
+                    (rowMouseDown)="onRowMouseDown($event.event, $event.row, $event.rowIndex)"
+                    (toggleSelection)="toggleRowSelectionForRow($event.event, $event.row)">
+                </app-dynamic-table-row>
+            </tbody>
+          
+
+        </table>
+        </app-dynamic-table-body>
+
+
+    </div>
+
+    <!-- <div #tableWrapper id="table-wrapper" class="table-wrapper">
+        <ngx-datatable #mainDatatableElement *ngIf="!isMobile && displayedColumns.length > 0 && rows" class="bootstrap core-bootstrap"  [ngClass]="{
+      'table-dark1': currentSkin === 'dark',
+      'table-light1': currentSkin !== 'dark',
+      'limit-body': maxHeight
+  }" [columnMode]="'force'" [scrollbarH]="true" [rows]="rows || []"
+   [reorderable]="false" [emptyMessage]="''"
+                       (reorder)="onReorder($event)" (activate)="onRowActivate($event)" [headerHeight]="getHeaderHeight()" [rowHeight]="'auto'"
+                       [rowClass]="getRowClass">
+
+            <ngx-datatable-column *ngFor="let col of displayedColumns" [name]="col.name" [prop]="col.key" [width]="col.width"
+                                  [minWidth]="col.minWidth" [cellTemplate]="col.cellTemplate" [headerTemplate]="col.headerTemplate"
+                                  [sortable]="enableSort" [resizeable]="false" [canAutoResize]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-empty>
+                <div class="text-center p-1" style="padding-bottom: 0px !important">
+                    <i class="fa fa-info-circle me-1"></i>
+                    Không có dữ liệu phù hợp
+                </div>
+            </ngx-datatable-empty>
+        </ngx-datatable>
+    </div> -->
+    <div *ngIf="rows?.length === 0" class="text-center p-2 mb-2" style="padding-bottom: 0px !important">
+        <i class="fa fa-info-circle me-1"></i>
+        {{ 'COMMON.NO_DATA' | translate }}
+    </div>
+    <div class="card-footer d-flex px-0 px-sm-3" [ngClass]="['justify-content-' + paginationAlign, isMobile ? 'mobile-padding' : '']" *ngIf="enablePagination && effectiveTotalPage > 1"
+        style="border: none !important">
+        <ngb-pagination *ngIf="!isMobile && effectiveTotal > 0" [collectionSize]="effectiveTotal" [(page)]="page"
+            [pageSize]="selectedOption" [maxSize]="5" [rotate]="true" [ellipses]="true" [boundaryLinks]="true"
+            (pageChange)="onPageChange($event)">
+        </ngb-pagination>
+
+        <!-- Mobile -->
+        <ngb-pagination *ngIf="isMobile && effectiveTotal > 0" [collectionSize]="effectiveTotal" [(page)]="page" [size]="'sm'"
+            [pageSize]="selectedOption" [maxSize]="2" [rotate]="false" [ellipses]="true" [boundaryLinks]="true"
+            [class]="mobilePaginationClass" (pageChange)="onPageChange($event)">
+        </ngb-pagination>
+    </div>
+
+    <!-- Popup chọn cột -->
+    <div *ngIf="showColumnPopup" #columnPopup class="position-absolute border rounded shadow p-1 column-popup"
+        [ngClass]="{
+      'bg-primary text-white': currentSkin === 'dark',
+      'bg-white text-dark': currentSkin !== 'dark'
+    }" style="top: 40px; right: 10px; width: 220px; z-index: 1050;">
+        <div class="d-flex flex-col justify-content-between align-items-center mb-2">
+            <div>
+                <button type="button" class="btn btn-sm btn-link p-0 me-1" [ngClass]="{
+      ' text-white': currentSkin === 'dark',
+      'text-dark': currentSkin !== 'dark'
+    }" (click)="showAllColumns()">
+                    {{'COMMON.SHOW_ALL' | translate}}
+                </button>
+            </div>
+            <div title="Mặc định" style="cursor: pointer;" (click)="resetToDefaultColumns()">
+                MĐ
+            </div>
+            <div>
+                <button type="button" class="btn btn-sm btn-link p-0 text-white" [ngClass]="{
+      ' text-white': currentSkin === 'dark',
+      'text-dark': currentSkin !== 'dark'
+    }" (click)="hideAllColumns()">
+                    {{'COMMON.HIDE_ALL' | translate}}
+
+                </button>
+            </div>
+        </div>
+        <input type="text" class="form-control form-control-sm mb-1" [placeholder]="'COMMON.FIND_COLUMN' | translate"
+            [(ngModel)]="searchColumnText" (ngModelChange)="onSearchColumnChange($event)" />
+        <div class="column-list-scroll">
+            <div *ngFor="let col of filteredColumns; trackBy: trackByColumn" class="form-check mb-1">
+                <input class="form-check-input" type="checkbox" [id]="col.name + '_' + col.key" [checked]="visibleColumnNames.has(col.key)"
+                    (change)="toggleColumn(col)" />
+                <label class="form-check-label small" [for]="col.name + '_' + col.key">{{ col.name }}</label>
+            </div>
+        </div>
+    </div>
+</div>

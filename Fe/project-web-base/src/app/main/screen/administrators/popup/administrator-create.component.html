@@ -1,0 +1,148 @@
+<app-modal-content [visible]="visible" [size]="'lg'" [title]="'ADMINISTRATOR.CREATE_TITLE' | translate"
+  [saveButtonText]="'Tạo'" [closeButtonText]="'Đóng'" [disableSave]="
+    !admin?.full_name?.trim() ||
+    !admin?.phone?.trim() ||
+    !admin?.email?.trim() ||
+    !admin?.user_name?.trim() ||
+    !admin?.password?.trim() ||
+    !admin?.department_id ||
+    !admin?.work_area_id ||
+    errMsg.length > 0
+  " (onSave)="onSave()" [loading]="creating" (onClose)="onClose()">
+  <div class="modal-body">
+    <div class="row">
+      <!-- Cột trái: form -->
+      <div class="col-md-8">
+        <div class="mb-2">
+          <app-form-input [label]="'COMMON.NAME' | translate" type="text" [max]="150" [(model)]="admin.full_name"
+            labelType="required">
+          </app-form-input>
+        </div>
+
+        <div class="mb-2">
+          <app-form-input [label]="'COMMON.USERNAME' | translate" type="text" [max]="150" [(model)]="admin.user_name"
+            labelType="required" (modelChange)="validateParam('username', $event)">
+          </app-form-input>
+           <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'username'">{{ err.label }}</span>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <app-form-input label="Email" type="text" [max]="250" [(model)]="admin.email"
+            (modelChange)="validateParam('email', $event)" labelType="required">
+          </app-form-input>
+          <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'email'">{{ err.label }}</span>
+          </div>
+        </div>
+
+        <div class="mb-2"> 
+          <app-form-input  [selectOpen]="onOpen" [selectClose]="selectClose" [label]="'COMMON.DEPARTMENT' | translate" #mySelectParent  class="ng-select-parent" type="select-search" [options]="departments"
+            [searchText]="searchDepartment" optionLabel="name" optionValue="id" [labelType]="'required'"
+            [(model)]="admin.department_id" [placeholder]="'COMMON.DEPARTMENT_PLACEHOLDER' | translate">
+          </app-form-input>
+
+          <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'department'">{{ err.label }}</span>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <app-form-input [selectOpen]="onOpen" [selectClose]="selectClose" [label]="'COMMON.WORK_AREA' | translate" class="ng-select-parent"  type="select-search" [options]="workAreas"
+            [searchText]="searchWorkArea" optionLabel="name" optionValue="id" [labelType]="'required'"
+            [(model)]="admin.work_area_id" [placeholder]="'COMMON.WORK_AREA_PLACEHOLDER' | translate">
+          </app-form-input>
+
+          <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'workarea'">{{ err.label }}</span>
+          </div>
+        </div>
+
+        <!-- <div class="mb-2">
+          <app-form-input [selectOpen]="onOpen" [selectClose]="selectClose" [label]="'COMMON.AREA' | translate" class="ng-select-parent"  type="select-search" [options]="workAreas"
+            [searchText]="searchArea" optionLabel="name" optionValue="id" [labelType]="'required'"
+            [(model)]="admin.area_id" [placeholder]="'COMMON.AREA_PLACEHOLDER' | translate">
+          </app-form-input>
+
+          <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'area'">{{ err.label }}</span>
+          </div>
+        </div> -->
+
+        <div class="mb-2"> 
+          <app-form-input [label]="'COMMON.PASSWORD' | translate" type="password" [max]="30" [(model)]="admin.password"
+            (modelChange)="validateParam('password', $event)" labelType="required">
+          </app-form-input>
+          <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'password'">{{ err.label }}</span>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <app-form-input [label]="'COMMON.PHONE' | translate" type="phone" [max]="13" [(model)]="admin.phone"
+            (modelChange)="validateParam('phone', $event)" labelType="required">
+          </app-form-input>
+          <div *ngFor="let err of errMsg" class="text-danger mt-1">
+            <span *ngIf="err.type == 'phone'">{{ err.label }}</span>
+          </div>
+        </div>
+
+         <div class="mb-2">
+          <app-form-input [label]="'COMMON.BARCODE' | translate" type="phone" [max]="150" [(model)]="admin.start_barcode"
+           >
+          </app-form-input>
+        </div>
+
+        <div class="mb-2">
+          <app-form-input *ngIf="positions" [selectOpen]="onOpen" [selectClose]="selectClose" [label]="'COMMON.POSITION1' | translate" type="select-search" [options]="positions"
+           optionLabel="label" optionValue="value" 
+            [(model)]="admin.position" [placeholder]="'COMMON.POSITION1' | translate">
+           >
+          </app-form-input>
+        </div>
+
+        <div class="mb-2 d-flex align-items-center">
+             <app-form-input type="checkbox" [for]="'status'" [(model)]="admin.status"
+            [label]="admin.status === 1 || admin.status  ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) "
+            (modelChange)="changeStatus($event)" labelType="required">
+          </app-form-input>
+        </div>
+      </div>
+
+      <!-- Cột phải: upload ảnh -->
+      <div class="col-md-4 text-center">
+        <app-form-input
+          #adminPhotoUpload
+          type="image-upload"
+          imageShape="round"
+          [imagePreviewUrl]="previewPhoto"
+          imageFallbackUrl="assets/images/avatars/avatar-default.png"
+          [imageAltText]="'COMMON.AVATAR' | translate"
+          [imageButtonLabel]="'COMMON.CHOOSE_IMAGE' | translate"
+          [imageErrors]="errMsg"
+          imageErrorKey="photo"
+          (imageFileChange)="onPhotoSelected($event)"
+          (imageClear)="onPhotoClear()">
+        </app-form-input>
+
+        <app-form-input
+          #adminSignatureUpload
+          class="mt-2"
+          type="image-upload"
+          imageShape="rectangle"
+          [imagePreviewUrl]="previewAvatar"
+          imageFallbackUrl="assets/images/illustration/digital-signature.jpg"
+          [imageAltText]="'COMMON.DIGITAL_SIGNATURE' | translate"
+          [imageButtonLabel]="'COMMON.CHOOSE_DIGITAL_SIGNATURE' | translate"
+          [imageErrors]="errMsg"
+          imageErrorKey="avatar"
+          (imageFileChange)="onAvatarSelected($event)"
+          (imageClear)="onAvatarClear()">
+        </app-form-input>
+      </div>
+
+
+    </div>
+  </div>
+</app-modal-content>

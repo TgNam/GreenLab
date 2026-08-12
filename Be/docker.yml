@@ -1,0 +1,33 @@
+# ===========================
+# Stage 1 - Build
+# ===========================
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
+
+WORKDIR /workspace
+
+# Copy source code
+COPY project-core-base ./project-core-base
+COPY project-admin-api-base ./project-admin-api-base
+
+# Build project-core-base
+WORKDIR /workspace/project-core-base
+RUN mvn clean install -DskipTests
+
+# Build project-admin-api-base
+WORKDIR /workspace/project-admin-api-base
+RUN mvn clean package -DskipTests
+
+# ===========================
+# Stage 2 - Runtime
+# ===========================
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+ENV TZ=Asia/Ho_Chi_Minh
+
+COPY --from=builder /workspace/project-admin-api-base/target/*.jar app.jar
+
+EXPOSE 8081
+
+ENTRYPOINT ["java","-jar","app.jar","--server.port=8081"]

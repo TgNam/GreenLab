@@ -1,0 +1,63 @@
+<app-modal-content [visible]="visible" [size]="'lg'" [title]="'SYSTEMCONFIG.CREATE_TITLE' | translate" [saveButtonText]="'COMMON.CREATE' | translate"
+    [closeButtonText]="'COMMON.CLOSE' | translate"
+    [disableSave]="!systemconfig?.key?.trim() || !systemconfig?.name?.trim() || !systemconfig.value || errMsg.length > 0 || saving" [loading]="saving" (onSave)="onSave()"
+    (onClose)="onClose()">
+
+
+    <!-- Body -->
+    <div class="modal-body">
+        <div>
+
+            <!-- SystemConfigKey selection -->
+            <div class="mb-2">
+                <app-form-input [label]="'SYSTEMCONFIG.KEY' | translate" type="select-search" [(model)]="systemconfig.key"
+                    (modelChange)="onSelectionChange('key', $event)" [options]="unusedKeyOptions" optionLabel="label"
+                    optionValue="value" labelType="required" [placeholder]="'SYSTEMCONFIG.SELECT_KEY' | translate">
+                </app-form-input>
+                <div *ngFor="let err of errMsg" class="text-danger mt-1">
+                    <span *ngIf="err.type == 'key'">{{ err.label }}</span>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <app-form-input [label]="'SYSTEMCONFIG.CONFIG_NAME' | translate" type="text" [(model)]="systemconfig.name" [max]="250"
+                    [placeholder]="'SYSTEMCONFIG.ENTER_NAME' | translate" labelType="required" (modelChange)="validateParam('name', $event)">
+                </app-form-input>
+                <div *ngFor="let err of errMsg" class="text-danger mt-1">
+                    <span *ngIf="err.type == 'name'">{{ err.label }}</span>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <app-form-input [label]="'SYSTEMCONFIG.VALUE' | translate" type="textarea" [(model)]="systemconfig.value" 
+                    [rows]="3" [placeholder]="'SYSTEMCONFIG.ENTER_VALUE' | translate" labelType="required" (modelChange)="validateParam('value', $event)">
+                </app-form-input>
+                <div *ngFor="let err of errMsg" class="text-danger mt-1">
+                    <span *ngIf="err.type == 'value'">{{ err.label }}</span>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <app-form-input [label]="'SYSTEMCONFIG.NOTE' | translate" type="text" [(model)]="systemconfig.note" [max]="250"
+                    [placeholder]="'SYSTEMCONFIG.ENTER_NOTE' | translate">
+                </app-form-input>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-2 d-flex align-items-center">
+                <app-form-input type="checkbox" [for]="'status'" [(model)]="systemconfig.active"
+                    [label]="systemconfig.active ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate)"
+                    (modelChange)="changeStatus($event)">
+                </app-form-input>
+            </div>
+
+            <ng-template #loading>
+                <div class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- Footer -->
+    </div>
+</app-modal-content>
